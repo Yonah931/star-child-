@@ -18,6 +18,13 @@ from pdf_report import generate_pdf
 
 load_dotenv()
 
+def get_secret(key):
+    try:
+        return st.secrets[key]
+    except:
+        return os.getenv(key)
+
+
 st.set_page_config(page_title="Sureflow Agentic OS", page_icon="🤖", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
@@ -47,10 +54,10 @@ llm = ChatOpenAI(
     model="openai/gpt-oss-20b",
     temperature=0.3,
     base_url="https://api.groq.com/openai/v1",
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=get_secret("GROQ_API_KEY")
 )
 
-tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+tavily = TavilyClient(api_key=get_secret("TAVILY_API_KEY"))
 
 def ceo_orchestrator(state: AgentState):
     history = state.get("history", [])
