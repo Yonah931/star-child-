@@ -1,0 +1,14 @@
+venv/
+.env
+__pycache__/
+*.pyc
+.DS_Store
+sureflow_report.pdf
+*.db
+.env
+.env
+*.deb
+fix.py
+main.py
+main.py.save
+star child

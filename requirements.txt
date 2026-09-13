@@ -1,0 +1,14 @@
+streamlit
+langgraph
+langchain
+langchain-openai
+langchain-core
+langchain-groq
+python-dotenv
+tavily-python
+plotly
+pandas
+openpyxl
+fpdf2
+arabic-reshaper
+python-bidi
