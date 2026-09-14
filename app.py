@@ -197,7 +197,15 @@ init_db()
 app = workflow.compile(checkpointer=memory)
 
 # ===== الترويسة =====
-st.markdown('<div class="main-header">🤖 Yonah Ashkenaz Agentic OS</div>', unsafe_allow_html=True)
+import base64
+try:
+    with open("logo.jpg", "rb") as _img:
+        _logo = base64.b64encode(_img.read()).decode()
+    st.markdown(f'<div style="text-align: center; margin-bottom: 1rem;"><img src="data:image/jpeg;base64,{_logo}" style="width: 140px; height: 140px; border-radius: 50%; box-shadow: 0 0 40px #00d4ff88; border: 3px solid #00d4ff;"></div>', unsafe_allow_html=True)
+except Exception as _e:
+    pass
+
+st.markdown('<div class="main-header">Yonah Ashkenaz</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">نظام وكلاء الذكاء الاصطناعي لإدارة الشركة</div>', unsafe_allow_html=True)
 
 # ===== شريط الحالة =====
