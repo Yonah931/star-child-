@@ -60,10 +60,17 @@ llm = ChatOpenAI(
 
 tavily = TavilyClient(api_key=get_secret("TAVILY_API_KEY"))
 
+IDENTITY = """أنت وكيل ذكاء اصطناعي في نظام 'Yonah Ashkenaz'، وهو نظام وكلاء ذكاء اصطناعي لإدارة الشركة.
+مؤسس النظام ومالكه هو Yonah Ashkenaz.
+لا تذكر أبداً أنك ChatGPT أو OpenAI أو أي شركة أخرى.
+إذا سُئلت عن هويتك، قل: 'أنا وكيل ذكاء اصطناعي في نظام Yonah Ashkenaz'.
+
+"""
+
 def ceo_orchestrator(state: AgentState):
     history = state.get("history", [])
     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in history[-5:]]) if history else "لا يوجد سياق سابق"
-    prompt = f"""أنت الرئيس التنفيذي (CEO) لنظام وكلاء. 
+    prompt = IDENTITY + f"""أنت الرئيس التنفيذي (CEO) لنظام وكلاء. 
     الوكلاء المتاحون:
     - 'Researcher': للبحث في الإنترنت والأخبار الحديثة
     - 'CMO': للتسويق والمحتوى
@@ -86,7 +93,7 @@ def researcher_agent(state: AgentState):
         sources_text = ""
         for i, result in enumerate(search_result.get("results", []), 1):
             sources_text += f"\n\n{i}. {result['title']}\n{result['content'][:400]}...\n🔗 {result['url']}"
-        prompt = f"""أنت باحث خبير. لخص نتائج البحث عن: "{state['task']}"
+        prompt = IDENTITY + f"""أنت باحث خبير. لخص نتائج البحث عن: "{state['task']}"
         النتائج: {sources_text}
         قدم تقريراً منظماً بالعربية مع المصادر."""
         response = llm.invoke([SystemMessage(content=prompt)])
@@ -95,17 +102,17 @@ def researcher_agent(state: AgentState):
         return {"result": f"🔍 **Researcher**\n\nحدث خطأ: {str(e)}"}
 
 def cmo_agent(state: AgentState):
-    prompt = f"أنت مدير التسويق (CMO). اكتب خطة تسويقية احترافية للمهمة: {state['task']}"
+    prompt = IDENTITY + f"أنت مدير التسويق (CMO). اكتب خطة تسويقية احترافية للمهمة: {state['task']}"
     response = llm.invoke([SystemMessage(content=prompt)])
     return {"result": f"📢 **CMO**\n\n{response.content}"}
 
 def salesrep_agent(state: AgentState):
-    prompt = f"أنت مندوب مبيعات محترف. اكتب رسالة أو خطة مبيعات للمهمة: {state['task']}"
+    prompt = IDENTITY + f"أنت مندوب مبيعات محترف. اكتب رسالة أو خطة مبيعات للمهمة: {state['task']}"
     response = llm.invoke([SystemMessage(content=prompt)])
     return {"result": f"💼 **SalesRep**\n\n{response.content}"}
 
 def dev_agent(state: AgentState):
-    prompt = f"""أنت مطور Python خبير. اكتب كود Python لحل المهمة التالية:
+    prompt = IDENTITY + f"""أنت مطور Python خبير. اكتب كود Python لحل المهمة التالية:
     {state['task']}
     
     قواعد مهمة:
@@ -146,14 +153,14 @@ def dataanalyst_agent(state: AgentState):
 - الإحصائيات الوصفية:
 {df.describe().to_string()}
 """
-        prompt = f"""أنت محلل بيانات خبير. لديك البيانات التالية:
+        prompt = IDENTITY + f"""أنت محلل بيانات خبير. لديك البيانات التالية:
 {info}
 
 المهمة: {task}
 
 قدم تحليلاً مفصلاً ومنظماً بالعربية مع أرقام حقيقية من البيانات."""
     else:
-        prompt = f"""أنت محلل بيانات خبير. حلل المهمة: {task}
+        prompt = IDENTITY + f"""أنت محلل بيانات خبير. حلل المهمة: {task}
         
 ملاحظة: لم يتم رفع أي بيانات. قدم تحليلاً عاماً أو اقترح على المستخدم رفع ملف CSV/Excel."""
     
@@ -163,7 +170,7 @@ def dataanalyst_agent(state: AgentState):
 def assistant_agent(state: AgentState):
     history = state.get("history", [])
     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in history[-10:]]) if history else ""
-    prompt = f"""أنت مساعد ذكاء اصطناعي عام. أجب بشكل واضح ومفيد.
+    prompt = IDENTITY + f"""أنت مساعد ذكاء اصطناعي عام. أجب بشكل واضح ومفيد.
     السياق: {history_text}
     السؤال: {state['task']}"""
     response = llm.invoke([SystemMessage(content=prompt)])
