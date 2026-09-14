@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import operator
 from tavily import TavilyClient
 from datetime import datetime
+from database import init_db, save_task, get_tasks, get_stats
 from pdf_report import generate_pdf
 
 load_dotenv()
@@ -25,7 +26,7 @@ def get_secret(key):
         return os.getenv(key)
 
 
-st.set_page_config(page_title="Sureflow Agentic OS", page_icon="🤖", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Yonah Ashkenaz Agentic OS", page_icon="🤖", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
 <style>
@@ -185,10 +186,11 @@ for agent in ["Researcher", "CMO", "SalesRep", "Dev", "DataAnalyst", "Assistant"
     workflow.add_edge(agent, END)
 
 memory = MemorySaver()
+init_db()
 app = workflow.compile(checkpointer=memory)
 
 # ===== الترويسة =====
-st.markdown('<div class="main-header">🤖 Sureflow Agentic OS</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🤖 Yonah Ashkenaz Agentic OS</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">نظام وكلاء الذكاء الاصطناعي لإدارة الشركة</div>', unsafe_allow_html=True)
 
 # ===== شريط الحالة =====
@@ -296,6 +298,7 @@ if prompt := st.chat_input("ما هي المهمة التي تريدها؟"):
             st.markdown(result)
     
     st.session_state.messages.append({"role": "assistant", "content": result})
+    save_task(prompt, next_agent, result)
     st.session_state.total_tasks += 1
     if next_agent in st.session_state.agents_used:
         st.session_state.agents_used[next_agent] += 1
@@ -322,6 +325,22 @@ with st.sidebar:
             df = st.session_state.uploaded_data
             st.markdown(f'<div class="data-badge">📊 {df.shape[0]} صف × {df.shape[1]} عمود</div>', unsafe_allow_html=True)
     
+    st.markdown("---")
+    st.markdown("### 📜 السجل")
+    total, by_agent = get_stats()
+    st.markdown(f"**إجمالي المهام:** {total}")
+    if by_agent:
+        for agent_name, count in by_agent:
+            st.markdown(f"- **{agent_name}**: {count} مهمة")
+    with st.expander("📋 عرض آخر 10 مهام"):
+        tasks = get_tasks(limit=10)
+        if tasks:
+            for ts, user_in, agent, resp in tasks:
+                st.markdown(f"**{ts}** | `{agent}`")
+                st.caption(f"👤 {user_in[:80]}")
+                st.markdown("---")
+        else:
+            st.info("لا توجد مهام مسجلة بعد.")
     st.markdown("---")
     st.markdown("### ⚙️ التحكم")
     if st.button("🗑️ مسح المحادثة"):

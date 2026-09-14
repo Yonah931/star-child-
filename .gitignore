@@ -12,3 +12,5 @@ fix.py
 main.py
 main.py.save
 star child
+history.db
+*.db
