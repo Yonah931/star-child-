@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: yonah-ashkenaz-api
+    env: python
+    buildCommand: pip install -r requirements-api.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
