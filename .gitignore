@@ -14,3 +14,8 @@ main.py.save
 star child
 history.db
 *.db
+.agents/
+.env
+venv/
+__pycache__/
+.agents/
