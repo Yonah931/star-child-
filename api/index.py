@@ -115,3 +115,17 @@ def ask(task: Task):
         "agent": result.get("next_agent"),
         "response": result.get("result", "لا توجد نتيجة")
     }
+from fastapi import Request
+from fastapi.responses import Response
+
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str, request: Request):
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400",
+        }
+    
