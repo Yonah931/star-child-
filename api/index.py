@@ -118,14 +118,19 @@ def ask(task: Task):
 from fastapi import Request
 from fastapi.responses import Response
 
-@app.options("/{full_path:path}")
-async def options_handler(full_path: str, request: Request):
-    return Response(
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Max-Age": "86400",
-        }
-    
+import traceback
+from fastapi.responses import JSONResponse
+
+@app.post("/ask")
+def ask(task: Task):
+    try:
+        out = graph.invoke(
+            {"task": task.prompt, "next_agent": "", "result": ""},
+            config={"recursion_limit": 40},
+        )
+        return {"agent": out.get("next_agent", ""), "response": out.get("result", "")}
+    except Exception as e:
+        return JSONResponse(
+            {"error": repr(e), "trace": traceback.format_exc()[-1500:]},
+            status_code=500,
+        )
