@@ -19,3 +19,12 @@ history.db
 venv/
 __pycache__/
 .agents/
+
+# ملفات مؤقتة
+report_*.pdf
+accounting_report.pdf
+test_balance.xlsx
+app_accountant.py
+main.py
+*.pyc
+__pycache__/
