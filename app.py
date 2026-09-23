@@ -1,381 +1,347 @@
-import os
-import io
-import sys
 import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-from contextlib import redirect_stdout
-from typing import TypedDict, Annotated
-from langgraph.graph import StateGraph, END
-from langgraph.checkpoint.memory import MemorySaver
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage
-from dotenv import load_dotenv
-import operator
-from tavily import TavilyClient
+import os
 from datetime import datetime
-from database import init_db, save_task, get_tasks, get_stats
-from pdf_report import generate_pdf
+from accountant import AccountantAgent, generate_accounting_pdf
+from translations import get_text
 
-load_dotenv()
+st.set_page_config(
+    page_title="Yonah Ashkenaz",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
-def get_secret(key):
-    try:
-        return st.secrets[key]
-    except:
-        return os.getenv(key)
-
-
-st.set_page_config(page_title="Yonah Ashkenaz Agentic OS", page_icon="🤖", layout="wide", initial_sidebar_state="expanded")
-
+# === CSS مشترك ===
 st.markdown("""
 <style>
-    .stApp {background-color: #0a0e1a;}
-    .main-header {font-size: 3rem; font-weight: bold; text-align: center; color: #00d4ff; text-shadow: 0 0 20px #00d4ff88; margin-bottom: 0.2rem;}
-    .sub-header {text-align: center; color: #6b7a99; margin-bottom: 2rem; font-size: 1rem;}
-    .stat-card {background: linear-gradient(135deg, #1a1f35 0%, #0f1422 100%); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #00d4ff33;}
-    .stat-number {font-size: 2rem; font-weight: bold; color: #00d4ff;}
-    .stat-label {color: #6b7a99; font-size: 0.85rem; margin-top: 5px;}
-    .agent-card {background: linear-gradient(135deg, #1a1f35 0%, #0f1422 100%); border-radius: 10px; padding: 12px; margin: 6px 0; border-left: 4px solid #00d4ff;}
-    .agent-name {font-weight: bold; color: #00d4ff; font-size: 0.95rem;}
-    .agent-role {color: #6b7a99; font-size: 0.8rem; margin-top: 2px;}
-    .status-bar {background: #1a1f35; border-radius: 10px; padding: 12px 20px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid #00d4ff33;}
-    .status-dot {display: inline-block; width: 10px; height: 10px; background: #00ff88; border-radius: 50%; margin-left: 8px; box-shadow: 0 0 10px #00ff88;}
-    .data-badge {background: #00ff8833; color: #00ff88; padding: 4px 10px; border-radius: 10px; font-size: 0.75rem;}
+    /* Hero */
+    .hero {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
+        border-radius: 20px;
+        margin-bottom: 2rem;
+    }
+    .hero-title {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(90deg, #00d4ff, #00ff88);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
+    .hero-subtitle {color: #a8b4c8; font-size: 1.2rem;}
+    
+    /* Features */
+    .feature-card {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 15px;
+        border-left: 4px solid #00d4ff;
+        margin: 1rem 0;
+        height: 100%;
+    }
+    .feature-icon {font-size: 2.5rem; margin-bottom: 1rem;}
+    .feature-title {font-size: 1.3rem; font-weight: bold; color: #0a0e1a; margin-bottom: 0.5rem;}
+    .feature-desc {color: #555; line-height: 1.6;}
+    
+    /* Price cards */
+    .price-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 2px solid #e0e0e0;
+        text-align: center;
+        height: 100%;
+    }
+    .price-card.featured {
+        border-color: #00d4ff;
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+    }
+    .price-amount {font-size: 2.5rem; font-weight: bold; color: #00d4ff; margin: 1rem 0;}
+    .price-currency {font-size: 1rem; color: #888;}
+    
+    /* Result boxes */
+    .issue-box {background: #fff3cd; padding: 1rem; border-radius: 10px; border-left: 4px solid #ffc107; margin: 0.5rem 0;}
+    .success-box {background: #d4edda; padding: 1rem; border-radius: 10px; border-left: 4px solid #28a745; margin: 0.5rem 0;}
+    .error-box {background: #f8d7da; padding: 1rem; border-radius: 10px; border-left: 4px solid #dc3545; margin: 0.5rem 0;}
+    
+    /* Buttons */
+    .stButton > button {
+        background: linear-gradient(90deg, #00d4ff, #00ff88) !important;
+        color: #0a0e1a !important;
+        border: none !important;
+        font-weight: bold !important;
+        font-size: 1rem !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 2rem !important;
+    }
+    .stDownloadButton > button {
+        background: linear-gradient(90deg, #00ff88, #00d4ff) !important;
+        color: #0a0e1a !important;
+        border: none !important;
+        font-weight: bold !important;
+        border-radius: 10px !important;
+    }
+    
+    /* Header app */
+    .app-header {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        background: linear-gradient(90deg, #00d4ff, #00ff88);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    .app-sub {text-align: center; color: #666; margin-bottom: 2rem;}
 </style>
 """, unsafe_allow_html=True)
 
-class AgentState(TypedDict):
-    task: str
-    next_agent: str
-    result: str
-    history: Annotated[list, operator.add]
+# === إدارة الصفحات ===
+if "page" not in st.session_state:
+    st.session_state.page = "landing"
 
-llm = ChatOpenAI(
-    model="openai/gpt-oss-20b",
-    temperature=0.3,
-    base_url="https://api.groq.com/openai/v1",
-    api_key=get_secret("GROQ_API_KEY")
-)
+if "lang" not in st.session_state:
+    st.session_state.lang = "ar"
 
-tavily = TavilyClient(api_key=get_secret("TAVILY_API_KEY"))
 
-IDENTITY = """أنت وكيل ذكاء اصطناعي في نظام 'Yonah Ashkenaz'، وهو نظام وكلاء ذكاء اصطناعي لإدارة الشركة.
-مؤسس النظام ومالكه هو Yonah Ashkenaz.
-لا تذكر أبداً أنك ChatGPT أو OpenAI أو أي شركة أخرى.
-إذا سُئلت عن هويتك، قل: 'أنا وكيل ذكاء اصطناعي في نظام Yonah Ashkenaz'.
+# =====================================================
+# الصفحة 1: Landing Page (التسويقية)
+# =====================================================
+def show_landing():
+    st.markdown("""
+    <div class="hero">
+        <div class="hero-title">📊 Yonah Ashkenaz</div>
+        <div class="hero-subtitle">المحاسب الذكي - وفّر 10 ساعات أسبوعياً في مراجعة بيانات عملائك</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-"""
+    # CTA
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("🚀 جرّب مجاناً الآن", use_container_width=True, key="cta_btn"):
+            st.session_state.page = "app"
+            st.rerun()
 
-def ceo_orchestrator(state: AgentState):
-    history = state.get("history", [])
-    history_text = "\n".join([f"{m['role']}: {m['content']}" for m in history[-5:]]) if history else "لا يوجد سياق سابق"
-    prompt = IDENTITY + f"""أنت الرئيس التنفيذي (CEO) لنظام وكلاء. 
-    الوكلاء المتاحون:
-    - 'Researcher': للبحث في الإنترنت والأخبار الحديثة
-    - 'CMO': للتسويق والمحتوى
-    - 'SalesRep': للمبيعات والعملاء
-    - 'Dev': للتطوير التقني وكتابة وتنفيذ أكواد Python
-    - 'DataAnalyst': لتحليل البيانات وقراءة ملفات CSV/Excel
-    - 'Assistant': للأسئلة العامة والمحادثات
-    السياق السابق: {history_text}
-    الطلب: {state['task']}
-    أجب بكلمة واحدة فقط هي اسم الوكيل المناسب."""
-    response = llm.invoke([SystemMessage(content=prompt)])
-    next_agent = response.content.strip()
-    if next_agent not in ["Researcher", "CMO", "SalesRep", "Dev", "DataAnalyst", "Assistant"]:
-        next_agent = "Assistant"
-    return {"next_agent": next_agent}
+    st.markdown("---")
+    st.markdown("## ✨ لماذا Yonah Ashkenaz؟")
 
-def researcher_agent(state: AgentState):
-    try:
-        search_result = tavily.search(query=state['task'], max_results=5)
-        sources_text = ""
-        for i, result in enumerate(search_result.get("results", []), 1):
-            sources_text += f"\n\n{i}. {result['title']}\n{result['content'][:400]}...\n🔗 {result['url']}"
-        prompt = IDENTITY + f"""أنت باحث خبير. لخص نتائج البحث عن: "{state['task']}"
-        النتائج: {sources_text}
-        قدم تقريراً منظماً بالعربية مع المصادر."""
-        response = llm.invoke([SystemMessage(content=prompt)])
-        return {"result": f"🔍 **Researcher** - بحث حقيقي من الإنترنت\n\n{response.content}"}
-    except Exception as e:
-        return {"result": f"🔍 **Researcher**\n\nحدث خطأ: {str(e)}"}
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">سرعة فائقة</div>
+            <div class="feature-desc">حلّل ملفات Excel بمئات الصفوف في ثوانٍ. لا مزيد من المراجعة اليدوية المملة.</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <div class="feature-title">اكتشاف الأخطاء</div>
+            <div class="feature-desc">يكشف القيم السالبة، الصفوف المكررة، الأرقام الضخمة، والقيود الناقصة تلقائياً.</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <div class="feature-title">تقارير احترافية</div>
+            <div class="feature-desc">تقارير PDF بالعربية والفرنسية والإنجليزية، جاهزة للإرسال للعملاء.</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-def cmo_agent(state: AgentState):
-    prompt = IDENTITY + f"أنت مدير التسويق (CMO). اكتب خطة تسويقية احترافية للمهمة: {state['task']}"
-    response = llm.invoke([SystemMessage(content=prompt)])
-    return {"result": f"📢 **CMO**\n\n{response.content}"}
-
-def salesrep_agent(state: AgentState):
-    prompt = IDENTITY + f"أنت مندوب مبيعات محترف. اكتب رسالة أو خطة مبيعات للمهمة: {state['task']}"
-    response = llm.invoke([SystemMessage(content=prompt)])
-    return {"result": f"💼 **SalesRep**\n\n{response.content}"}
-
-def dev_agent(state: AgentState):
-    prompt = IDENTITY + f"""أنت مطور Python خبير. اكتب كود Python لحل المهمة التالية:
-    {state['task']}
-    
-    قواعد مهمة:
-    - أجب بالكود فقط، بدون شرح.
-    - ضع الكود داخل ```python ... ```
-    - استخدم print() لعرض النتائج.
-    - إذا احتجت مكتبات، استخدم pandas، numpy، أو المكتبات القياسية فقط."""
-    response = llm.invoke([SystemMessage(content=prompt)])
-    code = response.content.replace("```python", "").replace("```", "").strip()
-    
-    try:
-        output = io.StringIO()
-        exec_globals = {"pd": pd, "print": print}
-        with redirect_stdout(output):
-            exec(code, exec_globals)
-        result_text = output.getvalue()
-        if not result_text:
-            result_text = "(تم التنفيذ بدون مخرجات)"
-        return {"result": f"💻 **Dev** - تم توليد الكود وتنفيذه\n\n**الكود:**\n```python\n{code}\n```\n\n**النتيجة:**\n```\n{result_text}\n```"}
-    except Exception as e:
-        return {"result": f"💻 **Dev**\n\n**الكود:**\n```python\n{code}\n```\n\n⚠️ خطأ في التنفيذ: {str(e)}"}
-
-def dataanalyst_agent(state: AgentState):
-    task = state['task']
-    df = st.session_state.get("uploaded_data")
-    
-    if df is not None:
-        info = f"""البيانات المتاحة:
-- عدد الصفوف: {df.shape[0]}
-- عدد الأعمدة: {df.shape[1]}
-- أسماء الأعمدة: {list(df.columns)}
-- أنواع البيانات:
-{df.dtypes.to_string()}
-
-- أول 5 صفوف:
-{df.head().to_string()}
-
-- الإحصائيات الوصفية:
-{df.describe().to_string()}
-"""
-        prompt = IDENTITY + f"""أنت محلل بيانات خبير. لديك البيانات التالية:
-{info}
-
-المهمة: {task}
-
-قدم تحليلاً مفصلاً ومنظماً بالعربية مع أرقام حقيقية من البيانات."""
-    else:
-        prompt = IDENTITY + f"""أنت محلل بيانات خبير. حلل المهمة: {task}
-        
-ملاحظة: لم يتم رفع أي بيانات. قدم تحليلاً عاماً أو اقترح على المستخدم رفع ملف CSV/Excel."""
-    
-    response = llm.invoke([SystemMessage(content=prompt)])
-    return {"result": f"📊 **DataAnalyst**\n\n{response.content}"}
-
-def assistant_agent(state: AgentState):
-    history = state.get("history", [])
-    history_text = "\n".join([f"{m['role']}: {m['content']}" for m in history[-10:]]) if history else ""
-    prompt = IDENTITY + f"""أنت مساعد ذكاء اصطناعي عام. أجب بشكل واضح ومفيد.
-    السياق: {history_text}
-    السؤال: {state['task']}"""
-    response = llm.invoke([SystemMessage(content=prompt)])
-    return {"result": f"🤖 **Assistant**\n\n{response.content}"}
-
-workflow = StateGraph(AgentState)
-workflow.add_node("CEO", ceo_orchestrator)
-workflow.add_node("Researcher", researcher_agent)
-workflow.add_node("CMO", cmo_agent)
-workflow.add_node("SalesRep", salesrep_agent)
-workflow.add_node("Dev", dev_agent)
-workflow.add_node("DataAnalyst", dataanalyst_agent)
-workflow.add_node("Assistant", assistant_agent)
-workflow.set_entry_point("CEO")
-workflow.add_conditional_edges("CEO", lambda state: state["next_agent"], {
-    "Researcher": "Researcher", "CMO": "CMO", "SalesRep": "SalesRep",
-    "Dev": "Dev", "DataAnalyst": "DataAnalyst", "Assistant": "Assistant"
-})
-for agent in ["Researcher", "CMO", "SalesRep", "Dev", "DataAnalyst", "Assistant"]:
-    workflow.add_edge(agent, END)
-
-memory = MemorySaver()
-init_db()
-app = workflow.compile(checkpointer=memory)
-
-# ===== الترويسة =====
-import base64
-try:
-    with open("logo.jpg", "rb") as _img:
-        _logo = base64.b64encode(_img.read()).decode()
-    st.markdown(f'<div style="text-align: center; margin-bottom: 1rem;"><img src="data:image/jpeg;base64,{_logo}" style="width: 140px; height: 140px; border-radius: 50%; box-shadow: 0 0 40px #00d4ff88; border: 3px solid #00d4ff;"></div>', unsafe_allow_html=True)
-except Exception as _e:
-    pass
-
-st.markdown('<div class="main-header">Yonah Ashkenaz</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">نظام وكلاء الذكاء الاصطناعي لإدارة الشركة</div>', unsafe_allow_html=True)
-
-# ===== شريط الحالة =====
-st.markdown(f"""
-<div class="status-bar">
-    <div><b style="color:#00d4ff;">System Status:</b> Operational <span class="status-dot"></span></div>
-    <div style="color:#6b7a99; font-size:0.85rem;">⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</div>
-</div>
-""", unsafe_allow_html=True)
-
-# ===== الإحصائيات =====
-if "total_tasks" not in st.session_state:
-    st.session_state.total_tasks = 0
-if "agents_used" not in st.session_state:
-    st.session_state.agents_used = {"Researcher": 0, "CMO": 0, "SalesRep": 0, "Dev": 0, "DataAnalyst": 0, "Assistant": 0}
-
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.markdown(f'<div class="stat-card"><div class="stat-number">{st.session_state.total_tasks}</div><div class="stat-label">📋 المهام المنفذة</div></div>', unsafe_allow_html=True)
-with col2:
-    st.markdown(f'<div class="stat-card"><div class="stat-number">7</div><div class="stat-label">🤖 الوكلاء النشطون</div></div>', unsafe_allow_html=True)
-with col3:
-    has_data = "✅" if st.session_state.get("uploaded_data") is not None else "—"
-    st.markdown(f'<div class="stat-card"><div class="stat-number">{has_data}</div><div class="stat-label">📁 البيانات المرفوعة</div></div>', unsafe_allow_html=True)
-with col4:
-    st.markdown(f'<div class="stat-card"><div class="stat-number">🌐</div><div class="stat-label">Tavily: متصل</div></div>', unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# ===== شبكة الوكلاء + الحالة =====
-col_net, col_status = st.columns([2, 1])
-
-with col_net:
-    st.markdown("### 🕸️ شبكة الوكلاء")
-    agents = ["CEO", "Assistant", "Researcher", "CMO", "SalesRep", "Dev", "DataAnalyst"]
-    labels = ["👑 CEO", "🤖 Assistant", "🔍 Researcher", "📢 CMO", "💼 SalesRep", "💻 Dev", "📊 DataAnalyst"]
-    x_pos = [0.5, 0.1, 0.25, 0.42, 0.58, 0.75, 0.9]
-    y_pos = [1.0, 0.4, 0.1, 0.1, 0.1, 0.1, 0.1]
-    
-    edge_x, edge_y = [], []
-    for i in range(1, len(agents)):
-        edge_x.extend([0.5, x_pos[i], None])
-        edge_y.extend([1.0, y_pos[i], None])
-    
-    edge_trace = go.Scatter(x=edge_x, y=edge_y, line=dict(width=1.5, color='#00d4ff44'), hoverinfo='none', mode='lines')
-    node_colors = ['#00d4ff', '#00ff88', '#ff6b6b', '#ffd93d', '#a78bfa', '#4ade80', '#fb923c']
-    node_trace = go.Scatter(
-        x=x_pos, y=y_pos, mode='markers+text', text=labels,
-        textposition="bottom center",
-        textfont=dict(size=13, color='#ffffff', family='Arial'),
-        marker=dict(size=45, color=node_colors, line=dict(width=2, color='#ffffff')),
-        hoverinfo='text',
-        hovertext=[f"{a}<br>المهام: {st.session_state.agents_used.get(a, 0)}" for a in agents]
-    )
-    fig = go.Figure(data=[edge_trace, node_trace], layout=go.Layout(
-        showlegend=False, hovermode='closest',
-        margin=dict(b=0, l=0, r=0, t=0),
-        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[0, 1]),
-        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-0.15, 1.1]),
-        plot_bgcolor='#0a0e1a', paper_bgcolor='#0a0e1a', height=400,
-    ))
-    st.plotly_chart(fig, use_container_width=True)
-
-with col_status:
-    st.markdown("### 📊 حالة الوكلاء")
-    agents_info = [
-        ("👑 CEO", "المنسق الرئيسي"),
-        ("🤖 Assistant", "الأسئلة العامة"),
-        ("🔍 Researcher", "بحث في الإنترنت"),
-        ("📢 CMO", "التسويق والمحتوى"),
-        ("💼 SalesRep", "المبيعات والعملاء"),
-        ("💻 Dev", "توليد وتنفيذ الأكواد"),
-        ("📊 DataAnalyst", "تحليل CSV/Excel"),
+    st.markdown("---")
+    st.markdown("## 🎯 كيف يعمل؟")
+    col1, col2, col3, col4 = st.columns(4)
+    steps = [
+        ("1️⃣", "ارفع الملف", "Excel أو CSV"),
+        ("2️⃣", "انتظر ثوانٍ", "تحليل تلقائي"),
+        ("3️⃣", "راجع النتائج", "قائمة الأخطاء"),
+        ("4️⃣", "حمّل PDF", "تقرير جاهز"),
     ]
-    for name, role in agents_info:
-        st.markdown(f'<div class="agent-card"><div class="agent-name">{name}</div><div class="agent-role">{role}</div></div>', unsafe_allow_html=True)
+    for i, (icon, title, desc) in enumerate(steps):
+        with [col1, col2, col3, col4][i]:
+            st.markdown(f"""
+            <div style="text-align:center; padding:1rem;">
+                <div style="font-size:2rem;">{icon}</div>
+                <div style="font-weight:bold; margin:0.5rem 0;">{title}</div>
+                <div style="color:#666; font-size:0.9rem;">{desc}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-st.markdown("---")
+    st.markdown("---")
+    st.markdown("## 💰 الأسعار")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div class="price-card">
+            <h3>Basic</h3>
+            <div class="price-amount">500 <span class="price-currency">درهم/شهر</span></div>
+            <p>10 ملفات شهرياً</p>
+            <p>✓ تحليل كامل</p>
+            <p>✓ تقارير PDF</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="price-card featured">
+            <h3>Pro 🔥</h3>
+            <div class="price-amount">1,200 <span class="price-currency">درهم/شهر</span></div>
+            <p>50 ملف شهرياً</p>
+            <p>✓ كل ميزات Basic</p>
+            <p>✓ 3 لغات</p>
+            <p>✓ دعم أولوية</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div class="price-card">
+            <h3>Business</h3>
+            <div class="price-amount">2,500 <span class="price-currency">درهم/شهر</span></div>
+            <p>غير محدود</p>
+            <p>✓ كل ميزات Pro</p>
+            <p>✓ تخصيص كامل</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-# ===== جلسة الذاكرة =====
-if "thread_id" not in st.session_state:
-    st.session_state.thread_id = f"user_{os.urandom(4).hex()}"
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align:center; padding:2rem;">
+        <h2>📞 ابدأ اليوم</h2>
+        <p style="font-size:1.1rem; color:#666;">جرّب مجاناً لمدة 7 أيام، بدون التزام.</p>
+        <p style="font-size:1.2rem; margin-top:1rem; direction:ltr; text-align:center;">
+            📧 <b>ashkenazyonah@gmail.com</b><br>
+            💬 <b>WhatsApp: +212719082215</b>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# ===== منطقة المحادثة =====
-st.markdown("### 💬 المحادثة")
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# =====================================================
+# الصفحة 2: تطبيق المحاسب
+# =====================================================
+def show_app():
+    # زر الرجوع
+    col1, col2 = st.columns([1, 5])
+    with col1:
+        if st.button("← الرئيسية", key="back_btn"):
+            st.session_state.page = "landing"
+            st.rerun()
 
-if prompt := st.chat_input("ما هي المهمة التي تريدها؟"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    
-    with st.chat_message("assistant"):
-        with st.spinner("⏳ الوكلاء يعملون..."):
-            history = [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[:-1]]
-            config = {"configurable": {"thread_id": st.session_state.thread_id}}
-            final_state = app.invoke({"task": prompt, "history": history}, config=config)
-            result = final_state.get("result", "لا توجد نتيجة")
-            next_agent = final_state.get("next_agent", "")
-            st.markdown(result)
-    
-    st.session_state.messages.append({"role": "assistant", "content": result})
-    save_task(prompt, next_agent, result)
-    st.session_state.total_tasks += 1
-    if next_agent in st.session_state.agents_used:
-        st.session_state.agents_used[next_agent] += 1
-    st.rerun()
+    # اختيار اللغة
+    with st.sidebar:
+        st.markdown("### 🌍 Language")
+        lang_choice = st.selectbox(
+            "Choisir la langue",
+            options=["ar", "fr", "en"],
+            format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x],
+            index=["ar", "fr", "en"].index(st.session_state.lang)
+        )
+        st.session_state.lang = lang_choice
 
-# ===== الشريط الجانبي =====
-with st.sidebar:
-    st.markdown("### 📁 رفع البيانات")
-    uploaded_file = st.file_uploader("ارفع ملف CSV أو Excel للتحليل", type=["csv", "xlsx", "xls"])
-    if uploaded_file is not None:
-        try:
-            if uploaded_file.name.endswith(".csv"):
-                df = pd.read_csv(uploaded_file)
-            else:
-                df = pd.read_excel(uploaded_file)
-            st.session_state.uploaded_data = df
-            st.success(f"✅ تم تحميل: {df.shape[0]} صف × {df.shape[1]} عمود")
-            with st.expander("👁️ معاينة البيانات"):
-                st.dataframe(df.head(10))
-        except Exception as e:
-            st.error(f"خطأ في قراءة الملف: {str(e)}")
+        st.markdown("---")
+        st.markdown(f"### 📁 {get_text(lang_choice, 'upload_file')}")
+        uploaded = st.file_uploader(
+            get_text(lang_choice, "choose_file"),
+            type=['xlsx', 'xls', 'csv']
+        )
+        st.markdown("---")
+        st.markdown("### ℹ️ Steps")
+        st.markdown(f"""
+        {get_text(lang_choice, 'step1')}
+        
+        {get_text(lang_choice, 'step2')}
+        
+        {get_text(lang_choice, 'step3')}
+        
+        {get_text(lang_choice, 'step4')}
+        """)
+
+    lang = st.session_state.lang
+
+    st.markdown('<div class="app-header">📊 Yonah Ashkenaz</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="app-sub">{get_text(lang, "subtitle")}</div>', unsafe_allow_html=True)
+
+    if uploaded is None:
+        st.info(f"👈 {get_text(lang, 'upload_prompt')}")
+        return
+
+    temp_path = f"/tmp/{uploaded.name}"
+    with open(temp_path, "wb") as f:
+        f.write(uploaded.getbuffer())
+
+    agent = AccountantAgent()
+    load_result = agent.load_file(temp_path)
+
+    if not load_result['success']:
+        st.error(f"❌ {get_text(lang, 'file_error')}: {load_result.get('error')}")
+        return
+
+    st.markdown(f"### 📂 {get_text(lang, 'file_label')}: `{uploaded.name}`")
+    st.markdown(f"**{get_text(lang, 'rows_count')}:** {load_result['rows']} | **{get_text(lang, 'columns_count')}:** {len(load_result['columns'])}")
+
+    cols = agent.detect_columns()
+    if not cols['debit'] or not cols['credit']:
+        st.error(f"⚠️ {get_text(lang, 'columns_error')}")
+        st.write("**Columns detected:**", load_result['columns'])
+        return
+
+    balance = agent.check_balance(cols['debit'], cols['credit'])
+    issues = agent.find_issues(cols['debit'], cols['credit'], lang=lang)
+    summary = agent.generate_summary(cols['debit'], cols['credit'])
+
+    st.markdown("---")
+    st.markdown(f"### 📊 {get_text(lang, 'analysis_results')}")
+
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.metric(f"📋 {get_text(lang, 'rows_count')}", summary['total_rows'])
+    with c2:
+        st.metric(f"💰 {get_text(lang, 'total_debit')}", f"{summary['total_debit']:,.2f}")
+    with c3:
+        st.metric(f"💵 {get_text(lang, 'total_credit')}", f"{summary['total_credit']:,.2f}")
+    with c4:
+        st.metric(f"⚠️ {get_text(lang, 'issues_count')}", summary['issues_count'])
+
+    st.markdown("---")
+
+    if balance.get('balanced'):
+        st.markdown(f'<div class="success-box"><b>✅ {get_text(lang, "balance_ok")}</b></div>', unsafe_allow_html=True)
     else:
-        if st.session_state.get("uploaded_data") is not None:
-            df = st.session_state.uploaded_data
-            st.markdown(f'<div class="data-badge">📊 {df.shape[0]} صف × {df.shape[1]} عمود</div>', unsafe_allow_html=True)
-    
+        st.markdown(f'<div class="error-box"><b>❌ {get_text(lang, "balance_warning")}</b><br>{get_text(lang, "difference")}: <b>{balance.get("difference", 0):,.2f}</b></div>', unsafe_allow_html=True)
+
+    st.markdown(f"### ⚠️ {get_text(lang, 'issues')}")
+    if issues:
+        for i, issue in enumerate(issues, 1):
+            st.markdown(f'<div class="issue-box">{i}. {issue}</div>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div class="success-box">{get_text(lang, "no_issues")} ✅</div>', unsafe_allow_html=True)
+
     st.markdown("---")
-    st.markdown("### 📜 السجل")
-    total, by_agent = get_stats()
-    st.markdown(f"**إجمالي المهام:** {total}")
-    if by_agent:
-        for agent_name, count in by_agent:
-            st.markdown(f"- **{agent_name}**: {count} مهمة")
-    with st.expander("📋 عرض آخر 10 مهام"):
-        tasks = get_tasks(limit=10)
-        if tasks:
-            for ts, user_in, agent, resp in tasks:
-                st.markdown(f"**{ts}** | `{agent}`")
-                st.caption(f"👤 {user_in[:80]}")
-                st.markdown("---")
-        else:
-            st.info("لا توجد مهام مسجلة بعد.")
+    with st.expander(f"👁️ {get_text(lang, 'preview')}"):
+        st.dataframe(agent.df.head(10))
+
     st.markdown("---")
-    st.markdown("### ⚙️ التحكم")
-    if st.button("🗑️ مسح المحادثة"):
-        st.session_state.messages = []
-        st.session_state.thread_id = f"user_{os.urandom(4).hex()}"
-        st.rerun()
-    if st.button("🔄 إعادة تعيين الإحصائيات"):
-        st.session_state.total_tasks = 0
-        st.session_state.agents_used = {"Researcher": 0, "CMO": 0, "SalesRep": 0, "Dev": 0, "DataAnalyst": 0, "Assistant": 0}
-        st.rerun()
-    if st.button("🗑️ حذف البيانات المرفوعة"):
-        st.session_state.uploaded_data = None
-        st.rerun()
-    if st.button("📄 توليد تقرير PDF"):
-        if st.session_state.get("messages"):
-            try:
-                pdf_path = generate_pdf(st.session_state.messages)
-                with open(pdf_path, "rb") as f:
-                    st.download_button("⬇️ تحميل التقرير", f, file_name="sureflow_report.pdf", mime="application/pdf")
-            except Exception as e:
-                st.error(f"خطأ: {str(e)}")
-        else:
-            st.warning("لا توجد محادثة لتوليد تقرير")
+    st.markdown(f"### 📄 {get_text(lang, 'report')}")
+
+    if st.button(f"📥 {get_text(lang, 'generate_pdf')}", use_container_width=True, key="pdf_btn"):
+        with st.spinner(get_text(lang, "generating")):
+            pdf_file = generate_accounting_pdf(summary, balance, issues, lang=lang)
+            with open(pdf_file, "rb") as f:
+                st.download_button(
+                    f"⬇️ {get_text(lang, 'download_pdf')}",
+                    f,
+                    file_name=f"report_{lang}_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+
+
+# === Router ===
+if st.session_state.page == "landing":
+    show_landing()
+else:
+    show_app()
