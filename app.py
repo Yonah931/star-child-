@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 from accountant import AccountantAgent, generate_accounting_pdf
 from translations import get_text
+from hr import HRAgent
+from cfo import CFOAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -101,6 +103,40 @@ def show_landing():
         """, unsafe_allow_html=True)
         if st.button("🚀 جرّب الوكلاء", key="go_agents", use_container_width=True):
             st.session_state.page = "agents"
+            st.rerun()
+
+    # صف ثانٍ
+    st.markdown("---")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <div class="feature-title">وكيل الموارد البشرية</div>
+            <div class="feature-desc">
+                فرز السير الذاتية، توليد إعلانات التوظيف،<br>
+                أسئلة المقابلات، تحليل المرشحين.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🚀 جرّب HR", key="go_hr", use_container_width=True):
+            st.session_state.page = "hr"
+            st.rerun()
+
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <div class="feature-title">المدير المالي (CFO)</div>
+            <div class="feature-desc">
+                تحليل الربحية، حساب الضرائب،<br>
+                التدفق النقدي، التوصيات المالية.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🚀 جرّب CFO", key="go_cfo", use_container_width=True):
+            st.session_state.page = "cfo"
             st.rerun()
 
     st.markdown("---")
@@ -279,6 +315,224 @@ def show_agents():
 
 
 # ============================================================
+# الصفحة 4: وكيل HR
+# ============================================================
+def show_hr():
+    col1, col2 = st.columns([1, 5])
+    with col1:
+        if st.button("← الرئيسية", key="back_hr"):
+            st.session_state.page = "landing"
+            st.rerun()
+
+    st.markdown('<div class="main-header">👥 وكيل الموارد البشرية</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">فرز CV • إعلانات توظيف • أسئلة مقابلات</div>', unsafe_allow_html=True)
+
+    # التبويبات
+    tab1, tab2, tab3 = st.tabs(["🔍 فرز CV", "📢 إعلان توظيف", "❓ أسئلة المقابلة"])
+
+    # === تبويب 1: فرز CV ===
+    with tab1:
+        st.markdown("### ارفع ملف السير الذاتية (Excel/CSV)")
+        st.markdown("يجب أن يحتوي الملف على أعمدة: `Name`, `Email`, `Experience`, `Skills`")
+
+        uploaded = st.file_uploader("اختر الملف", type=['xlsx', 'xls', 'csv'], key="hr_cv_upload")
+
+        if uploaded:
+            temp_path = f"/tmp/{uploaded.name}"
+            with open(temp_path, "wb") as f:
+                f.write(uploaded.getbuffer())
+
+            hr = HRAgent()
+            result = hr.load_cvs(temp_path)
+
+            if not result['success']:
+                st.error(f"❌ خطأ: {result['error']}")
+            else:
+                st.success(f"✅ تم تحميل {result['count']} سيرة ذاتية")
+
+                st.markdown("---")
+                st.markdown("### ⚙️ معايير الفرز")
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    skills_input = st.text_input("المهارات المطلوبة (مفصولة بفاصلة)", "Python, Git, SQL")
+                with col2:
+                    min_exp = st.number_input("الحد الأدنى للخبرة (سنوات)", 0, 20, 2)
+
+                if st.button("🔍 ابدأ الفرز", key="hr_screen_btn", use_container_width=True):
+                    skills = [s.strip() for s in skills_input.split(',')]
+                    candidates = hr.screen_cvs(required_skills=skills, min_experience=min_exp, lang='ar')
+
+                    st.markdown("---")
+                    st.markdown(f"### 🏆 أفضل المرشحين ({len(candidates)})")
+
+                    for i, c in enumerate(candidates, 1):
+                        with st.expander(f"#{i} {c['name']} — ⭐ {c['score']}/100"):
+                            st.markdown(f"**📧 البريد:** {c['email']}")
+                            st.markdown(f"**💼 الخبرة:** {c['experience']} سنوات")
+                            st.markdown(f"**✅ المهارات المطابقة:** {', '.join(c['matched_skills']) or '—'}")
+
+                    stats = hr.get_statistics()
+                    st.markdown("---")
+                    st.markdown("### 📊 الإحصائيات")
+                    c1, c2, c3, c4 = st.columns(4)
+                    c1.metric("📋 المرشحون", stats.get('total_candidates', 0))
+                    c2.metric("⭐ متوسط النقاط", stats.get('average_score', 0))
+                    c3.metric("💼 متوسط الخبرة", f"{stats.get('average_experience', 0)} سنوات")
+                    c4.metric("🏆 الأفضل", stats.get('top_candidate', '—'))
+
+    # === تبويب 2: إعلان توظيف ===
+    with tab2:
+        st.markdown("### 📢 توليد إعلان توظيف")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            job_type = st.selectbox("نوع الوظيفة",
+                options=["developer", "accountant", "sales", "marketing", "hr"],
+                format_func=lambda x: {
+                    "developer": "💻 مطور برمجيات",
+                    "accountant": "📊 محاسب",
+                    "sales": "💼 مندوب مبيعات",
+                    "marketing": "📢 مسؤول تسويق",
+                    "hr": "👥 مسؤول HR"
+                }[x])
+        with col2:
+            company_name = st.text_input("اسم الشركة", "Yonah Tech")
+
+        lang_job = st.selectbox("اللغة", ["ar", "fr", "en"],
+            format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
+
+        if st.button("📢 توليد الإعلان", key="hr_job_btn", use_container_width=True):
+            hr = HRAgent()
+            posting = hr.generate_job_posting(job_type, company_name, lang=lang_job)
+            st.markdown("---")
+            st.markdown("### 📄 الإعلان الجاهز")
+            st.text_area("", posting, height=400)
+
+    # === تبويب 3: أسئلة المقابلة ===
+    with tab3:
+        st.markdown("### ❓ أسئلة المقابلة")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            category = st.selectbox("الفئة", ["general", "technical"],
+                format_func=lambda x: {"general": "📋 عامة", "technical": "💼 تقنية"}[x])
+        with col2:
+            lang_q = st.selectbox("اللغة ", ["ar", "fr", "en"],
+                format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
+
+        if st.button("❓ توليد الأسئلة", key="hr_q_btn", use_container_width=True):
+            hr = HRAgent()
+            questions = hr.get_interview_questions(category, lang_q)
+            st.markdown("---")
+            for i, q in enumerate(questions, 1):
+                st.markdown(f"**{i}.** {q}")
+
+
+# ============================================================
+# الصفحة 5: وكيل CFO
+# ============================================================
+def show_cfo():
+    col1, col2 = st.columns([1, 5])
+    with col1:
+        if st.button("← الرئيسية", key="back_cfo"):
+            st.session_state.page = "landing"
+            st.rerun()
+
+    st.markdown('<div class="main-header">💰 المدير المالي (CFO)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">تحليل الربحية • حساب الضرائب • التدفق النقدي • التوصيات</div>', unsafe_allow_html=True)
+
+    with st.sidebar:
+        st.markdown("### 📁 رفع البيانات المالية")
+        uploaded = st.file_uploader(
+            "ملف Excel/CSV",
+            type=['xlsx', 'xls', 'csv'],
+            key="cfo_upload"
+        )
+        st.markdown("---")
+        st.markdown("### ℹ️ الأعمدة المطلوبة")
+        st.markdown("""
+        - **Revenus** أو **Revenue** (الإيرادات)
+        - **Dépenses** أو **Expense** (المصاريف)
+        - **Date** (التاريخ) — اختياري
+        """)
+
+    if uploaded is None:
+        st.info("👈 ارفع ملف البيانات المالية من الشريط الجانبي")
+        return
+
+    temp_path = f"/tmp/{uploaded.name}"
+    with open(temp_path, "wb") as f:
+        f.write(uploaded.getbuffer())
+
+    cfo = CFOAgent()
+    result = cfo.load_file(temp_path)
+
+    if not result['success']:
+        st.error(f"❌ خطأ: {result['error']}")
+        return
+
+    st.markdown(f"### 📂 الملف: `{uploaded.name}`")
+    st.markdown(f"**عدد الصفوف:** {result['rows']}")
+
+    cols = cfo.detect_columns()
+    if not cols['revenue'] or not cols['expense']:
+        st.error("⚠️ لم يتم العثور على أعمدة الإيرادات والمصاريف")
+        st.write("**الأعمدة المكتشفة:**", result['columns'])
+        return
+
+    # التحليل
+    cfo.analyze_profitability(cols['revenue'], cols['expense'])
+    cfo.calculate_taxes()
+    cfo.analyze_cash_flow()
+    cfo.generate_recommendations()
+
+    summary = cfo.summary
+    taxes = cfo.taxes
+
+    st.markdown("---")
+    st.markdown("### 📊 تحليل الربحية")
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("💰 إجمالي الإيرادات", f"{summary['total_revenue']:,.2f}")
+    c2.metric("💸 إجمالي المصاريف", f"{summary['total_expense']:,.2f}")
+    c3.metric("📈 الربح الصافي", f"{summary['net_profit']:,.2f}")
+    c4.metric("🎯 الهامش", f"{summary['margin_percent']}%")
+
+    st.markdown("---")
+    st.markdown("### 💰 الضرائب (المغرب 2026)")
+
+    t1, t2, t3, t4 = st.columns(4)
+    t1.metric("TVA (20%)", f"{taxes['tva']:,.2f}")
+    t2.metric("IS (20%)", f"{taxes['is']:,.2f}")
+    t3.metric("CNSS (26.77%)", f"{taxes['cnss']:,.2f}")
+    t4.metric("إجمالي الضرائب", f"{taxes['total_taxes']:,.2f}")
+
+    st.markdown("---")
+    st.markdown("### 💵 التدفق النقدي")
+
+    f1, f2 = st.columns(2)
+    f1.metric("Cash Flow", f"{summary['cash_flow']:,.2f}")
+    f2.metric("معدل الاستهلاك الشهري", f"{summary['monthly_burn']:,.2f}")
+
+    st.markdown("---")
+    st.markdown("### 💡 التوصيات الذكية")
+
+    for insight in cfo.insights:
+        itype = insight['type']
+        msg = insight['message']
+
+        if itype == 'success':
+            st.markdown(f'<div class="success-box">{msg}</div>', unsafe_allow_html=True)
+        elif itype == 'warning':
+            st.markdown(f'<div class="issue-box">{msg}</div>', unsafe_allow_html=True)
+        elif itype == 'danger':
+            st.markdown(f'<div class="error-box">{msg}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="success-box">{msg}</div>', unsafe_allow_html=True)
+
+
+# ============================================================
 # Router
 # ============================================================
 if st.session_state.page == "landing":
@@ -287,3 +541,7 @@ elif st.session_state.page == "accountant":
     show_accountant()
 elif st.session_state.page == "agents":
     show_agents()
+elif st.session_state.page == "hr":
+    show_hr()
+elif st.session_state.page == "cfo":
+    show_cfo()
