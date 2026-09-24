@@ -267,7 +267,7 @@ def show_agents():
 
     st.link_button(
         "🚀 افتح نظام الوكلاء السبعة",
-        "https://sureflow-agentic-os9.streamlit.app",
+        "https://yonah-agents.streamlit.app",
         use_container_width=True
     )
 
