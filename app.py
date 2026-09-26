@@ -5,6 +5,7 @@ from accountant import AccountantAgent, generate_accounting_pdf
 from translations import get_text
 from hr import HRAgent
 from cfo import CFOAgent
+from reports import generate_hr_report, generate_cfo_report
 
 # نظام الوكلاء السبعة
 import sys
@@ -362,17 +363,26 @@ def show_hr():
                 if st.button("🔍 ابدأ الفرز", key="hr_screen_btn", use_container_width=True):
                     skills = [s.strip() for s in skills_input.split(',')]
                     candidates = hr.screen_cvs(required_skills=skills, min_experience=min_exp, lang='ar')
+                    stats = hr.get_statistics()
+                    # حفظ النتائج
+                    st.session_state['hr_candidates'] = candidates
+                    st.session_state['hr_stats'] = stats
+                    st.session_state['hr_screened'] = True
+
+                # عرض النتائج (حتى بعد إعادة التشغيل)
+                if st.session_state.get('hr_screened'):
+                    candidates = st.session_state['hr_candidates']
+                    stats = st.session_state['hr_stats']
 
                     st.markdown("---")
                     st.markdown(f"### 🏆 أفضل المرشحين ({len(candidates)})")
 
                     for i, c in enumerate(candidates, 1):
-                        with st.expander(f"#{i} {c['name']} — ⭐ {c['score']}/100"):
+                        with st.expander(f"#{i} {c['name']} — {c['score']}/100"):
                             st.markdown(f"**📧 البريد:** {c['email']}")
                             st.markdown(f"**💼 الخبرة:** {c['experience']} سنوات")
                             st.markdown(f"**✅ المهارات المطابقة:** {', '.join(c['matched_skills']) or '—'}")
 
-                    stats = hr.get_statistics()
                     st.markdown("---")
                     st.markdown("### 📊 الإحصائيات")
                     c1, c2, c3, c4 = st.columns(4)
@@ -380,6 +390,44 @@ def show_hr():
                     c2.metric("⭐ متوسط النقاط", stats.get('average_score', 0))
                     c3.metric("💼 متوسط الخبرة", f"{stats.get('average_experience', 0)} سنوات")
                     c4.metric("🏆 الأفضل", stats.get('top_candidate', '—'))
+
+                    # === زر تقرير PDF ===
+                    st.markdown("---")
+                    st.markdown("### 📄 توليد التقرير")
+
+                    col_a, col_b = st.columns(2)
+                    with col_a:
+                        if st.button("📥 تقرير PDF (عربي)", key="hr_pdf_ar", use_container_width=True):
+                            with st.spinner("جاري التوليد..."):
+                                pdf_path = generate_hr_report(candidates, stats, lang='ar')
+                                with open(pdf_path, "rb") as f:
+                                    st.session_state['hr_pdf_ar_bytes'] = f.read()
+                                st.session_state['hr_pdf_ar_ready'] = True
+                    with col_b:
+                        if st.button("📥 Rapport PDF (Français)", key="hr_pdf_fr", use_container_width=True):
+                            with st.spinner("Génération..."):
+                                pdf_path = generate_hr_report(candidates, stats, lang='fr')
+                                with open(pdf_path, "rb") as f:
+                                    st.session_state['hr_pdf_fr_bytes'] = f.read()
+                                st.session_state['hr_pdf_fr_ready'] = True
+
+                    # أزرار التحميل
+                    if st.session_state.get('hr_pdf_ar_ready'):
+                        st.download_button(
+                            "⬇️ تحميل التقرير العربي",
+                            st.session_state['hr_pdf_ar_bytes'],
+                            file_name=f"hr_report_ar_{datetime.now().strftime('%Y%m%d')}.pdf",
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
+                    if st.session_state.get('hr_pdf_fr_ready'):
+                        st.download_button(
+                            "⬇️ Télécharger le rapport",
+                            st.session_state['hr_pdf_fr_bytes'],
+                            file_name=f"hr_report_fr_{datetime.now().strftime('%Y%m%d')}.pdf",
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
 
     # === تبويب 2: إعلان توظيف ===
     with tab2:
@@ -530,6 +578,44 @@ def show_cfo():
             st.markdown(f'<div class="error-box">{msg}</div>', unsafe_allow_html=True)
         else:
             st.markdown(f'<div class="success-box">{msg}</div>', unsafe_allow_html=True)
+
+    # === زر تقرير PDF ===
+    st.markdown("---")
+    st.markdown("### 📄 توليد التقرير المالي")
+
+    col_a, col_b = st.columns(2)
+    with col_a:
+        if st.button("📥 تقرير PDF (عربي)", key="cfo_pdf_ar", use_container_width=True):
+            with st.spinner("جاري التوليد..."):
+                pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='ar')
+                with open(pdf_path, "rb") as f:
+                    st.session_state['cfo_pdf_ar_bytes'] = f.read()
+                st.session_state['cfo_pdf_ar_ready'] = True
+    with col_b:
+        if st.button("📥 Rapport PDF (Français)", key="cfo_pdf_fr", use_container_width=True):
+            with st.spinner("Génération..."):
+                pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='fr')
+                with open(pdf_path, "rb") as f:
+                    st.session_state['cfo_pdf_fr_bytes'] = f.read()
+                st.session_state['cfo_pdf_fr_ready'] = True
+
+    # أزرار التحميل
+    if st.session_state.get('cfo_pdf_ar_ready'):
+        st.download_button(
+            "⬇️ تحميل التقرير العربي",
+            st.session_state['cfo_pdf_ar_bytes'],
+            file_name=f"cfo_report_ar_{datetime.now().strftime('%Y%m%d')}.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
+    if st.session_state.get('cfo_pdf_fr_ready'):
+        st.download_button(
+            "⬇️ Télécharger le rapport",
+            st.session_state['cfo_pdf_fr_bytes'],
+            file_name=f"cfo_report_fr_{datetime.now().strftime('%Y%m%d')}.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
 
 
 # ============================================================
