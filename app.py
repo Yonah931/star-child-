@@ -6,6 +6,7 @@ from translations import get_text
 from hr import HRAgent
 from cfo import CFOAgent
 from reports import generate_hr_report, generate_cfo_report
+from invoice import InvoiceAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -139,6 +140,10 @@ def show_landing():
         if st.button("🚀 جرّب CFO", key="go_cfo", use_container_width=True):
             st.session_state.page = "cfo"
             st.rerun()
+
+    if st.button("🧾 جرّب Invoice", use_container_width=True, key="btn_invoice"):
+        st.session_state.page = "invoice"
+        st.rerun()
 
     st.markdown("---")
     st.markdown("## 💰 الأسعار")
@@ -619,6 +624,70 @@ def show_cfo():
 
 
 # ============================================================
+def show_invoice():
+    lang = st.selectbox("Choix", ["fr", "ar", "en"], key="inv_lang_main")
+    st.session_state.lang = lang
+    st.markdown('<div class="main-header">🧾 Yonah Invoice</div>', unsafe_allow_html=True)
+    if st.button("⬅️ رجوع", key="inv_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+    st.markdown("### 📝 بيانات الفاتورة")
+    client_name = st.text_input("اسم العميل *", key="inv_client")
+    client_address = st.text_input("عنوان العميل", key="inv_addr")
+    n_items = st.number_input("عدد البنود", min_value=1, max_value=20, value=1, step=1, key="inv_n")
+    items = []
+    for i in range(int(n_items)):
+        st.markdown(f"**البند {i+1}**")
+        desc = st.text_input("الوصف", key=f"inv_desc_{i}")
+        qty = st.number_input("الكمية", min_value=0.01, value=1.0, step=1.0, key=f"inv_qty_{i}")
+        price = st.number_input("السعر (درهم)", min_value=0.0, value=100.0, step=10.0, key=f"inv_price_{i}")
+        items.append({"description": desc or f"بند {i+1}", "quantity": qty, "unit_price": price})
+    if st.button("🔨 إنشاء الفاتورة", type="primary", key="inv_create"):
+        if not client_name.strip():
+            st.error("⚠️ اسم العميل مطلوب")
+        else:
+            try:
+                agent = InvoiceAgent()
+                inv = agent.create_invoice(client_name=client_name, client_address=client_address or "-", items=items, tax_rate=0.20)
+                st.session_state["inv_dict"] = inv
+                st.success(f"✅ تم إنشاء الفاتورة {inv['number']}")
+            except Exception as e:
+                st.error(f"خطأ: {e}")
+    if "inv_dict" in st.session_state:
+        inv = st.session_state["inv_dict"]
+        st.divider()
+        st.markdown("### 👁️ معاينة الفاتورة")
+        st.markdown(f"**رقم الفاتورة:** {inv['number']} | **التاريخ:** {inv['date']}")
+        st.markdown(f"**العميل:** {inv['client_name']}")
+        items_display = [{"الوصف": it["description"], "الكمية": it["quantity"], "السعر": f"{it['unit_price']:.2f}", "المجموع": f"{it['quantity'] * it['unit_price']:.2f}"} for it in inv["items"]]
+        st.dataframe(items_display, use_container_width=True, hide_index=True)
+        c1, c2, c3 = st.columns(3)
+        c1.metric("المجموع HT", f"{inv['subtotal']:.2f} DH")
+        c2.metric(f"TVA {int(inv['tax_rate'] * 100)}%", f"{inv['tax']:.2f} DH")
+        c3.metric("المجموع TTC", f"{inv['total']:.2f} DH")
+        if st.button("📄 توليد PDF", type="primary", key="inv_pdf"):
+            try:
+                with st.spinner("جاري التوليد..."):
+                    agent = InvoiceAgent()
+                    pdf_path = agent.generate_pdf(inv, lang=lang)
+                if pdf_path and os.path.exists(pdf_path):
+                    with open(pdf_path, "rb") as f:
+                        pdf_bytes = f.read()
+                    st.session_state["inv_pdf_bytes"] = pdf_bytes
+                    st.session_state["inv_pdf_name"] = pdf_path
+                    st.success("✅ تم توليد الفاتورة")
+                else:
+                    st.error(f"❌ لم يُنشأ الملف: {pdf_path}")
+            except Exception as e:
+                st.error(f"خطأ: {e}")
+        if st.session_state.get("inv_pdf_bytes"):
+            st.download_button("⬇️ تحميل PDF", data=st.session_state["inv_pdf_bytes"], file_name=os.path.basename(st.session_state["inv_pdf_name"]), mime="application/pdf", use_container_width=True, key="inv_dl")
+        if st.button("🗑️ مسح", key="inv_clear"):
+            for k in ["inv_dict", "inv_pdf_bytes", "inv_pdf_name"]:
+                st.session_state.pop(k, None)
+            st.rerun()
+
+
 # Router
 # ============================================================
 if st.session_state.page == "landing":
@@ -631,3 +700,5 @@ elif st.session_state.page == "hr":
     show_hr()
 elif st.session_state.page == "cfo":
     show_cfo()
+elif st.session_state.page == "invoice":
+    show_invoice()
