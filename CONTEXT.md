@@ -33,3 +33,22 @@ create_invoice(client_name, client_address, items, tax_rate=0.20) -> dict
 # items = [{"description": str, "quantity": float, "unit_price": float}]
 # يرجع: {number, date, client_name, client_address, items, subtotal, tax, total, tax_rate}
 generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
+
+
+## 16. Moroccan Admin Agent
+- الملف: moroccan_admin.py
+- الفئة: MoroccanAdmin
+- الدوال:
+  - calculate_tva(sales_ht, purchases_ht, rate) -> dict
+  - calculate_is(annual_revenue, annual_expenses) -> dict
+  - calculate_ir_annual(annual_net_salary) -> dict
+  - calculate_payroll(salary_brut) -> dict
+  - get_tax_calendar(year) -> list
+  - get_upcoming_deadlines(days) -> list
+- معدلات 2025:
+  - TVA: 20%, 14%, 10%, 7%, exempt
+  - IS: 10% / 20% / 31% / 34%
+  - IR: 0% / 10% / 20% / 30% / 34% / 37%
+  - CNSS موظف: 4.48% (سقف 6000)
+  - AMO موظف: 2.26%
+  - CNSS صاحب عمل: 21.09%

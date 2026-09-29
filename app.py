@@ -7,6 +7,7 @@ from hr import HRAgent
 from cfo import CFOAgent
 from reports import generate_hr_report, generate_cfo_report
 from invoice import InvoiceAgent
+from moroccan_admin import MoroccanAdmin
 
 # نظام الوكلاء السبعة
 import sys
@@ -143,6 +144,10 @@ def show_landing():
 
     if st.button("🧾 جرّب Invoice", use_container_width=True, key="btn_invoice"):
         st.session_state.page = "invoice"
+        st.rerun()
+
+    if st.button("🇲🇦 جرّب Moroccan Admin", use_container_width=True, key="btn_moroccan"):
+        st.session_state.page = "moroccan_admin"
         st.rerun()
 
     st.markdown("---")
@@ -690,6 +695,76 @@ def show_invoice():
 
 # Router
 # ============================================================
+def show_moroccan_admin():
+    st.markdown('<div class="main-header">🇲🇦 Moroccan Admin</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">TVA · IS · IR · CNSS · Payroll</div>', unsafe_allow_html=True)
+    if st.button("⬅️ رجوع", key="ma_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    admin = MoroccanAdmin()
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 TVA", "💰 IS", "👥 Payroll", "📅 التقويم"])
+
+    with tab1:
+        st.markdown("### حساب TVA")
+        c1, c2 = st.columns(2)
+        with c1:
+            sales = st.number_input("المبيعات HT (DH)", min_value=0.0, value=100000.0, step=1000.0, key="ma_sales")
+        with c2:
+            purchases = st.number_input("المشتريات HT (DH)", min_value=0.0, value=40000.0, step=1000.0, key="ma_purch")
+        rate = st.selectbox("المعدل", ["standard", "reduced1", "reduced2", "reduced3", "exempt"],
+                            format_func=lambda x: {"standard":"20%","reduced1":"14%","reduced2":"10%","reduced3":"7%","exempt":"معفى"}[x],
+                            key="ma_rate")
+        if st.button("احسب TVA", type="primary", key="ma_calc_tva"):
+            r = admin.calculate_tva(sales, purchases, rate)
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("TVA محصلة", f"{r['tva_collected']:,.2f} DH")
+            c2.metric("TVA قابلة للخصم", f"{r['tva_deductible']:,.2f} DH")
+            c3.metric("TVA المستحقة", f"{r['tva_due']:,.2f} DH")
+            c4.metric("الحالة", r["status"])
+
+    with tab2:
+        st.markdown("### حساب IS (ضريبة الشركات)")
+        c1, c2 = st.columns(2)
+        with c1:
+            revenue = st.number_input("الإيرادات السنوية (DH)", min_value=0.0, value=500000.0, step=10000.0, key="ma_rev")
+        with c2:
+            expenses = st.number_input("المصاريف السنوية (DH)", min_value=0.0, value=300000.0, step=10000.0, key="ma_exp")
+        if st.button("احسب IS", type="primary", key="ma_calc_is"):
+            r = admin.calculate_is(revenue, expenses)
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("الربح", f"{r['profit']:,.2f} DH")
+            c2.metric("IS", f"{r['is_due']:,.2f} DH")
+            c3.metric("المعدل الفعال", f"{r['effective_rate']}%")
+            c4.metric("الحالة", r["status"])
+
+    with tab3:
+        st.markdown("### حساب Payroll (كشف الراتب)")
+        salary = st.number_input("الأجر الخام الشهري (DH)", min_value=0.0, value=8000.0, step=500.0, key="ma_sal")
+        if st.button("احسب Payroll", type="primary", key="ma_calc_pay"):
+            r = admin.calculate_payroll(salary)
+            st.markdown("**خصومات الموظف:**")
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("CNSS", f"{r['cnss_employee']} DH")
+            c2.metric("AMO", f"{r['amo_employee']} DH")
+            c3.metric("IR", f"{r['ir_monthly']} DH")
+            c4.metric("✅ الصافي", f"{r['net_salary']:,.2f} DH")
+            st.markdown("**على صاحب العمل:**")
+            c1, c2 = st.columns(2)
+            c1.metric("CNSS صاحب العمل", f"{r['cnss_employer']} DH")
+            c2.metric("💰 التكلفة الكلية", f"{r['total_cost_employer']:,.2f} DH")
+
+    with tab4:
+        st.markdown("### 📅 التقويم الضريبي")
+        days = st.slider("الأيام القادمة", 7, 90, 30, key="ma_days")
+        deadlines = admin.get_upcoming_deadlines(days)
+        if deadlines:
+            for d in deadlines:
+                st.markdown(f"{d['urgency']} **{d['date']}** — {d['obligation']} *({d['days_left']} يوم)*")
+        else:
+            st.info(f"لا مواعيد خلال {days} يوماً")
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -702,3 +777,5 @@ elif st.session_state.page == "cfo":
     show_cfo()
 elif st.session_state.page == "invoice":
     show_invoice()
+elif st.session_state.page == "moroccan_admin":
+    show_moroccan_admin()
