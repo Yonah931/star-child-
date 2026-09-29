@@ -52,3 +52,13 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
   - CNSS موظف: 4.48% (سقف 6000)
   - AMO موظف: 2.26%
   - CNSS صاحب عمل: 21.09%
+
+
+## 17. WeasyPrint (حل العربية PDF)
+- الملف: invoice.py v4
+- الطريقة: HTML + CSS RTL → PDF
+- يعمل في: Chrome, Firefox, Evince, Okular (كل العارضات)
+- محلياً: `pip install weasyprint`
+- على Cloud: يحتاج packages.txt (7 مكتبات نظام)
+- packages.txt يحتوي: libpango, libharfbuzz, libffi, libcairo, libgdk-pixbuf, shared-mime-info, fonts-dejavu-core
+- آخر commit: 88d6d52
