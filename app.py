@@ -12,6 +12,7 @@ from customer_support import CustomerSupportAgent
 from content_writer import ContentWriterAgent
 from email_agent import EmailAgent
 from social_media import SocialMediaAgent
+from meeting_notes import MeetingNotesAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -168,6 +169,10 @@ def show_landing():
 
     if st.button("📱 جرّب Social Media", use_container_width=True, key="btn_social_media"):
         st.session_state.page = "social_media"
+        st.rerun()
+
+    if st.button("📝 جرّب Meeting Notes", use_container_width=True, key="btn_meeting_notes"):
+        st.session_state.page = "meeting_notes"
         st.rerun()
 
     st.markdown("---")
@@ -1054,6 +1059,45 @@ def show_social_media():
             st.code(" ".join(agent.suggest_hashtags(topic, platform, lang)))
 
 
+def show_meeting_notes():
+    st.markdown('<div class="main-header">📝 Meeting Notes</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">محاضر اجتماعات · مهام · قرارات</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="mn_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    agent = MeetingNotesAgent()
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="mn_lang")
+    with c2:
+        mtype = st.selectbox("نوع الاجتماع", list(agent.MEETING_TYPES.keys()),
+                             format_func=lambda x: f"{agent.MEETING_TYPES[x]['icon']} {agent.MEETING_TYPES[x][lang]}",
+                             key="mn_type")
+    with c3:
+        date = st.text_input("التاريخ", value=datetime.now().strftime("%Y-%m-%d"), key="mn_date")
+
+    title = st.text_input("عنوان الاجتماع", key="mn_title", placeholder="مثال: اجتماع شهري")
+    transcript = st.text_area("نص الاجتماع *", height=250, key="mn_text",
+                              placeholder="الصق هنا نص الحوار أو الملاحظات...")
+
+    if st.button("📝 توليد المحضر", type="primary", key="mn_generate"):
+        if not transcript.strip():
+            st.error("⚠️ الصق نص الاجتماع")
+        else:
+            with st.spinner("جاري التوليد..."):
+                r = agent.generate_minutes(transcript, mtype, lang, title, date)
+
+            st.divider()
+            st.info(f"المصدر: {r['source']} | النوع: {r['type_label']}")
+            st.markdown(r["minutes"])
+            st.download_button("⬇️ تحميل المحضر (.md)", data=r["minutes"],
+                               file_name=f"meeting_{date}.md", mime="text/markdown",
+                               key="mn_dl")
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -1076,3 +1120,5 @@ elif st.session_state.page == "email_agent":
     show_email_agent()
 elif st.session_state.page == "social_media":
     show_social_media()
+elif st.session_state.page == "meeting_notes":
+    show_meeting_notes()
