@@ -637,6 +637,19 @@ def show_cfo():
 def show_invoice():
     lang = st.selectbox("Choix", ["fr", "ar", "en"], key="inv_lang_main")
     st.session_state.lang = lang
+
+    # زر تحميل النموذج التجريبي
+    demo_path = os.path.join(os.path.dirname(__file__), "demo_invoice.xlsx")
+    if os.path.exists(demo_path):
+        with open(demo_path, "rb") as f:
+            demo_bytes = f.read()
+        st.download_button(
+            "⬇️ تحميل نموذج Excel",
+            data=demo_bytes,
+            file_name="demo_invoice.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            key="inv_demo_dl",
+        )
     st.markdown('<div class="main-header">🧾 Yonah Invoice</div>', unsafe_allow_html=True)
     if st.button("⬅️ رجوع", key="inv_back"):
         st.session_state.page = "landing"
