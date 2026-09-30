@@ -9,6 +9,7 @@ from reports import generate_hr_report, generate_cfo_report
 from invoice import InvoiceAgent
 from moroccan_admin import MoroccanAdmin
 from customer_support import CustomerSupportAgent
+from content_writer import ContentWriterAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -153,6 +154,10 @@ def show_landing():
 
     if st.button("📞 جرّب Customer Support", use_container_width=True, key="btn_customer_support"):
         st.session_state.page = "customer_support"
+        st.rerun()
+
+    if st.button("✍️ جرّب Content Writer", use_container_width=True, key="btn_content_writer"):
+        st.session_state.page = "content_writer"
         st.rerun()
 
     st.markdown("---")
@@ -845,6 +850,90 @@ def show_customer_support():
             st.caption(faq["a"])
 
 
+def show_content_writer():
+    st.markdown('<div class="main-header">✍️ Content Writer</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">مقالات · وصف منتجات · سوشيال ميديا · إعلانات</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="cw_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    agent = ContentWriterAgent()
+
+    # الإعدادات
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="cw_lang")
+    with c2:
+        tone = st.selectbox("النبرة", list(agent.TONES.keys()),
+                            format_func=lambda x: agent.TONES[x][lang],
+                            key="cw_tone")
+    with c3:
+        length = st.selectbox("الطول", list(agent.LENGTHS.keys()),
+                              format_func=lambda x: agent.LENGTHS[x][lang],
+                              key="cw_length")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        content_type = st.selectbox("نوع المحتوى", list(agent.CONTENT_TYPES.keys()),
+                                    format_func=lambda x: f"{agent.CONTENT_TYPES[x]['icon']} {agent.CONTENT_TYPES[x][lang]}",
+                                    key="cw_type")
+    with c2:
+        topic = st.text_input("الموضوع *", key="cw_topic", placeholder="مثال: خدمات المحاسبة")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        audience = st.text_input("الجمهور المستهدف (اختياري)", key="cw_aud")
+    with c2:
+        keywords = st.text_input("كلمات مفتاحية (اختياري)", key="cw_kw")
+
+    if st.button("✍️ توليد المحتوى", type="primary", key="cw_generate"):
+        if not topic.strip():
+            st.error("⚠️ اكتب الموضوع أولاً")
+        else:
+            with st.spinner("جاري التوليد..."):
+                result = agent.generate(content_type, topic, tone, length, lang, audience, keywords)
+
+            st.divider()
+            st.info(f"المصدر: {result['source']} | النوع: {result['type_label']} | النبرة: {result['tone']}")
+
+            st.text_area("المحتوى", value=result["content"], height=400, key="cw_output")
+
+            # أزرار التحميل
+            c1, c2 = st.columns(2)
+            with c1:
+                st.download_button(
+                    "⬇️ تحميل .txt",
+                    data=result["content"],
+                    file_name=f"content_{content_type}_{lang}.txt",
+                    mime="text/plain",
+                    key="cw_dl_txt"
+                )
+            with c2:
+                # اقتراحات إضافية
+                if content_type in ["social", "ad"]:
+                    hashtags = agent.suggest_hashtags(topic, lang=lang)
+                    st.download_button(
+                        "⬇️ تحميل Hashtags",
+                        data=" ".join(hashtags),
+                        file_name=f"hashtags_{lang}.txt",
+                        mime="text/plain",
+                        key="cw_dl_tags"
+                    )
+
+            # Hashtags مقترحة
+            if content_type in ["social", "ad"]:
+                st.markdown("### 🔖 Hashtags مقترحة")
+                hashtags = agent.suggest_hashtags(topic, lang=lang)
+                st.code(" ".join(hashtags))
+
+            # عناوين مقترحة
+            if content_type in ["article", "email"]:
+                st.markdown("### 📰 عناوين مقترحة")
+                for t in agent.suggest_titles(topic, lang=lang):
+                    st.markdown(f"- {t}")
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -861,3 +950,5 @@ elif st.session_state.page == "moroccan_admin":
     show_moroccan_admin()
 elif st.session_state.page == "customer_support":
     show_customer_support()
+elif st.session_state.page == "content_writer":
+    show_content_writer()
