@@ -14,3 +14,4 @@ arabic-reshaper
 python-bidi
 uharfbuzz
 weasyprint
+groq

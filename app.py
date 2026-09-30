@@ -8,6 +8,7 @@ from cfo import CFOAgent
 from reports import generate_hr_report, generate_cfo_report
 from invoice import InvoiceAgent
 from moroccan_admin import MoroccanAdmin
+from customer_support import CustomerSupportAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -148,6 +149,10 @@ def show_landing():
 
     if st.button("🇲🇦 جرّب Moroccan Admin", use_container_width=True, key="btn_moroccan"):
         st.session_state.page = "moroccan_admin"
+        st.rerun()
+
+    if st.button("📞 جرّب Customer Support", use_container_width=True, key="btn_customer_support"):
+        st.session_state.page = "customer_support"
         st.rerun()
 
     st.markdown("---")
@@ -765,6 +770,68 @@ def show_moroccan_admin():
             st.info(f"لا مواعيد خلال {days} يوماً")
 
 
+def show_customer_support():
+    st.markdown('<div class="main-header">📞 Customer Support</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">تصنيف التذاكر · ردود ذكية · إجراءات مقترحة</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="cs_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    agent = CustomerSupportAgent()
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="cs_lang")
+    with c2:
+        tone = st.selectbox("النبرة", ["formal", "friendly", "apologetic"],
+                            format_func=lambda x: {"formal":"رسمي","friendly":"ودي","apologetic":"اعتذاري"}[x],
+                            key="cs_tone")
+    with c3:
+        client_name = st.text_input("اسم العميل (اختياري)", key="cs_name")
+
+    text = st.text_area("نص تذكرة العميل", height=150, key="cs_text",
+                        placeholder="الصق هنا رسالة العميل...")
+
+    if st.button("🔍 تحليل وتوليد رد", type="primary", key="cs_analyze"):
+        if not text.strip():
+            st.error("⚠️ اكتب نص التذكرة أولاً")
+        else:
+            result = agent.classify_ticket(text, lang=lang)
+            result["client_name"] = client_name
+
+            st.divider()
+            st.markdown("### 📊 التصنيف")
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("النوع", f"{result['type_icon']} {result['type_label']}")
+            c2.metric("الأولوية", f"{result['priority_icon']} {result['priority_label']}")
+            c3.metric("المشاعر", f"{result['sentiment_emoji']} {result['sentiment_label']}")
+            c4.metric("التصعيد", "⚠️ نعم" if result['needs_escalation'] else "✅ لا")
+            if result['needs_escalation']:
+                st.warning(f"⚠️ يحتاج تصعيد: {result['escalation_reason']}")
+
+            st.divider()
+            st.markdown("### ✉️ الرد المقترح")
+            with st.spinner("جاري توليد الرد..."):
+                resp = agent.generate_response(result, tone=tone, lang=lang)
+            st.info(f"المصدر: {resp['source']}")
+            st.text_area("الرد", value=resp["text"], height=200, key="cs_response")
+            st.download_button("⬇️ تحميل الرد", data=resp["text"],
+                               file_name=f"response_{lang}.txt", mime="text/plain",
+                               key="cs_dl")
+
+            st.divider()
+            st.markdown("### 🎯 الإجراءات المقترحة")
+            for action in agent.suggest_actions(result, lang=lang):
+                st.markdown(f"- {action}")
+
+    with st.expander("📚 الأسئلة الشائعة"):
+        faqs = agent.get_faq(lang=lang)
+        for faq in faqs:
+            st.markdown(f"**{faq['q']}**")
+            st.caption(faq["a"])
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -779,3 +846,5 @@ elif st.session_state.page == "invoice":
     show_invoice()
 elif st.session_state.page == "moroccan_admin":
     show_moroccan_admin()
+elif st.session_state.page == "customer_support":
+    show_customer_support()
