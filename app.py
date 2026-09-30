@@ -13,6 +13,7 @@ from content_writer import ContentWriterAgent
 from email_agent import EmailAgent
 from social_media import SocialMediaAgent
 from meeting_notes import MeetingNotesAgent
+from supplier_agent import SupplierAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -173,6 +174,10 @@ def show_landing():
 
     if st.button("📝 جرّب Meeting Notes", use_container_width=True, key="btn_meeting_notes"):
         st.session_state.page = "meeting_notes"
+        st.rerun()
+
+    if st.button("🚚 جرّب Supplier", use_container_width=True, key="btn_supplier"):
+        st.session_state.page = "supplier"
         st.rerun()
 
     st.markdown("---")
@@ -1098,6 +1103,47 @@ def show_meeting_notes():
                                key="mn_dl")
 
 
+def show_supplier():
+    st.markdown('<div class="main-header">🚚 Supplier Agent</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">طلبات · تفاوض · مقارنة الموردين</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="sp_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    agent = SupplierAgent()
+
+    c1, c2 = st.columns(2)
+    with c1:
+        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="sp_lang")
+    with c2:
+        rtype = st.selectbox("نوع الرسالة", list(agent.REQUEST_TYPES.keys()),
+                             format_func=lambda x: f"{agent.REQUEST_TYPES[x]['icon']} {agent.REQUEST_TYPES[x][lang]}",
+                             key="sp_type")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        supplier = st.text_input("اسم المورد", key="sp_sup")
+    with c2:
+        sender = st.text_input("المرسل (شركتك)", key="sp_sender")
+
+    context = st.text_area("السياق *", height=120, key="sp_ctx",
+                           placeholder="مثال: توريد 100 وحدة، ميزانية محددة، شروط...")
+
+    if st.button("🚚 توليد الرسالة", type="primary", key="sp_gen"):
+        if not context.strip():
+            st.error("⚠️ اكتب السياق")
+        else:
+            with st.spinner("جاري التوليد..."):
+                r = agent.generate_request(rtype, supplier, context, lang, sender)
+            st.divider()
+            st.info(f"المصدر: {r['source']} | النوع: {r['type_label']}")
+            st.text_area("الرسالة", value=r["content"], height=300, key="sp_out")
+            st.download_button("⬇️ تحميل", data=r["content"],
+                               file_name=f"supplier_{rtype}_{lang}.txt",
+                               mime="text/plain", key="sp_dl")
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -1122,3 +1168,5 @@ elif st.session_state.page == "social_media":
     show_social_media()
 elif st.session_state.page == "meeting_notes":
     show_meeting_notes()
+elif st.session_state.page == "supplier":
+    show_supplier()
