@@ -65,6 +65,15 @@ if "lang" not in st.session_state:
 # الصفحة 1: التسويقية
 # ============================================================
 def show_landing():
+    # عدّاد الوكلاء
+    st.markdown(
+        '<div style="text-align:center; margin: 20px 0; font-size:1.4rem; color:#00d4ff;">'
+        '🎯 <strong>12 وكيلاً ذكياً</strong> · '
+        '7 مدعومة بالذكاء الاصطناعي · '
+        '3 لغات (عربي · فرنسي · إنجليزي)'
+        '</div>',
+        unsafe_allow_html=True
+    )
     st.markdown("""
     <div style="text-align:center; padding:3rem 1rem;
         background:linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
