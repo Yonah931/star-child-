@@ -10,6 +10,7 @@ from invoice import InvoiceAgent
 from moroccan_admin import MoroccanAdmin
 from customer_support import CustomerSupportAgent
 from content_writer import ContentWriterAgent
+from email_agent import EmailAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -158,6 +159,10 @@ def show_landing():
 
     if st.button("✍️ جرّب Content Writer", use_container_width=True, key="btn_content_writer"):
         st.session_state.page = "content_writer"
+        st.rerun()
+
+    if st.button("📧 جرّب Email Agent", use_container_width=True, key="btn_email_agent"):
+        st.session_state.page = "email_agent"
         st.rerun()
 
     st.markdown("---")
@@ -934,6 +939,63 @@ def show_content_writer():
                     st.markdown(f"- {t}")
 
 
+def show_email_agent():
+    st.markdown('<div class="main-header">📧 Email Agent</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">ردود · حملات · متابعة · دعوات</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="em_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    agent = EmailAgent()
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="em_lang")
+    with c2:
+        tone = st.selectbox("النبرة", list(agent.TONES.keys()),
+                            format_func=lambda x: agent.TONES[x][lang],
+                            key="em_tone")
+    with c3:
+        email_type = st.selectbox("نوع البريد", list(agent.EMAIL_TYPES.keys()),
+                                  format_func=lambda x: f"{agent.EMAIL_TYPES[x]['icon']} {agent.EMAIL_TYPES[x][lang]}",
+                                  key="em_type")
+
+    subject = st.text_input("الموضوع *", key="em_subject", placeholder="مثال: عرض خاص للعملاء")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        recipient = st.text_input("المستقبل (اختياري)", key="em_recip")
+    with c2:
+        sender = st.text_input("المرسل (اختياري)", key="em_sender")
+
+    context = st.text_area("السياق الإضافي (اختياري)", height=100, key="em_context",
+                           placeholder="معلومات إضافية للرد عليها...")
+
+    if st.button("📧 توليد البريد", type="primary", key="em_generate"):
+        if not subject.strip():
+            st.error("⚠️ اكتب الموضوع أولاً")
+        else:
+            with st.spinner("جاري التوليد..."):
+                result = agent.generate(email_type, subject, context, tone, lang, recipient, sender)
+
+            st.divider()
+            st.info(f"المصدر: {result['source']} | النوع: {result['type_label']} | النبرة: {result['tone']}")
+            st.text_area("البريد", value=result["content"], height=400, key="em_output")
+            st.download_button(
+                "⬇️ تحميل .txt",
+                data=result["content"],
+                file_name=f"email_{email_type}_{lang}.txt",
+                mime="text/plain",
+                key="em_dl"
+            )
+
+            st.divider()
+            st.markdown("### 💡 عناوين مقترحة")
+            for s in agent.suggest_subjects(subject, lang=lang):
+                st.markdown(f"- {s}")
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -952,3 +1014,5 @@ elif st.session_state.page == "customer_support":
     show_customer_support()
 elif st.session_state.page == "content_writer":
     show_content_writer()
+elif st.session_state.page == "email_agent":
+    show_email_agent()
