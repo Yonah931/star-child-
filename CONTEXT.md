@@ -62,3 +62,20 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
 - على Cloud: يحتاج packages.txt (7 مكتبات نظام)
 - packages.txt يحتوي: libpango, libharfbuzz, libffi, libcairo, libgdk-pixbuf, shared-mime-info, fonts-dejavu-core
 - آخر commit: 88d6d52
+
+## 18. جميع الوكلاء (11)
+| # | الملف | الوصف |
+|---|---|---|
+| 1 | accountant.py | المحاسب |
+| 2 | hr.py | HR |
+| 3 | cfo.py | CFO |
+| 4 | invoice.py | Invoice (WeasyPrint) |
+| 5 | moroccan_admin.py | Moroccan Admin |
+| 6 | customer_support.py | Customer Support (AI) |
+| 7 | content_writer.py | Content Writer (AI) |
+| 8 | email_agent.py | Email Agent (AI) |
+| 9 | social_media.py | Social Media (AI) |
+| 10 | meeting_notes.py | Meeting Notes (AI) |
+| 11 | supplier_agent.py | Supplier (AI) |
+
+**جميع الوكلاء يعملون بـ Groq AI (openai/gpt-oss-20b)**
