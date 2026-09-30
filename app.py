@@ -11,6 +11,7 @@ from moroccan_admin import MoroccanAdmin
 from customer_support import CustomerSupportAgent
 from content_writer import ContentWriterAgent
 from email_agent import EmailAgent
+from social_media import SocialMediaAgent
 
 # نظام الوكلاء السبعة
 import sys
@@ -163,6 +164,10 @@ def show_landing():
 
     if st.button("📧 جرّب Email Agent", use_container_width=True, key="btn_email_agent"):
         st.session_state.page = "email_agent"
+        st.rerun()
+
+    if st.button("📱 جرّب Social Media", use_container_width=True, key="btn_social_media"):
+        st.session_state.page = "social_media"
         st.rerun()
 
     st.markdown("---")
@@ -996,6 +1001,59 @@ def show_email_agent():
                 st.markdown(f"- {s}")
 
 
+def show_social_media():
+    st.markdown('<div class="main-header">📱 Social Media Agent</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">منشورات جاهزة · 6 منصات · 3 لغات</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="sm_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    agent = SocialMediaAgent()
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="sm_lang")
+    with c2:
+        platform = st.selectbox("المنصة", list(agent.PLATFORMS.keys()),
+                                format_func=lambda x: f"{agent.PLATFORMS[x]['icon']} {agent.PLATFORMS[x][lang]}",
+                                key="sm_platform")
+    with c3:
+        post_type = st.selectbox("نوع المنشور", list(agent.POST_TYPES.keys()),
+                                 format_func=lambda x: f"{agent.POST_TYPES[x]['icon']} {agent.POST_TYPES[x][lang]}",
+                                 key="sm_type")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        tone = st.selectbox("النبرة", list(agent.TONES.keys()),
+                            format_func=lambda x: agent.TONES[x][lang],
+                            key="sm_tone")
+    with c2:
+        audience = st.text_input("الجمهور (اختياري)", key="sm_aud")
+
+    topic = st.text_input("الموضوع *", key="sm_topic", placeholder="مثال: نصائح إنتاجية")
+
+    if st.button("📱 توليد المنشور", type="primary", key="sm_generate"):
+        if not topic.strip():
+            st.error("⚠️ اكتب الموضوع")
+        else:
+            with st.spinner("جاري التوليد..."):
+                r = agent.generate_post(platform, post_type, topic, tone, lang, audience)
+
+            st.divider()
+            best = r['best_chars']
+            status = "✅ ممتاز" if r['char_count'] <= best else "⚠️ طويل قليلاً"
+            st.info(f"المصدر: {r['source']} | {r['platform_icon']} {r['platform_label']} | الأحرف: {r['char_count']}/{best} {status}")
+
+            st.text_area("المنشور", value=r["content"], height=300, key="sm_output")
+            st.download_button("⬇️ تحميل .txt", data=r["content"],
+                               file_name=f"post_{platform}_{lang}.txt", mime="text/plain",
+                               key="sm_dl")
+
+            st.markdown("### 🔖 Hashtags مقترحة")
+            st.code(" ".join(agent.suggest_hashtags(topic, platform, lang)))
+
+
 if st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
@@ -1016,3 +1074,5 @@ elif st.session_state.page == "content_writer":
     show_content_writer()
 elif st.session_state.page == "email_agent":
     show_email_agent()
+elif st.session_state.page == "social_media":
+    show_social_media()
