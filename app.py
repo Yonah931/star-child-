@@ -14,6 +14,8 @@ from email_agent import EmailAgent
 from social_media import SocialMediaAgent
 from meeting_notes import MeetingNotesAgent
 from supplier_agent import SupplierAgent
+import streamlit_authenticator as stauth
+import yaml
 
 # نظام الوكلاء السبعة
 import sys
@@ -25,6 +27,41 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# ============================================
+# تسجيل الدخول (Authentication)
+# ============================================
+import os as _os
+_auth_file = _os.path.join(_os.path.dirname(__file__), "auth_config.yaml")
+
+if _os.path.exists(_auth_file):
+    with open(_auth_file, "r", encoding="utf-8") as _f:
+        _auth_config = yaml.safe_load(_f)
+
+    _authenticator = stauth.Authenticate(
+        _auth_config["credentials"],
+        _auth_config["cookie"]["name"],
+        _auth_config["cookie"]["key"],
+        _auth_config["cookie"]["expiry_days"],
+    )
+
+    _authenticator.login(location="main", key="main_login")
+
+    if st.session_state.get("authentication_status") is False:
+        st.error("❌ اسم المستخدم أو كلمة السر خاطئة")
+        st.stop()
+    elif st.session_state.get("authentication_status") is None:
+        st.warning("🔒 يرجى تسجيل الدخول للمتابعة")
+        st.stop()
+    else:
+        # عرض شريط علوي مع اسم المستخدم وزر خروج
+        _col1, _col2 = st.columns([4, 1])
+        with _col1:
+            st.caption(f"👋 مرحباً **{st.session_state.get('name', 'مستخدم')}**")
+        with _col2:
+            _authenticator.logout(location="main", key="main_logout")
+
+
 
 st.markdown("""
 <style>

@@ -1,0 +1,23 @@
+cookie:
+  expiry_days: 30
+  key: yonah_agentic_os_secret_key_2026
+  name: yonah_auth_cookie
+credentials:
+  usernames:
+    demo:
+      email: demo@example.com
+      first_name: Demo
+      last_name: User
+      password: $2b$12$3YE6KrUONOyqmn/MFO7E2..Xq9Dx0DNZMG0nG97xAcqQnAY4myr/e
+      roles:
+      - user
+    yonah:
+      email: ashkenazyonah@gmail.com
+      first_name: Yonah
+      last_name: Ashkenaz
+      password: $2b$12$TPa2BfIiQS3Fh1uA9z7FTuQcRe2f4tO0sgBOhz39QQlxl8.r2VaDO
+      roles:
+      - admin
+      - user
+preauthorized:
+  emails: []

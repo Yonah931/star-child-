@@ -15,3 +15,5 @@ python-bidi
 uharfbuzz
 weasyprint
 groq
+streamlit-authenticator
+PyYAML
