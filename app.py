@@ -170,15 +170,15 @@ def show_dashboard():
     st.markdown("### ⚡ اختصارات سريعة")
     c1, c2, c3 = st.columns(3)
     with c1:
-        if st.button("🧾 فاتورة جديدة", use_container_width=True, key="dash_inv"):
+        if st.button("🧾 فاتورة جديدة", width="stretch", key="dash_inv"):
             st.session_state.page = "invoice"
             st.rerun()
     with c2:
-        if st.button("📞 دعم العملاء", use_container_width=True, key="dash_cs"):
+        if st.button("📞 دعم العملاء", width="stretch", key="dash_cs"):
             st.session_state.page = "customer_support"
             st.rerun()
     with c3:
-        if st.button("✍️ محتوى جديد", use_container_width=True, key="dash_cw"):
+        if st.button("✍️ محتوى جديد", width="stretch", key="dash_cw"):
             st.session_state.page = "content_writer"
             st.rerun()
 
@@ -295,7 +295,7 @@ def show_admin():
         import pandas as _pd
         df = _pd.DataFrame(users)
         df.columns = ["اسم المستخدم", "البريد", "الاسم", "الأدوار"]
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
     else:
         st.info("لا يوجد مستخدمون")
 
@@ -403,7 +403,7 @@ def show_landing():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب المحاسب", key="go_accountant", use_container_width=True):
+        if st.button("🚀 جرّب المحاسب", key="go_accountant", width="stretch"):
             st.session_state.page = "accountant"
             st.rerun()
 
@@ -419,7 +419,7 @@ def show_landing():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب الوكلاء", key="go_agents", use_container_width=True):
+        if st.button("🚀 جرّب الوكلاء", key="go_agents", width="stretch"):
             st.session_state.page = "agents"
             st.rerun()
 
@@ -438,7 +438,7 @@ def show_landing():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب HR", key="go_hr", use_container_width=True):
+        if st.button("🚀 جرّب HR", key="go_hr", width="stretch"):
             st.session_state.page = "hr"
             st.rerun()
 
@@ -453,43 +453,43 @@ def show_landing():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب CFO", key="go_cfo", use_container_width=True):
+        if st.button("🚀 جرّب CFO", key="go_cfo", width="stretch"):
             st.session_state.page = "cfo"
             st.rerun()
 
-    if st.button("🧾 جرّب Invoice", use_container_width=True, key="btn_invoice"):
+    if st.button("🧾 جرّب Invoice", width="stretch", key="btn_invoice"):
         st.session_state.page = "invoice"
         st.rerun()
 
-    if st.button("🇲🇦 جرّب Moroccan Admin", use_container_width=True, key="btn_moroccan"):
+    if st.button("🇲🇦 جرّب Moroccan Admin", width="stretch", key="btn_moroccan"):
         st.session_state.page = "moroccan_admin"
         st.rerun()
 
-    if st.button("📞 جرّب Customer Support", use_container_width=True, key="btn_customer_support"):
+    if st.button("📞 جرّب Customer Support", width="stretch", key="btn_customer_support"):
         st.session_state.page = "customer_support"
         st.rerun()
 
-    if st.button("✍️ جرّب Content Writer", use_container_width=True, key="btn_content_writer"):
+    if st.button("✍️ جرّب Content Writer", width="stretch", key="btn_content_writer"):
         st.session_state.page = "content_writer"
         st.rerun()
 
-    if st.button("📧 جرّب Email Agent", use_container_width=True, key="btn_email_agent"):
+    if st.button("📧 جرّب Email Agent", width="stretch", key="btn_email_agent"):
         st.session_state.page = "email_agent"
         st.rerun()
 
-    if st.button("📱 جرّب Social Media", use_container_width=True, key="btn_social_media"):
+    if st.button("📱 جرّب Social Media", width="stretch", key="btn_social_media"):
         st.session_state.page = "social_media"
         st.rerun()
 
-    if st.button("📝 جرّب Meeting Notes", use_container_width=True, key="btn_meeting_notes"):
+    if st.button("📝 جرّب Meeting Notes", width="stretch", key="btn_meeting_notes"):
         st.session_state.page = "meeting_notes"
         st.rerun()
 
-    if st.button("✨ الميزات الكاملة", use_container_width=True, key="btn_features"):
+    if st.button("✨ الميزات الكاملة", width="stretch", key="btn_features"):
         st.session_state.page = "features"
         st.rerun()
 
-    if st.button("🚚 جرّب Supplier", use_container_width=True, key="btn_supplier"):
+    if st.button("🚚 جرّب Supplier", width="stretch", key="btn_supplier"):
         st.session_state.page = "supplier"
         st.rerun()
 
@@ -661,12 +661,12 @@ def show_agents():
     st.link_button(
         "🚀 افتح نظام الوكلاء السبعة",
         "https://yonah-agents.streamlit.app",
-        use_container_width=True
+        width="stretch"
     )
 
     st.markdown("---")
     st.markdown("### 🎯 أو جرّب المحاسب الذكي")
-    if st.button("📊 فتح المحاسب", key="go_acc_from_agents", use_container_width=True):
+    if st.button("📊 فتح المحاسب", key="go_acc_from_agents", width="stretch"):
         st.session_state.page = "accountant"
         st.rerun()
 
@@ -716,7 +716,7 @@ def show_hr():
                 with col2:
                     min_exp = st.number_input("الحد الأدنى للخبرة (سنوات)", 0, 20, 2)
 
-                if st.button("🔍 ابدأ الفرز", key="hr_screen_btn", use_container_width=True):
+                if st.button("🔍 ابدأ الفرز", key="hr_screen_btn", width="stretch"):
                     skills = [s.strip() for s in skills_input.split(',')]
                     candidates = hr.screen_cvs(required_skills=skills, min_experience=min_exp, lang='ar')
                     stats = hr.get_statistics()
@@ -753,14 +753,14 @@ def show_hr():
 
                     col_a, col_b = st.columns(2)
                     with col_a:
-                        if st.button("📥 تقرير PDF (عربي)", key="hr_pdf_ar", use_container_width=True):
+                        if st.button("📥 تقرير PDF (عربي)", key="hr_pdf_ar", width="stretch"):
                             with st.spinner("جاري التوليد..."):
                                 pdf_path = generate_hr_report(candidates, stats, lang='ar')
                                 with open(pdf_path, "rb") as f:
                                     st.session_state['hr_pdf_ar_bytes'] = f.read()
                                 st.session_state['hr_pdf_ar_ready'] = True
                     with col_b:
-                        if st.button("📥 Rapport PDF (Français)", key="hr_pdf_fr", use_container_width=True):
+                        if st.button("📥 Rapport PDF (Français)", key="hr_pdf_fr", width="stretch"):
                             with st.spinner("Génération..."):
                                 pdf_path = generate_hr_report(candidates, stats, lang='fr')
                                 with open(pdf_path, "rb") as f:
@@ -774,7 +774,7 @@ def show_hr():
                             st.session_state['hr_pdf_ar_bytes'],
                             file_name=f"hr_report_ar_{datetime.now().strftime('%Y%m%d')}.pdf",
                             mime="application/pdf",
-                            use_container_width=True
+                            width="stretch"
                         )
                     if st.session_state.get('hr_pdf_fr_ready'):
                         st.download_button(
@@ -782,7 +782,7 @@ def show_hr():
                             st.session_state['hr_pdf_fr_bytes'],
                             file_name=f"hr_report_fr_{datetime.now().strftime('%Y%m%d')}.pdf",
                             mime="application/pdf",
-                            use_container_width=True
+                            width="stretch"
                         )
 
     # === تبويب 2: إعلان توظيف ===
@@ -806,7 +806,7 @@ def show_hr():
         lang_job = st.selectbox("اللغة", ["ar", "fr", "en"],
             format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
 
-        if st.button("📢 توليد الإعلان", key="hr_job_btn", use_container_width=True):
+        if st.button("📢 توليد الإعلان", key="hr_job_btn", width="stretch"):
             hr = HRAgent()
             posting = hr.generate_job_posting(job_type, company_name, lang=lang_job)
             st.markdown("---")
@@ -825,7 +825,7 @@ def show_hr():
             lang_q = st.selectbox("اللغة ", ["ar", "fr", "en"],
                 format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
 
-        if st.button("❓ توليد الأسئلة", key="hr_q_btn", use_container_width=True):
+        if st.button("❓ توليد الأسئلة", key="hr_q_btn", width="stretch"):
             hr = HRAgent()
             questions = hr.get_interview_questions(category, lang_q)
             st.markdown("---")
@@ -941,14 +941,14 @@ def show_cfo():
 
     col_a, col_b = st.columns(2)
     with col_a:
-        if st.button("📥 تقرير PDF (عربي)", key="cfo_pdf_ar", use_container_width=True):
+        if st.button("📥 تقرير PDF (عربي)", key="cfo_pdf_ar", width="stretch"):
             with st.spinner("جاري التوليد..."):
                 pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='ar')
                 with open(pdf_path, "rb") as f:
                     st.session_state['cfo_pdf_ar_bytes'] = f.read()
                 st.session_state['cfo_pdf_ar_ready'] = True
     with col_b:
-        if st.button("📥 Rapport PDF (Français)", key="cfo_pdf_fr", use_container_width=True):
+        if st.button("📥 Rapport PDF (Français)", key="cfo_pdf_fr", width="stretch"):
             with st.spinner("Génération..."):
                 pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='fr')
                 with open(pdf_path, "rb") as f:
@@ -962,7 +962,7 @@ def show_cfo():
             st.session_state['cfo_pdf_ar_bytes'],
             file_name=f"cfo_report_ar_{datetime.now().strftime('%Y%m%d')}.pdf",
             mime="application/pdf",
-            use_container_width=True
+            width="stretch"
         )
     if st.session_state.get('cfo_pdf_fr_ready'):
         st.download_button(
@@ -970,7 +970,7 @@ def show_cfo():
             st.session_state['cfo_pdf_fr_bytes'],
             file_name=f"cfo_report_fr_{datetime.now().strftime('%Y%m%d')}.pdf",
             mime="application/pdf",
-            use_container_width=True
+            width="stretch"
         )
 
 
@@ -1024,7 +1024,7 @@ def show_invoice():
         st.markdown(f"**رقم الفاتورة:** {inv['number']} | **التاريخ:** {inv['date']}")
         st.markdown(f"**العميل:** {inv['client_name']}")
         items_display = [{"الوصف": it["description"], "الكمية": it["quantity"], "السعر": f"{it['unit_price']:.2f}", "المجموع": f"{it['quantity'] * it['unit_price']:.2f}"} for it in inv["items"]]
-        st.dataframe(items_display, use_container_width=True, hide_index=True)
+        st.dataframe(items_display, width="stretch", hide_index=True)
         c1, c2, c3 = st.columns(3)
         c1.metric("المجموع HT", f"{inv['subtotal']:.2f} DH")
         c2.metric(f"TVA {int(inv['tax_rate'] * 100)}%", f"{inv['tax']:.2f} DH")
@@ -1045,7 +1045,7 @@ def show_invoice():
             except Exception as e:
                 st.error(f"خطأ: {e}")
         if st.session_state.get("inv_pdf_bytes"):
-            st.download_button("⬇️ تحميل PDF", data=st.session_state["inv_pdf_bytes"], file_name=os.path.basename(st.session_state["inv_pdf_name"]), mime="application/pdf", use_container_width=True, key="inv_dl")
+            st.download_button("⬇️ تحميل PDF", data=st.session_state["inv_pdf_bytes"], file_name=os.path.basename(st.session_state["inv_pdf_name"]), mime="application/pdf", width="stretch", key="inv_dl")
         if st.button("🗑️ مسح", key="inv_clear"):
             for k in ["inv_dict", "inv_pdf_bytes", "inv_pdf_name"]:
                 st.session_state.pop(k, None)
