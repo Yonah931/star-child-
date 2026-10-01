@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import time as _time
 from datetime import datetime
 from accountant import AccountantAgent, generate_accounting_pdf
 from translations import get_text
@@ -46,6 +47,12 @@ if _os.path.exists(_auth_file):
         _auth_config["cookie"]["expiry_days"],
     )
 
+    # فحص القفل
+    if st.session_state.get("login_locked_until") and st.session_state["login_locked_until"] > _time.time():
+        _remaining = int((st.session_state["login_locked_until"] - _time.time()) / 60) + 1
+        st.error(f"🔒 الحساب مقفل مؤقتاً ({_remaining} دقيقة).")
+        st.stop()
+    
     _authenticator.login(
         location="main",
         key="main_login",
@@ -58,12 +65,22 @@ if _os.path.exists(_auth_file):
     )
 
     if st.session_state.get("authentication_status") is False:
-        st.error("❌ اسم المستخدم أو كلمة السر خاطئة")
+        st.session_state["login_attempts"] = st.session_state.get("login_attempts", 0) + 1
+        _attempts = st.session_state["login_attempts"]
+        _max = 5
+        if _attempts >= _max:
+            st.session_state["login_locked_until"] = _time.time() + 15 * 60
+            st.error(f"🔒 تم قفل الجلسة لمدة 15 دقيقة بعد {_max} محاولات فاشلة.")
+        else:
+            st.error(f"❌ اسم المستخدم أو كلمة السر خاطئة (المتبقي: {_max - _attempts} محاولات)")
         st.stop()
     elif st.session_state.get("authentication_status") is None:
         st.warning("🔒 يرجى تسجيل الدخول للمتابعة")
         st.stop()
     else:
+        st.session_state["login_attempts"] = 0
+        st.session_state["login_locked_until"] = None
+
         # عرض شريط علوي مع اسم المستخدم وزر خروج
         _col1, _col2 = st.columns([4, 1])
         with _col1:
