@@ -79,3 +79,26 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
 | 11 | supplier_agent.py | Supplier (AI) |
 
 **جميع الوكلاء يعملون بـ Groq AI (openai/gpt-oss-20b)**
+
+
+## 20. نظام تسجيل الدخول (Authentication)
+- المكتبة: streamlit-authenticator
+- الملف: auth_config.yaml
+- المستخدمون:
+  - yonah / Yonah@2026 (admin)
+  - demo / Demo@2026 (user)
+- الكود في app.py بعد st.set_page_config مباشرة
+- الروابط معروضة في الأعلى بعد الدخول
+
+## 21. أزرار الاشتراك (WhatsApp)
+- 3 أزرار تحت بطاقات الأسعار
+- تفتح واتساب مباشرة: 212719082215
+- رسالة معدّة مسبقاً لكل حزمة
+- دالة: make_whatsapp_link(plan_name, price)
+
+## 22. البنية التحتية للبيع (تحديث)
+- ✅ تسجيل دخول
+- ✅ قناة بيع (WhatsApp)
+- ⏳ نظام دفع (تحويل بنكي لاحقاً)
+- ⏳ لوحة تحكم العميل
+- ⏳ شروط استخدام + عقد
