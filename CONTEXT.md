@@ -63,7 +63,7 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
 - packages.txt يحتوي: libpango, libharfbuzz, libffi, libcairo, libgdk-pixbuf, shared-mime-info, fonts-dejavu-core
 - آخر commit: 88d6d52
 
-## 18. جميع الوكلاء (11)
+## 18. جميع الوكلاء (12)
 | # | الملف | الوصف |
 |---|---|---|
 | 1 | accountant.py | المحاسب |
