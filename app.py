@@ -72,9 +72,13 @@ if _os.path.exists(_auth_file):
             if st.button("📊 لوحتي", key="goto_dash"):
                 st.session_state.page = "dashboard"
                 st.rerun()
+        with _col2:
+            if st.button("⚙️ الإعدادات", key="goto_settings"):
+                st.session_state.page = "settings"
+                st.rerun()
         _admin_roles = st.session_state.get("roles") or []
         if "admin" in _admin_roles:
-            if st.button("⚙️ المدير", key="goto_admin"):
+            if st.button("👑 المدير", key="goto_admin"):
                 st.session_state.page = "admin"
                 st.rerun()
         with st.container():
@@ -362,6 +366,91 @@ def show_admin():
                     st.success(f"✅ {msg}")
                 else:
                     st.error(f"❌ {msg}")
+
+
+def show_settings():
+    """إعدادات المستخدم"""
+    st.markdown('<div class="main-header">⚙️ الإعدادات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">إدارة حسابك وتفضيلاتك</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="settings_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    username = st.session_state.get("username", "")
+    name = st.session_state.get("name", "")
+    roles = st.session_state.get("roles") or []
+
+    # القسم 1: معلومات الحساب
+    st.markdown("### 👤 معلومات الحساب")
+    c1, c2 = st.columns(2)
+    with c1:
+        st.text_input("اسم المستخدم", value=username, disabled=True, key="set_username")
+        st.text_input("الاسم الكامل", value=name, disabled=True, key="set_name")
+    with c2:
+        st.text_input("الأدوار", value=", ".join(roles), disabled=True, key="set_roles")
+        st.text_input("الحالة", value="✅ نشط", disabled=True, key="set_status")
+
+    st.divider()
+
+    # القسم 2: تغيير كلمة السر
+    st.markdown("### 🔑 تغيير كلمة السر")
+    with st.form("change_pwd_form"):
+        current_pwd = st.text_input("كلمة السر الحالية", type="password")
+        new_pwd = st.text_input("كلمة السر الجديدة", type="password")
+        confirm_pwd = st.text_input("تأكيد كلمة السر الجديدة", type="password")
+
+        submitted = st.form_submit_button("💾 تحديث كلمة السر", type="primary")
+        if submitted:
+            if not current_pwd or not new_pwd or not confirm_pwd:
+                st.error("⚠️ جميع الحقول مطلوبة")
+            elif new_pwd != confirm_pwd:
+                st.error("⚠️ كلمتا السر غير متطابقتين")
+            elif len(new_pwd) < 6:
+                st.error("⚠️ كلمة السر يجب أن تكون 6 أحرف على الأقل")
+            else:
+                ok, msg = admin_panel.change_password(username, new_pwd)
+                if ok:
+                    st.success(f"✅ {msg} (ستحتاج لإعادة تسجيل الدخول)")
+                else:
+                    st.error(f"❌ {msg}")
+
+    st.divider()
+
+    # القسم 3: تفضيلات اللغة
+    st.markdown("### 🌍 تفضيلات اللغة")
+    current_lang = st.session_state.get("lang", "ar")
+    lang = st.selectbox(
+        "اللغة الافتراضية",
+        ["ar", "fr", "en"],
+        index=["ar", "fr", "en"].index(current_lang),
+        format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x],
+        key="set_lang",
+    )
+    if st.button("💾 حفظ التفضيلات", key="save_settings"):
+        st.session_state["lang"] = lang
+        st.success(f"✅ تم حفظ اللغة: {lang}")
+
+    st.divider()
+
+    # القسم 4: معلومات الاشتراك
+    st.markdown("### 💎 الاشتراك")
+    plan = "Business" if "admin" in roles else "Starter"
+    c1, c2, c3 = st.columns(3)
+    c1.metric("الحزمة الحالية", plan)
+    c2.metric("الوكلاء المتاحون", "12")
+    c3.metric("الاستخدام", "غير محدود")
+
+    if st.button("💬 ترقية الاشتراك", key="upgrade"):
+        st.markdown("[اضغط للتواصل عبر واتساب](https://wa.me/212719082215)")
+
+    st.divider()
+
+    # القسم 5: الحساب الخطير
+    st.markdown("### ⚠️ منطقة الخطر")
+    st.caption("حذف الحساب لا يمكن التراجع عنه.")
+    if st.button("🗑️ حذف حسابي", key="delete_me"):
+        st.warning("⚠️ للتواصل مع الإدارة لحذف الحساب: ashkenazyonah@gmail.com")
 
 
 def show_landing():
@@ -1462,6 +1551,8 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "settings":
+    show_settings()
 elif st.session_state.page == "admin":
     show_admin()
 elif st.session_state.page == "features":
