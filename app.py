@@ -45,7 +45,16 @@ if _os.path.exists(_auth_file):
         _auth_config["cookie"]["expiry_days"],
     )
 
-    _authenticator.login(location="main", key="main_login")
+    _authenticator.login(
+        location="main",
+        key="main_login",
+        fields={
+            "Form name": "🔐 تسجيل الدخول",
+            "Username": "اسم المستخدم",
+            "Password": "كلمة السر",
+            "Login": "دخول",
+        },
+    )
 
     if st.session_state.get("authentication_status") is False:
         st.error("❌ اسم المستخدم أو كلمة السر خاطئة")
@@ -59,6 +68,10 @@ if _os.path.exists(_auth_file):
         with _col1:
             st.caption(f"👋 مرحباً **{st.session_state.get('name', 'مستخدم')}**")
         with _col2:
+            if st.button("📊 لوحتي", key="goto_dash"):
+                st.session_state.page = "dashboard"
+                st.rerun()
+        with st.container():
             _authenticator.logout(location="main", key="main_logout")
 
 
@@ -111,6 +124,63 @@ def make_whatsapp_link(plan_name, price):
     number = "212719082215"
     message = f"مرحباً، أرغب في الاشتراك في حزمة *{plan_name}* ({price} درهم/شهر). هل يمكنكم مساعدتي؟"
     return f"https://wa.me/{number}?text={urllib.parse.quote(message)}"
+
+def show_dashboard():
+    """لوحة تحكم العميل"""
+    st.markdown('<div class="main-header">📊 لوحة التحكم</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">نظرة عامة على حسابك</div>', unsafe_allow_html=True)
+
+    # معلومات المستخدم
+    name = st.session_state.get("name", "مستخدم")
+    username = st.session_state.get("username", "")
+    roles = st.session_state.get("roles", [])
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.metric("👤 المستخدم", name)
+    with c2:
+        st.metric("🏷️ الحساب", username)
+    with c3:
+        plan = "Business" if "admin" in roles else "Starter"
+        st.metric("💎 الحزمة", plan)
+
+    st.divider()
+
+    # إحصائيات سريعة
+    st.markdown("### 📈 إحصائيات سريعة")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("🤖 الوكلاء المتاحون", "12")
+    c2.metric("🌍 اللغات المدعومة", "3")
+    c3.metric("📅 منذ التسجيل", "اليوم")
+    c4.metric("⚡ الاستخدام", "غير محدود")
+
+    st.divider()
+
+    # اختصارات سريعة
+    st.markdown("### ⚡ اختصارات سريعة")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        if st.button("🧾 فاتورة جديدة", use_container_width=True, key="dash_inv"):
+            st.session_state.page = "invoice"
+            st.rerun()
+    with c2:
+        if st.button("📞 دعم العملاء", use_container_width=True, key="dash_cs"):
+            st.session_state.page = "customer_support"
+            st.rerun()
+    with c3:
+        if st.button("✍️ محتوى جديد", use_container_width=True, key="dash_cw"):
+            st.session_state.page = "content_writer"
+            st.rerun()
+
+    st.divider()
+
+    # التواصل
+    st.markdown("### 📞 تواصل مع الدعم")
+    st.markdown("""
+    - 📧 **البريد:** ashkenazyonah@gmail.com
+    - 💬 **واتساب:** +212719082215
+    """)
+
 
 def show_landing():
     # عدّاد الوكلاء
@@ -1204,7 +1274,9 @@ def show_supplier():
                                mime="text/plain", key="sp_dl")
 
 
-if st.session_state.page == "landing":
+if st.session_state.page == "dashboard":
+    show_dashboard()
+elif st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
     show_accountant()
