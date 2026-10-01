@@ -131,9 +131,13 @@ def show_dashboard():
     st.markdown('<div class="sub-header">نظرة عامة على حسابك</div>', unsafe_allow_html=True)
 
     # معلومات المستخدم
+    if st.button("⬅️ رجوع", key="dash_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
     name = st.session_state.get("name", "مستخدم")
     username = st.session_state.get("username", "")
-    roles = st.session_state.get("roles", [])
+    roles = st.session_state.get("roles") or []
 
     c1, c2, c3 = st.columns(3)
     with c1:
@@ -180,6 +184,74 @@ def show_dashboard():
     - 📧 **البريد:** ashkenazyonah@gmail.com
     - 💬 **واتساب:** +212719082215
     """)
+
+
+def show_features():
+    """صفحة الميزات التفصيلية"""
+    st.markdown('<div class="main-header">✨ الميزات الكاملة</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">12 وكيلاً ذكياً لإدارة أعمالك</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="feat_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    st.divider()
+    st.markdown("### 🤖 الوكلاء المالية والمحاسبية")
+
+    features = [
+        ("📊 المحاسب الذكي", "يقرأ Excel/CSV، يكشف الأخطاء، يولّد تقارير PDF بـ 3 لغات", "AI"),
+        ("💰 المدير المالي (CFO)", "تحليل الربحية، حساب TVA/IS/CNSS، توصيات ذكية", "AI"),
+        ("🇲🇦 Moroccan Admin", "TVA، IS، IR، CNSS، Payroll، تقويم ضريبي مغربي", "AI"),
+        ("🧾 وكيل الفواتير", "فواتير احترافية مع ICE، TVA تلقائي، PDF بـ 3 لغات", "AI"),
+    ]
+
+    for name, desc, badge in features:
+        with st.expander(f"{name}"):
+            st.markdown(f"**الوصف:** {desc}")
+            st.markdown(f"**التقنية:** {badge}")
+
+    st.divider()
+    st.markdown("### 📢 الوكلاء التسويقية")
+
+    marketing = [
+        ("✍️ كاتب المحتوى", "مقالات، وصف منتجات، سوشيال ميديا، إعلانات (6 أنواع)"),
+        ("📱 Social Media", "منشورات لـ 6 منصات (Facebook, Instagram, LinkedIn, X, TikTok, WhatsApp)"),
+        ("📧 البريد الإلكتروني", "ردود، حملات، متابعة، دعوات (7 أنواع)"),
+        ("🎨 CMO (المسؤول التسويقي)", "استراتيجيات تسويق متكاملة"),
+    ]
+
+    for name, desc in marketing:
+        with st.expander(f"{name}"):
+            st.markdown(desc)
+
+    st.divider()
+    st.markdown("### 👥 الوكلاء الإدارية والدعم")
+
+    admin = [
+        ("👥 HR Agent", "فرز CVs، إعلانات توظيف، أسئلة مقابلات"),
+        ("📞 Customer Support", "تصنيف التذاكر، ردود AI، اقتراح إجراءات"),
+        ("📝 Meeting Notes", "محاضر اجتماعات مع مهام وقرارات"),
+        ("🚚 Supplier Agent", "طلبات، تفاوض، مقارنة موردين"),
+    ]
+
+    for name, desc in admin:
+        with st.expander(f"{name}"):
+            st.markdown(desc)
+
+    st.divider()
+    st.markdown("### 🎯 ميزات إضافية")
+    st.markdown("""
+    - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
+    - 📄 **تقارير PDF** احترافية
+    - 🔒 **تسجيل دخول آمن**
+    - ⚡ **سريع** (نتائج في ثوانٍ)
+    - ☁️ **سحابي** (يعمل من أي جهاز)
+    - 💬 **دعم واتساب مباشر**
+    """)
+
+    st.divider()
+    if st.button("💬 اشترك الآن", type="primary", key="feat_subscribe"):
+        st.markdown("[اضغط هنا للاشتراك عبر واتساب](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحباً، أرغب في الاشتراك في منصة Yonah Ashkenaz") + ")")
 
 
 def show_landing():
@@ -301,6 +373,10 @@ def show_landing():
 
     if st.button("📝 جرّب Meeting Notes", use_container_width=True, key="btn_meeting_notes"):
         st.session_state.page = "meeting_notes"
+        st.rerun()
+
+    if st.button("✨ الميزات الكاملة", use_container_width=True, key="btn_features"):
+        st.session_state.page = "features"
         st.rerun()
 
     if st.button("🚚 جرّب Supplier", use_container_width=True, key="btn_supplier"):
@@ -1276,6 +1352,8 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "features":
+    show_features()
 elif st.session_state.page == "landing":
     show_landing()
 elif st.session_state.page == "accountant":
