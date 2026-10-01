@@ -101,6 +101,17 @@ if "lang" not in st.session_state:
 # ============================================================
 # الصفحة 1: التسويقية
 # ============================================================
+
+
+# ============================================
+# مساعد: رابط واتساب مع رسالة
+# ============================================
+def make_whatsapp_link(plan_name, price):
+    import urllib.parse
+    number = "212719082215"
+    message = f"مرحباً، أرغب في الاشتراك في حزمة *{plan_name}* ({price} درهم/شهر). هل يمكنكم مساعدتي؟"
+    return f"https://wa.me/{number}?text={urllib.parse.quote(message)}"
+
 def show_landing():
     # عدّاد الوكلاء
     st.markdown(
@@ -238,6 +249,7 @@ def show_landing():
             <p>✅ وكيل واحد من اختيارك</p>
             <p>✅ 20 مهمة شهرياً</p>
             <p>✅ دعم واتساب</p>
+        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Starter%20%28500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 اشترك الآن</a>
         </div>
         """, unsafe_allow_html=True)
     with col2:
@@ -249,6 +261,7 @@ def show_landing():
             <p>✅ 100 مهمة شهرياً</p>
             <p>✅ كل الميزات</p>
             <p>✅ دعم أولوية</p>
+        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Pro%20%281200%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 اشترك الآن</a>
         </div>
         """, unsafe_allow_html=True)
     with col3:
@@ -260,6 +273,7 @@ def show_landing():
             <p>✅ غير محدود</p>
             <p>✅ تخصيص كامل</p>
             <p>✅ دعم 24/7</p>
+        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Business%20%282500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 اشترك الآن</a>
         </div>
         """, unsafe_allow_html=True)
 
