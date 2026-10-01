@@ -15,6 +15,7 @@ from social_media import SocialMediaAgent
 from meeting_notes import MeetingNotesAgent
 from supplier_agent import SupplierAgent
 import streamlit_authenticator as stauth
+import admin_panel
 import yaml
 
 # نظام الوكلاء السبعة
@@ -70,6 +71,11 @@ if _os.path.exists(_auth_file):
         with _col2:
             if st.button("📊 لوحتي", key="goto_dash"):
                 st.session_state.page = "dashboard"
+                st.rerun()
+        _admin_roles = st.session_state.get("roles") or []
+        if "admin" in _admin_roles:
+            if st.button("⚙️ المدير", key="goto_admin"):
+                st.session_state.page = "admin"
                 st.rerun()
         with st.container():
             _authenticator.logout(location="main", key="main_logout")
@@ -252,6 +258,110 @@ def show_features():
     st.divider()
     if st.button("💬 اشترك الآن", type="primary", key="feat_subscribe"):
         st.markdown("[اضغط هنا للاشتراك عبر واتساب](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحباً، أرغب في الاشتراك في منصة Yonah Ashkenaz") + ")")
+
+
+def show_admin():
+    """لوحة تحكم المدير — إدارة المستخدمين"""
+    # حماية: admin فقط
+    roles = st.session_state.get("roles") or []
+    if "admin" not in roles:
+        st.error("⛔ هذه الصفحة للمدير فقط")
+        if st.button("⬅️ رجوع", key="admin_unauth_back"):
+            st.session_state.page = "landing"
+            st.rerun()
+        return
+
+    st.markdown('<div class="main-header">⚙️ لوحة المدير</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">إدارة المستخدمين والاشتراكات</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="admin_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    # إحصائيات
+    s = admin_panel.stats()
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("👥 المجموع", s["total"])
+    c2.metric("👑 مدراء", s["admins"])
+    c3.metric("👤 عاديون", s["regular"])
+    c4.metric("🕐 آخر تحديث", s["updated"].split()[1])
+
+    st.divider()
+
+    # عرض المستخدمين
+    st.markdown("### 👥 المستخدمون")
+    users = admin_panel.list_users()
+    if users:
+        import pandas as _pd
+        df = _pd.DataFrame(users)
+        df.columns = ["اسم المستخدم", "البريد", "الاسم", "الأدوار"]
+        st.dataframe(df, use_container_width=True, hide_index=True)
+    else:
+        st.info("لا يوجد مستخدمون")
+
+    st.divider()
+
+    # إضافة مستخدم
+    st.markdown("### ➕ إضافة مستخدم جديد")
+    with st.form("add_user_form"):
+        c1, c2 = st.columns(2)
+        with c1:
+            new_username = st.text_input("اسم المستخدم *")
+            new_email = st.text_input("البريد الإلكتروني *")
+            new_first = st.text_input("الاسم الأول")
+        with c2:
+            new_last = st.text_input("الاسم الأخير")
+            new_password = st.text_input("كلمة السر *", type="password")
+            new_role = st.selectbox("الدور", ["user", "admin"])
+
+        submitted = st.form_submit_button("➕ إضافة", type="primary")
+        if submitted:
+            if not new_username or not new_password:
+                st.error("⚠️ اسم المستخدم وكلمة السر مطلوبان")
+            else:
+                ok, msg = admin_panel.add_user(
+                    new_username, new_email, new_first, new_last, new_password, new_role
+                )
+                if ok:
+                    st.success(f"✅ {msg}")
+                    st.rerun()
+                else:
+                    st.error(f"❌ {msg}")
+
+    st.divider()
+
+    # حذف مستخدم
+    st.markdown("### 🗑️ حذف مستخدم")
+    usernames = [u["username"] for u in users]
+    if usernames:
+        target = st.selectbox("اختر مستخدماً", usernames, key="admin_del_target")
+        if st.button(f"🗑️ حذف {target}", key="admin_del_btn"):
+            if target == st.session_state.get("username"):
+                st.error("⛔ لا يمكنك حذف حسابك الحالي")
+            else:
+                ok, msg = admin_panel.delete_user(target)
+                if ok:
+                    st.success(f"✅ {msg}")
+                    st.rerun()
+                else:
+                    st.error(f"❌ {msg}")
+
+    st.divider()
+
+    # تغيير كلمة السر
+    st.markdown("### 🔑 تغيير كلمة السر")
+    if usernames:
+        target_pwd = st.selectbox("اختر مستخدماً", usernames, key="admin_pwd_target")
+        new_pwd = st.text_input("كلمة السر الجديدة", type="password", key="admin_new_pwd")
+        if st.button("🔑 تغيير كلمة السر", key="admin_change_pwd"):
+            if len(new_pwd) < 6:
+                st.error("⚠️ كلمة السر يجب أن تكون 6 أحرف على الأقل")
+            else:
+                ok, msg = admin_panel.change_password(target_pwd, new_pwd)
+                if ok:
+                    st.success(f"✅ {msg}")
+                else:
+                    st.error(f"❌ {msg}")
 
 
 def show_landing():
@@ -1352,6 +1462,8 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "admin":
+    show_admin()
 elif st.session_state.page == "features":
     show_features()
 elif st.session_state.page == "landing":
