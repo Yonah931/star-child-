@@ -99,6 +99,9 @@ if _os.path.exists(_auth_file):
                 st.rerun()
         _admin_roles = st.session_state.get("roles") or []
         if "admin" in _admin_roles:
+            if st.button("📊 إحصائيات", key="goto_stats"):
+                st.session_state.page = "stats"
+                st.rerun()
             if st.button("👑 المدير", key="goto_admin"):
                 st.session_state.page = "admin"
                 st.rerun()
@@ -606,6 +609,77 @@ def show_my_invoices():
             st.json(inv)
         else:
             st.error("❌ الفاتورة غير موجودة")
+
+
+def show_stats():
+    """لوحة الإحصائيات — للمدير فقط"""
+    roles = st.session_state.get("roles") or []
+    if "admin" not in roles:
+        st.error("⛔ هذه الصفحة للمدير فقط")
+        if st.button("⬅️ رجوع", key="stats_unauth"):
+            st.session_state.page = "landing"
+            st.rerun()
+        return
+
+    st.markdown('<div class="main-header">📊 الإحصائيات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">نظرة شاملة على نشاط المنصة</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="stats_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    stats = database.get_full_stats()
+
+    st.divider()
+
+    # الإحصائيات الرئيسية
+    st.markdown("### 🎯 الأرقام الرئيسية")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("📄 الفواتير", stats["invoices_count"])
+    c2.metric("💰 إجمالي TTC", f"{stats['invoices_total']:,.2f} DH")
+    c3.metric("💵 إجمالي HT", f"{stats['invoices_subtotal']:,.2f} DH")
+    c4.metric("📝 المهمات", stats["tasks_count"])
+
+    st.divider()
+
+    # أعلى الوكلاء
+    st.markdown("### 🏆 الوكلاء الأكثر استخداماً")
+    if stats["top_agents"]:
+        for i, (agent, count) in enumerate(stats["top_agents"], 1):
+            medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "▫️"
+            c1, c2 = st.columns([4, 1])
+            c1.markdown(f"{medal} **{agent}**")
+            c2.markdown(f"**{count}** استخدام")
+    else:
+        st.info("📭 لا توجد مهمات مسجّلة بعد")
+
+    st.divider()
+
+    # آخر الفواتير
+    st.markdown("### 🕐 آخر الفواتير")
+    if stats["recent_invoices"]:
+        import pandas as _pd
+        df = _pd.DataFrame(
+            stats["recent_invoices"],
+            columns=["التاريخ", "رقم الفاتورة", "العميل", "الإجمالي (DH)"]
+        )
+        st.dataframe(df, width="stretch", hide_index=True)
+    else:
+        st.info("📭 لا توجد فواتير")
+
+    st.divider()
+
+    # نشاط المستخدمين
+    st.markdown("### 👥 نشاط المستخدمين")
+    activity = database.get_user_activity()
+    if activity:
+        for username, count in activity:
+            st.markdown(f"- **{username}**: {count} فاتورة")
+    else:
+        st.info("📭 لا يوجد نشاط مسجّل")
+
+    st.divider()
+    st.caption("📊 يتم التحديث تلقائياً عند كل زيارة")
 
 
 def show_landing():
@@ -1719,6 +1793,8 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "stats":
+    show_stats()
 elif st.session_state.page == "my_invoices":
     show_my_invoices()
 elif st.session_state.page == "about":

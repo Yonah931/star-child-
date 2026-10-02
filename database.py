@@ -156,3 +156,91 @@ def get_invoices_stats(username=None):
     conn.close()
     return {"count": count or 0, "total": total or 0}
 
+
+
+# ============================================
+# إحصائيات شاملة (للمدير)
+# ============================================
+def get_full_stats():
+    """إحصائيات شاملة للنظام"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    # فواتير (subtotal غير موجود كعمود — نحسبه من data_json)
+    try:
+        cursor.execute("SELECT COUNT(*), COALESCE(SUM(total),0) FROM invoices")
+        _row = cursor.fetchone()
+        inv_count = _row[0] or 0
+        inv_total = _row[1] or 0
+        # استخراج subtotal من data_json
+        inv_subtotal = 0
+        try:
+            cursor.execute("SELECT data_json FROM invoices")
+            import json as _json
+            for (_dj,) in cursor.fetchall():
+                try:
+                    _d = _json.loads(_dj)
+                    inv_subtotal += _d.get("subtotal", 0)
+                except Exception:
+                    pass
+        except Exception:
+            inv_subtotal = 0
+    except Exception:
+        inv_count, inv_total, inv_subtotal = 0, 0, 0
+    
+    # مهمات (tasks)
+    try:
+        cursor.execute("SELECT COUNT(*) FROM tasks")
+        task_count = cursor.fetchone()[0]
+    except Exception:
+        task_count = 0
+    
+    # أعلى 5 وكلاء استخداماً
+    try:
+        cursor.execute("""
+            SELECT agent, COUNT(*) as cnt FROM tasks 
+            WHERE agent IS NOT NULL AND agent != ''
+            GROUP BY agent ORDER BY cnt DESC LIMIT 5
+        """)
+        top_agents = cursor.fetchall()
+    except Exception:
+        top_agents = []
+    
+    # آخر 5 فواتير
+    try:
+        cursor.execute("""
+            SELECT timestamp, number, client_name, total 
+            FROM invoices ORDER BY id DESC LIMIT 5
+        """)
+        recent_invoices = cursor.fetchall()
+    except Exception:
+        recent_invoices = []
+    
+    conn.close()
+    
+    return {
+        "invoices_count": inv_count or 0,
+        "invoices_total": inv_total or 0,
+        "invoices_subtotal": inv_subtotal or 0,
+        "tasks_count": task_count or 0,
+        "top_agents": top_agents,
+        "recent_invoices": recent_invoices,
+    }
+
+
+def get_user_activity():
+    """نشاط المستخدمين"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT username, COUNT(*) as cnt 
+            FROM invoices WHERE username IS NOT NULL AND username != ''
+            GROUP BY username ORDER BY cnt DESC LIMIT 10
+        """)
+        rows = cursor.fetchall()
+    except Exception:
+        rows = []
+    conn.close()
+    return rows
+
