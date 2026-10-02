@@ -112,6 +112,43 @@ if _os.path.exists(_auth_file):
 
 st.markdown("""
 <style>
+
+/* ============================================
+   Logo + Brand
+   ============================================ */
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 10px 0 20px 0;
+}
+.brand-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #00d4ff 0%, #00ff88 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.25);
+}
+.brand-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00d4ff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.brand-tagline {
+    text-align: center;
+    color: #888;
+    font-size: 0.95rem;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
     .main-header {font-size: 2.5rem; font-weight: bold; text-align: center;
         background: linear-gradient(90deg, #00d4ff, #00ff88);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
@@ -683,6 +720,15 @@ def show_stats():
 
 
 def show_landing():
+    # الشعار
+    st.markdown("""
+    <div class="brand-logo">
+        <div class="brand-icon">🤖</div>
+        <div class="brand-text">Yonah Ashkenaz</div>
+    </div>
+    <div class="brand-tagline">منصة الذكاء الاصطناعي لإدارة الأعمال</div>
+    """, unsafe_allow_html=True)
+
     # عدّاد الوكلاء
     st.markdown(
         '<div style="text-align:center; margin: 20px 0; font-size:1.4rem; color:#00d4ff;">'
@@ -696,7 +742,6 @@ def show_landing():
     <div style="text-align:center; padding:3rem 1rem;
         background:linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
         border-radius:20px; margin-bottom:2rem;">
-        <div class="main-header">📊 Yonah Ashkenaz</div>
         <div style="color:#a8b4c8; font-size:1.2rem; margin-top:1rem;">
             منصة الذكاء الاصطناعي لإدارة الأعمال
         </div>
@@ -1299,6 +1344,7 @@ def show_cfo():
 # ============================================================
 def show_invoice():
     lang = st.selectbox("Choix", ["fr", "ar", "en"], key="inv_lang_main")
+    st.markdown('<div class="main-header">🧾 Yonah Invoice</div>', unsafe_allow_html=True)
     st.session_state.lang = lang
 
     # زر تحميل النموذج التجريبي
@@ -1313,7 +1359,6 @@ def show_invoice():
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             key="inv_demo_dl",
         )
-    st.markdown('<div class="main-header">🧾 Yonah Invoice</div>', unsafe_allow_html=True)
     if st.button("⬅️ رجوع", key="inv_back"):
         st.session_state.page = "landing"
         st.rerun()
