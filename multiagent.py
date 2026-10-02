@@ -30,6 +30,20 @@ def get_secret(key):
 
 st.set_page_config(page_title="Sureflow Agentic OS", page_icon="🤖", layout="wide", initial_sidebar_state="expanded")
 
+
+# ============================================
+# رابط العودة إلى المنصة الرئيسية
+# ============================================
+st.markdown(
+    '<div style="text-align:center; padding:8px; margin-bottom:15px;">'
+    '<a href="https://star-child-agentic-os-yonah-ashkenaz-morocco-sureflow-business1.streamlit.app" '
+    'target="_self" style="text-decoration:none; color:#00d4ff; font-weight:bold; '
+    'padding:10px 20px; border:2px solid #00d4ff; border-radius:8px;">'
+    '🔙 العودة إلى المنصة الرئيسية</a></div>',
+    unsafe_allow_html=True
+)
+
+
 st.markdown("""
 <style>
     .stApp {background-color: #0a0e1a;}
