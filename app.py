@@ -17,6 +17,7 @@ from meeting_notes import MeetingNotesAgent
 from supplier_agent import SupplierAgent
 import streamlit_authenticator as stauth
 import admin_panel
+import database
 import yaml
 
 # نظام الوكلاء السبعة
@@ -88,6 +89,9 @@ if _os.path.exists(_auth_file):
         with _col2:
             if st.button("📊 لوحتي", key="goto_dash"):
                 st.session_state.page = "dashboard"
+                st.rerun()
+            if st.button("📁 فواتيري", key="goto_myinv"):
+                st.session_state.page = "my_invoices"
                 st.rerun()
         with _col2:
             if st.button("⚙️ الإعدادات", key="goto_settings"):
@@ -551,6 +555,57 @@ def show_about():
 
     st.divider()
     st.caption("© 2026 Yonah Ashkenaz — Agentic OS. جميع الحقوق محفوظة.")
+
+
+def show_my_invoices():
+    """صفحة فواتيري"""
+    st.markdown('<div class="main-header">📁 فواتيري</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">سجل الفواتير المُنشأة</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="myinv_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    username = st.session_state.get("username", "")
+    rows = database.get_invoices(username=username, limit=100)
+    stats = database.get_invoices_stats(username=username)
+
+    # إحصائيات
+    c1, c2, c3 = st.columns(3)
+    c1.metric("📄 عدد الفواتير", stats["count"])
+    c2.metric("💰 الإجمالي", f"{stats['total']:,.2f} DH")
+    avg = stats["total"] / stats["count"] if stats["count"] > 0 else 0
+    c3.metric("📊 المتوسط", f"{avg:,.2f} DH")
+
+    st.divider()
+
+    if not rows:
+        st.info("📭 لا توجد فواتير بعد. اذهب إلى وكيل الفواتير وأنشئ واحدة.")
+        if st.button("🧾 إنشاء فاتورة", type="primary", key="myinv_create"):
+            st.session_state.page = "invoice"
+            st.rerun()
+        return
+
+    # جدول الفواتير
+    st.markdown("### 📋 الفواتير الأخيرة")
+    import pandas as _pd
+    df = _pd.DataFrame(rows, columns=["التاريخ", "رقم الفاتورة", "العميل", "الإجمالي", "TVA", "اللغة"])
+    df["الإجمالي"] = df["الإجمالي"].apply(lambda x: f"{x:,.2f} DH")
+    df["TVA"] = df["TVA"].apply(lambda x: f"{int(x * 100)}%")
+    st.dataframe(df, width="stretch", hide_index=True)
+
+    st.divider()
+
+    # تحميل فاتورة بالرقم
+    st.markdown("### ⬇️ تحميل فاتورة")
+    numbers = [row[1] for row in rows]
+    selected = st.selectbox("اختر رقم الفاتورة", numbers, key="myinv_select")
+    if st.button("📥 عرض التفاصيل", key="myinv_view"):
+        inv = database.get_invoice_by_number(selected)
+        if inv:
+            st.json(inv)
+        else:
+            st.error("❌ الفاتورة غير موجودة")
 
 
 def show_landing():
@@ -1207,6 +1262,15 @@ def show_invoice():
                 agent = InvoiceAgent()
                 inv = agent.create_invoice(client_name=client_name, client_address=client_address or "-", items=items, tax_rate=0.20)
                 st.session_state["inv_dict"] = inv
+                # حفظ في قاعدة البيانات
+                try:
+                    database.save_invoice(
+                        inv,
+                        username=st.session_state.get("username"),
+                        lang=lang,
+                    )
+                except Exception:
+                    pass
                 st.success(f"✅ تم إنشاء الفاتورة {inv['number']}")
             except Exception as e:
                 st.error(f"خطأ: {e}")
@@ -1655,6 +1719,8 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "my_invoices":
+    show_my_invoices()
 elif st.session_state.page == "about":
     show_about()
 elif st.session_state.page == "settings":
