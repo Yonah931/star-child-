@@ -102,3 +102,31 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
 - ⏳ نظام دفع (تحويل بنكي لاحقاً)
 - ⏳ لوحة تحكم العميل
 - ⏳ شروط استخدام + عقد
+
+
+## 23. ميزات جديدة (آخر 24 ساعة)
+- ✅ تعريب شاشة الدخول
+- ✅ لوحة تحكم العميل (Dashboard)
+- ✅ صفحة الميزات (Features)
+- ✅ لوحة المدير (Admin Panel)
+- ✅ صفحة الإعدادات (Settings)
+- ✅ صفحة من نحن (About Us)
+- ✅ Rate Limiting (5 محاولات → قفل 15 دقيقة)
+- ✅ حفظ الفواتير تلقائياً (SQLite)
+- ✅ صفحة "فواتيري" (عرض + تحميل + إحصائيات)
+- ✅ أزرار اشتراك واتساب على الأسعار
+
+## 24. الملفات الجديدة
+| الملف | الوظيفة |
+|---|---|
+| security.py | Rate limiting |
+| admin_panel.py | إدارة المستخدمين |
+| auth_config.yaml | بيانات الدخول |
+| history.db | قاعدة بيانات (tasks + invoices) |
+
+## 25. قواعد البيانات (SQLite)
+- **tasks:** id, timestamp, user_input, agent, response
+- **invoices:** id, timestamp, username, number, client_name, total, tax_rate, lang, data_json
+
+## 26. آخر commit
+4509c09 Add invoice history with auto-save + my invoices page
