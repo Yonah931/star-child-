@@ -31,35 +31,16 @@ def get_secret(key):
 st.set_page_config(page_title="Sureflow Agentic OS", page_icon="🤖", layout="wide", initial_sidebar_state="expanded")
 
 
+
 # ============================================
 # رابط العودة إلى المنصة الرئيسية
 # ============================================
+st.markdown("---")
 st.markdown(
-    '<div style="text-align:center; padding:8px; margin-bottom:15px;">'
-    '<a href="https://star-child-agentic-os-yonah-ashkenaz-morocco-sureflow-business1.streamlit.app" '
-    'target="_self" style="text-decoration:none; color:#00d4ff; font-weight:bold; '
-    'padding:10px 20px; border:2px solid #00d4ff; border-radius:8px;">'
-    '🔙 العودة إلى المنصة الرئيسية</a></div>',
-    unsafe_allow_html=True
+    "### 🔙 [العودة إلى المنصة الرئيسية](https://star-child-agentic-os-yonah-ashkenaz-morocco-sureflow-business1.streamlit.app)",
+    unsafe_allow_html=False,
 )
-
-
-st.markdown("""
-<style>
-    .stApp {background-color: #0a0e1a;}
-    .main-header {font-size: 3rem; font-weight: bold; text-align: center; color: #00d4ff; text-shadow: 0 0 20px #00d4ff88; margin-bottom: 0.2rem;}
-    .sub-header {text-align: center; color: #6b7a99; margin-bottom: 2rem; font-size: 1rem;}
-    .stat-card {background: linear-gradient(135deg, #1a1f35 0%, #0f1422 100%); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #00d4ff33;}
-    .stat-number {font-size: 2rem; font-weight: bold; color: #00d4ff;}
-    .stat-label {color: #6b7a99; font-size: 0.85rem; margin-top: 5px;}
-    .agent-card {background: linear-gradient(135deg, #1a1f35 0%, #0f1422 100%); border-radius: 10px; padding: 12px; margin: 6px 0; border-left: 4px solid #00d4ff;}
-    .agent-name {font-weight: bold; color: #00d4ff; font-size: 0.95rem;}
-    .agent-role {color: #6b7a99; font-size: 0.8rem; margin-top: 2px;}
-    .status-bar {background: #1a1f35; border-radius: 10px; padding: 12px 20px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid #00d4ff33;}
-    .status-dot {display: inline-block; width: 10px; height: 10px; background: #00ff88; border-radius: 50%; margin-left: 8px; box-shadow: 0 0 10px #00ff88;}
-    .data-badge {background: #00ff8833; color: #00ff88; padding: 4px 10px; border-radius: 10px; font-size: 0.75rem;}
-</style>
-""", unsafe_allow_html=True)
+st.markdown("---")
 
 class AgentState(TypedDict):
     task: str
