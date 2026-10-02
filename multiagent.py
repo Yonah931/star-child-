@@ -36,9 +36,9 @@ st.set_page_config(page_title="Sureflow Agentic OS", page_icon="🤖", layout="w
 # رابط العودة إلى المنصة الرئيسية
 # ============================================
 st.markdown("---")
-st.markdown(
-    "### 🔙 [العودة إلى المنصة الرئيسية](https://star-child-agentic-os-yonah-ashkenaz-morocco-sureflow-business1.streamlit.app)",
-    unsafe_allow_html=False,
+st.link_button(
+    "🔙 العودة إلى المنصة الرئيسية",
+    "https://star-child-agentic-os-yonah-ashkenaz-morocco-sureflow-business1.streamlit.app",
 )
 st.markdown("---")
 
