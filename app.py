@@ -470,6 +470,89 @@ def show_settings():
         st.warning("⚠️ للتواصل مع الإدارة لحذف الحساب: ashkenazyonah@gmail.com")
 
 
+def show_about():
+    """صفحة من نحن"""
+    st.markdown('<div class="main-header">👋 من نحن</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">قصة Yonah Ashkenaz Agentic OS</div>', unsafe_allow_html=True)
+
+    if st.button("⬅️ رجوع", key="about_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    st.divider()
+
+    # القصة
+    st.markdown("""
+    ### 🎯 رؤيتنا
+    
+    نبني **أدوات ذكية مخصصة للسوق المغربي** — بلغات ثلاثة، بأسعار في متناول الجميع، 
+    وبفهم عميق لاحتياجات المقاولات الصغيرة والمتوسطة.
+    
+    ### 💡 لماذا؟
+    
+    لاحظنا أن معظم أدوات الذكاء الاصطناعي:
+    - 🚫 صُمّمت للسوق الأمريكي/الأوروبي
+    - 🚫 باهظة الثمن بالدولار
+    - 🚫 لا تفهم TVA/IS/CNSS المغربية
+    - 🚫 لا تدعم العربية بشكل احترافي
+    
+    **قررنا أن نبني البديل المغربي.**
+    
+    ### 🚀 ما الذي يميزنا؟
+    
+    - 🇲🇦 **مصمّمة للمغرب:** TVA, IS, IR, CNSS, ICE, OMPIC
+    - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
+    - 🤖 **12 وكيلاً ذكياً:** محاسبة، HR، CFO، تسويق، دعم
+    - 💰 **أسعار بالدرهم:** تبدأ من 500 درهم/شهر
+    - ⚡ **سريعة:** نتائج في ثوانٍ
+    - 🔒 **آمنة:** تسجيل دخول + حماية متقدمة
+    """)
+
+    st.divider()
+
+    # الإحصائيات
+    st.markdown("### 📊 بالأرقام")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("🤖 الوكلاء", "12")
+    c2.metric("🌍 اللغات", "3")
+    c3.metric("⚡ الذكاء الاصطناعي", "7 وكلاء")
+    c4.metric("🇲🇦 مصمّم في", "المغرب")
+
+    st.divider()
+
+    # المؤسس
+    st.markdown("""
+    ### 👤 المؤسس
+    
+    **Yonah Ashkenaz**  
+    مهندس أنظمة ذكاء اصطناعي — Casablanca, Maroc
+    
+    شغوف ببناء أدوات تسهّل على المقاولين والمحاسبين المغاربة يومهم.
+    
+    📧 ashkenazyonah@gmail.com  
+    💬 +212719082215
+    """)
+
+    st.divider()
+
+    # تواصل
+    st.markdown("### 📞 تواصل معنا")
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown("""
+        **البريد الإلكتروني:**  
+        📧 ashkenazyonah@gmail.com
+        """)
+    with c2:
+        st.markdown("""
+        **واتساب:**  
+        💬 +212719082215
+        """)
+
+    st.divider()
+    st.caption("© 2026 Yonah Ashkenaz — Agentic OS. جميع الحقوق محفوظة.")
+
+
 def show_landing():
     # عدّاد الوكلاء
     st.markdown(
@@ -589,6 +672,10 @@ def show_landing():
 
     if st.button("📝 جرّب Meeting Notes", width="stretch", key="btn_meeting_notes"):
         st.session_state.page = "meeting_notes"
+        st.rerun()
+
+    if st.button("👋 من نحن", width="stretch", key="btn_about"):
+        st.session_state.page = "about"
         st.rerun()
 
     if st.button("✨ الميزات الكاملة", width="stretch", key="btn_features"):
@@ -1568,6 +1655,8 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "about":
+    show_about()
 elif st.session_state.page == "settings":
     show_settings()
 elif st.session_state.page == "admin":
