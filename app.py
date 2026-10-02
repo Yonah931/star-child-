@@ -15,6 +15,10 @@ from email_agent import EmailAgent
 from social_media import SocialMediaAgent
 from meeting_notes import MeetingNotesAgent
 from supplier_agent import SupplierAgent
+try:
+    from multiagent import show_agents_full
+except Exception as _e:
+    show_agents_full = None
 import streamlit_authenticator as stauth
 import admin_panel
 import database
@@ -782,8 +786,8 @@ def show_landing():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب الوكلاء", key="go_agents", width="stretch"):
-            st.session_state.page = "agents"
+        if st.button("🤖 جرّب الوكلاء السبعة", key="go_agents", width="stretch"):
+            st.session_state.page = "agents_full"
             st.rerun()
 
     # صف ثانٍ
@@ -1838,6 +1842,11 @@ def show_supplier():
 
 if st.session_state.page == "dashboard":
     show_dashboard()
+elif st.session_state.page == "agents_full":
+    if show_agents_full:
+        show_agents_full()
+    else:
+        st.error("⚠️ تطبيق الوكلاء غير متاح حالياً")
 elif st.session_state.page == "stats":
     show_stats()
 elif st.session_state.page == "my_invoices":
