@@ -130,3 +130,26 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
 
 ## 26. آخر commit
 4509c09 Add invoice history with auto-save + my invoices page
+
+
+## 27. الدمج النهائي (19 وكيلاً)
+- ✅ تم دمج `multiagent.py` في `app.py` كصفحة داخلية `show_agents_full()`
+- ✅ زر "🤖 جرّب الوكلاء السبعة" يفتحها بنفس الجلسة
+- ✅ زر "⬅️ رجوع" داخل الصفحة يعود للرئيسية
+- ✅ لا حاجة لتسجيل دخول ثانٍ
+
+### توزيع الوكلاء:
+- **في التطبيق الرئيسي (12):** المحاسب، HR، CFO، Invoice، Moroccan Admin، Customer Support، Content Writer، Email، Social Media، Meeting Notes، Supplier، + زر الوكلاء السبعة
+- **داخل show_agents_full (7):** CEO، Assistant، Researcher، CMO، SalesRep، Dev، DataAnalyst
+
+**المجموع: 19 وكيلاً في تطبيق واحد**
+
+## 28. آخر commit
+009b6d5 Merge multiagent into unified app (19 agents in one session)
+
+## 29. المهام المتبقية
+- فيديو Demo (تأجّل)
+- RIB + صفحة دفع
+- صفحة شروط الاستخدام
+- نموذج "تواصل معنا"
+- تسويق LinkedIn + قائمة عملاء
