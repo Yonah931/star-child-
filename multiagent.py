@@ -216,55 +216,48 @@ def show_agents_full():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ===== شبكة الوكلاء + الحالة =====
-    col_net, col_status = st.columns([2, 1])
+    # ============================================
+    # شبكة الوكلاء العصرية
+    # ============================================
+    st.markdown("### 🕸️ شبكة الوكلاء الذكية")
 
-    with col_net:
-        st.markdown("### 🕸️ شبكة الوكلاء")
-        agents = ["CEO", "Assistant", "Researcher", "CMO", "SalesRep", "Dev", "DataAnalyst"]
-        labels = ["👑 CEO", "🤖 Assistant", "🔍 Researcher", "📢 CMO", "💼 SalesRep", "💻 Dev", "📊 DataAnalyst"]
-        x_pos = [0.5, 0.1, 0.25, 0.42, 0.58, 0.75, 0.9]
-        y_pos = [1.0, 0.4, 0.1, 0.1, 0.1, 0.1, 0.1]
-    
-        edge_x, edge_y = [], []
-        for i in range(1, len(agents)):
-            edge_x.extend([0.5, x_pos[i], None])
-            edge_y.extend([1.0, y_pos[i], None])
-    
-        edge_trace = go.Scatter(x=edge_x, y=edge_y, line=dict(width=1.5, color='#00d4ff44'), hoverinfo='none', mode='lines')
-        node_colors = ['#00d4ff', '#00ff88', '#ff6b6b', '#ffd93d', '#a78bfa', '#4ade80', '#fb923c']
-        node_trace = go.Scatter(
-            x=x_pos, y=y_pos, mode='markers+text', text=labels,
-            textposition="bottom center",
-            textfont=dict(size=13, color='#ffffff', family='Arial'),
-            marker=dict(size=45, color=node_colors, line=dict(width=2, color='#ffffff')),
-            hoverinfo='text',
-            hovertext=[f"{a}<br>المهام: {st.session_state.agents_used.get(a, 0)}" for a in agents]
-        )
-        fig = go.Figure(data=[edge_trace, node_trace], layout=go.Layout(
-            showlegend=False, hovermode='closest',
-            margin=dict(b=0, l=0, r=0, t=0),
-            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[0, 1]),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-0.15, 1.1]),
-            plot_bgcolor='#0a0e1a', paper_bgcolor='#0a0e1a', height=400,
-        ))
-        st.plotly_chart(fig, use_container_width=True)
+    agents_info = [
+        ("👔", "CEO", "المنسق الرئيسي", "#00d4ff", "#0088cc"),
+        ("💬", "Assistant", "الأسئلة العامة", "#00ff88", "#00aa55"),
+        ("🔍", "Researcher", "البحث في الإنترنت", "#ff6b6b", "#cc3333"),
+        ("📢", "CMO", "التسويق والمحتوى", "#ffd93d", "#ccaa00"),
+        ("💼", "SalesRep", "المبيعات والعملاء", "#a78bfa", "#7744cc"),
+        ("👨💻", "Dev", "توليد وتنفيذ الأكواد", "#4ade80", "#22aa55"),
+        ("📊", "DataAnalyst", "تحليل CSV/Excel", "#fb923c", "#cc6622"),
+    ]
 
-    with col_status:
-        st.markdown("### 📊 حالة الوكلاء")
-        agents_info = [
-            ("👑 CEO", "المنسق الرئيسي"),
-            ("🤖 Assistant", "الأسئلة العامة"),
-            ("🔍 Researcher", "بحث في الإنترنت"),
-            ("📢 CMO", "التسويق والمحتوى"),
-            ("💼 SalesRep", "المبيعات والعملاء"),
-            ("💻 Dev", "توليد وتنفيذ الأكواد"),
-            ("📊 DataAnalyst", "تحليل CSV/Excel"),
-        ]
-        for name, role in agents_info:
-            st.markdown(f'<div class="agent-card"><div class="agent-name">{name}</div><div class="agent-role">{role}</div></div>', unsafe_allow_html=True)
+    # صفان: 4 + 3
+    row1 = agents_info[:4]
+    row2 = agents_info[4:]
+
+    for row in [row1, row2]:
+        cols = st.columns(len(row) if len(row) == 4 else 4)
+        for idx, (icon, name, role, c1, c2) in enumerate(row):
+            with cols[idx]:
+                st.markdown(f"""
+                <div style="background: linear-gradient(135deg, {c1}22 0%, {c2}22 100%);
+                            border: 1px solid {c1}55;
+                            border-top: 4px solid {c1};
+                            border-radius: 16px;
+                            padding: 20px 15px;
+                            text-align: center;
+                            margin-bottom: 15px;
+                            box-shadow: 0 8px 24px {c1}22;
+                            transition: transform 0.2s;">
+                    <div style="font-size: 3rem; margin-bottom: 8px;">{icon}</div>
+                    <div style="font-size: 1.3rem; font-weight: 700; color: {c1};
+                                margin-bottom: 4px;">{name}</div>
+                    <div style="font-size: 0.95rem; color: #bbb;">{role}</div>
+                </div>
+                """, unsafe_allow_html=True)
 
     st.markdown("---")
+
 
     # ===== جلسة الذاكرة =====
     if "thread_id" not in st.session_state:
