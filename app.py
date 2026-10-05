@@ -86,6 +86,20 @@ if _os.path.exists(_auth_file):
         st.session_state["login_attempts"] = 0
         st.session_state["login_locked_until"] = None
 
+    # قائمة اللغة العالمية
+    _current_lang = st.session_state.get("lang", "ar")
+    _lang_options = {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}
+    _selected_lang = st.selectbox(
+        "🌍 Language",
+        options=["ar", "fr", "en"],
+        index=["ar", "fr", "en"].index(_current_lang),
+        format_func=lambda x: _lang_options[x],
+        key="global_lang_selector",
+    )
+    if _selected_lang != _current_lang:
+        st.session_state["lang"] = _selected_lang
+        st.rerun()
+
         # عرض شريط علوي مع اسم المستخدم وزر خروج
         _col1, _col2 = st.columns([4, 1])
         with _col1:
@@ -176,6 +190,180 @@ st.markdown("""
     .stButton > button {background: linear-gradient(90deg, #00d4ff, #00ff88) !important;
         color: #0a0e1a !important; border: none !important; font-weight: bold !important;
         border-radius: 10px !important; padding: 0.75rem 2rem !important;}
+
+
+/* ============================================
+   Modern Dark Theme v2
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+.stApp {
+    background: radial-gradient(ellipse at top, #0f1729 0%, #0a0e1a 50%, #050810 100%);
+    font-family: 'Cairo', sans-serif;
+}
+
+.brand-text, .main-header {
+    background: linear-gradient(135deg, #00d4ff, #00ff88) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 800;
+}
+
+.agents-count { color: #00d4ff !important; }
+
+.feature-card, .price-card, .agent-card {
+    backdrop-filter: blur(14px);
+    background: linear-gradient(135deg, rgba(20, 27, 45, 0.85), rgba(15, 23, 41, 0.7)) !important;
+    border: 1px solid rgba(0, 212, 255, 0.15) !important;
+    border-top: 3px solid #00d4ff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover, .price-card:hover, .agent-card:hover {
+    border-color: rgba(0, 212, 255, 0.5) !important;
+    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15) !important;
+    transform: translateY(-3px);
+}
+
+h1, h2, h3, .feature-title, .agent-name { color: #00d4ff !important; }
+.price-amount { color: #00ff88 !important; }
+
+/* الأزرار — بتدرج بنفسجي → سماوي دائماً (نموذج جديد) */
+.stButton > button {
+    background: linear-gradient(90deg, #c026d3 0%, #7c3aed 40%, #06b6d4 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35),
+                0 0 20px rgba(6, 182, 212, 0.15) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.stButton > button:hover {
+    background: linear-gradient(90deg, #d946ef 0%, #8b5cf6 40%, #22d3ee 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 24px rgba(124, 58, 237, 0.55),
+                0 0 30px rgba(6, 182, 212, 0.35) !important;
+    transform: translateY(-2px);
+}
+
+.stButton > button:focus,
+.stButton > button:active {
+    background: linear-gradient(90deg, #d946ef 0%, #8b5cf6 40%, #22d3ee 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 30px rgba(124, 58, 237, 0.7),
+                0 0 15px rgba(6, 182, 212, 0.5) !important;
+    outline: none !important;
+    transform: translateY(-2px);
+}
+
+/* الأزرار primary — نفس التصميم لكن أقوى */
+.stButton > button[kind="primary"] {
+    background: linear-gradient(90deg, #d946ef 0%, #8b5cf6 40%, #22d3ee 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45),
+                0 0 25px rgba(6, 182, 212, 0.25) !important;
+}
+
+.stButton > button[kind="primary"]:hover {
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.7),
+                0 0 40px rgba(6, 182, 212, 0.5) !important;
+}
+
+/* روابط الأزرار — نفس التدرج */
+.stLinkButton a {
+    background: linear-gradient(90deg, #c026d3 0%, #7c3aed 40%, #06b6d4 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35) !important;
+}
+
+.stLinkButton a:hover {
+    background: linear-gradient(90deg, #d946ef 0%, #8b5cf6 40%, #22d3ee 100%) !important;
+    box-shadow: 0 6px 24px rgba(124, 58, 237, 0.55) !important;
+    transform: translateY(-2px);
+}
+
+[data-testid="stMetricValue"] { color: #00d4ff !important; font-weight: 700; }
+[data-testid="stMetricLabel"] { color: #8892a8 !important; }
+
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+    margin: 20px 0;
+}
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0f1729 0%, #0a0e1a 100%);
+    border-right: 1px solid rgba(0, 212, 255, 0.12);
+}
+
+.stAlert {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(124, 58, 237, 0.05)) !important;
+    border-left: 4px solid #00d4ff !important;
+    border-radius: 10px;
+    color: #e8eef5 !important;
+}
+
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea,
+.stSelectbox > div > div > div {
+    background: rgba(20, 27, 45, 0.8) !important;
+    border: 1px solid rgba(0, 212, 255, 0.2) !important;
+    border-radius: 10px !important;
+    color: #e8eef5 !important;
+}
+
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus,
+.stSelectbox > div > div > div:focus {
+    border-color: #00d4ff !important;
+    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15) !important;
+}
+
+[data-testid="stDataFrame"] {
+    background: rgba(20, 27, 45, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.stProgress > div > div > div {
+    background: linear-gradient(90deg, #00d4ff, #7c3aed) !important;
+}
+
+a { color: #00d4ff !important; text-decoration: none; transition: all 0.2s; }
+a:hover { color: #00ff88 !important; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+
+[data-baseweb="select"] > div {
+    background-color: rgba(20, 27, 45, 0.8) !important;
+    border-color: rgba(0, 212, 255, 0.2) !important;
+}
+
+[data-baseweb="tab"][aria-selected="true"] {
+    background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+    color: #ffffff !important;
+}
+
+[role="radiogroup"] label[data-checked="true"] { color: #00d4ff !important; }
+
+.stCheckbox [data-baseweb="checkbox"] [aria-checked="true"] {
+    background: #00d4ff !important;
+    border-color: #00d4ff !important;
+}
+
+.stSpinner > div > div { border-top-color: #00d4ff !important; }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -752,117 +940,25 @@ def show_landing():
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("## 🎯 اختر الحل المناسب لك")
+    # قائمة الوكلاء
+    import json as _json
+    from agents_ui import render_agents_panel
+    with open("agents_data.json", "r", encoding="utf-8") as _f:
+        _agents = _json.load(_f)
+    render_agents_panel(_agents)
+
+    # أزرار ثانوية
     st.markdown("---")
-
-    # === المنتجان ===
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <div class="feature-title">المحاسب الذكي</div>
-            <div class="feature-desc">
-                حلّل ملفات Excel المحاسبية في ثوانٍ.<br>
-                اكتشف الأخطاء، احصل على تقارير PDF.<br>
-                3 لغات: عربي / فرنسي / إنجليزي.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب المحاسب", key="go_accountant", width="stretch"):
-            st.session_state.page = "accountant"
+    _colA, _colB = st.columns(2)
+    with _colA:
+        if st.button("About / من نحن", width="stretch", key="btn_about2"):
+            st.session_state.page = "about"
+            st.rerun()
+    with _colB:
+        if st.button("Features / الميزات", width="stretch", key="btn_features2"):
+            st.session_state.page = "features"
             st.rerun()
 
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <div class="feature-title">نظام الوكلاء السبعة</div>
-            <div class="feature-desc">
-                CEO + 6 وكلاء متخصصين.<br>
-                بحث حقيقي، مبيعات، تسويق، برمجة، تحليل.<br>
-                حل متكامل لإدارة الأعمال.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🤖 جرّب الوكلاء السبعة", key="go_agents", width="stretch"):
-            st.session_state.page = "agents_full"
-            st.rerun()
-
-    # صف ثانٍ
-    st.markdown("---")
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">👥</div>
-            <div class="feature-title">وكيل الموارد البشرية</div>
-            <div class="feature-desc">
-                فرز السير الذاتية، توليد إعلانات التوظيف،<br>
-                أسئلة المقابلات، تحليل المرشحين.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب HR", key="go_hr", width="stretch"):
-            st.session_state.page = "hr"
-            st.rerun()
-
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">💰</div>
-            <div class="feature-title">المدير المالي (CFO)</div>
-            <div class="feature-desc">
-                تحليل الربحية، حساب الضرائب،<br>
-                التدفق النقدي، التوصيات المالية.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🚀 جرّب CFO", key="go_cfo", width="stretch"):
-            st.session_state.page = "cfo"
-            st.rerun()
-
-    if st.button("🧾 جرّب Invoice", width="stretch", key="btn_invoice"):
-        st.session_state.page = "invoice"
-        st.rerun()
-
-    if st.button("🇲🇦 جرّب Moroccan Admin", width="stretch", key="btn_moroccan"):
-        st.session_state.page = "moroccan_admin"
-        st.rerun()
-
-    if st.button("📞 جرّب Customer Support", width="stretch", key="btn_customer_support"):
-        st.session_state.page = "customer_support"
-        st.rerun()
-
-    if st.button("✍️ جرّب Content Writer", width="stretch", key="btn_content_writer"):
-        st.session_state.page = "content_writer"
-        st.rerun()
-
-    if st.button("📧 جرّب Email Agent", width="stretch", key="btn_email_agent"):
-        st.session_state.page = "email_agent"
-        st.rerun()
-
-    if st.button("📱 جرّب Social Media", width="stretch", key="btn_social_media"):
-        st.session_state.page = "social_media"
-        st.rerun()
-
-    if st.button("📝 جرّب Meeting Notes", width="stretch", key="btn_meeting_notes"):
-        st.session_state.page = "meeting_notes"
-        st.rerun()
-
-    if st.button("👋 من نحن", width="stretch", key="btn_about"):
-        st.session_state.page = "about"
-        st.rerun()
-
-    if st.button("✨ الميزات الكاملة", width="stretch", key="btn_features"):
-        st.session_state.page = "features"
-        st.rerun()
-
-    if st.button("🚚 جرّب Supplier", width="stretch", key="btn_supplier"):
-        st.session_state.page = "supplier"
-        st.rerun()
 
     st.markdown("---")
     st.markdown("## 💰 الأسعار")

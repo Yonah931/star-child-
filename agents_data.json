@@ -1,0 +1,86 @@
+[
+  {
+    "id": "accountant",
+    "name": "المحاسب الذكي",
+    "desc": "Excel/CSV، كشف الأخطاء، تقارير PDF",
+    "icon": "chart",
+    "page": "accountant"
+  },
+  {
+    "id": "agents7",
+    "name": "نظام الوكلاء السبعة",
+    "desc": "CEO + 6 متخصصين لإدارة الأعمال",
+    "icon": "spark",
+    "page": "agents_full"
+  },
+  {
+    "id": "hr",
+    "name": "وكيل الموارد البشرية",
+    "desc": "فرز CVs، إعلانات توظيف، أسئلة مقابلات",
+    "icon": "users",
+    "page": "hr"
+  },
+  {
+    "id": "cfo",
+    "name": "المدير المالي (CFO)",
+    "desc": "تحليل الربحية، TVA/IS/CNSS",
+    "icon": "money",
+    "page": "cfo"
+  },
+  {
+    "id": "invoice",
+    "name": "وكيل الفواتير",
+    "desc": "فواتير احترافية + ICE + TVA",
+    "icon": "doc",
+    "page": "invoice"
+  },
+  {
+    "id": "moroccan",
+    "name": "الإدارة المغربية",
+    "desc": "TVA، IS، IR، CNSS، Payroll",
+    "icon": "flag",
+    "page": "moroccan_admin"
+  },
+  {
+    "id": "support",
+    "name": "دعم العملاء",
+    "desc": "تصنيف التذاكر + ردود AI",
+    "icon": "chat",
+    "page": "customer_support"
+  },
+  {
+    "id": "content",
+    "name": "كاتب المحتوى",
+    "desc": "مقالات، وصف، سوشيال، إعلانات",
+    "icon": "pen",
+    "page": "content_writer"
+  },
+  {
+    "id": "email",
+    "name": "وكيل البريد",
+    "desc": "ردود، حملات، متابعة، دعوات",
+    "icon": "mail",
+    "page": "email_agent"
+  },
+  {
+    "id": "social",
+    "name": "السوشيال ميديا",
+    "desc": "منشورات لـ 6 منصات",
+    "icon": "phone",
+    "page": "social_media"
+  },
+  {
+    "id": "meeting",
+    "name": "محاضر الاجتماعات",
+    "desc": "ملخص، قرارات، مهام",
+    "icon": "note",
+    "page": "meeting_notes"
+  },
+  {
+    "id": "supplier",
+    "name": "الموردون",
+    "desc": "طلبات، تفاوض، مقارنة موردين",
+    "icon": "truck",
+    "page": "supplier"
+  }
+]
