@@ -2,6 +2,7 @@ import os
 import io
 import sys
 import streamlit as st
+from translations_ui import t
 import pandas as pd
 import plotly.graph_objects as go
 from contextlib import redirect_stdout
@@ -178,16 +179,17 @@ memory = MemorySaver()
 app = workflow.compile(checkpointer=memory)
 
 def show_agents_full():
+    _ag_lang = st.session_state.get("lang", "ar")
     """صفحة الوكلاء السبعة (مدمجة)"""
     # زر الرجوع
-    if st.button("⬅️ رجوع", key="agents_back"):
+    if st.button(t("back_short", _ag_lang), key="agents_back"):
         st.session_state.page = "landing"
         st.rerun()
 
 
     # ===== الترويسة =====
     st.markdown('<div class="main-header">🤖 Sureflow Agentic OS</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">نظام وكلاء الذكاء الاصطناعي لإدارة الشركة</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("ag7_subtitle", _ag_lang)}</div>', unsafe_allow_html=True)
 
     # ===== شريط الحالة =====
     st.markdown(f"""
@@ -207,10 +209,10 @@ def show_agents_full():
     with col1:
         st.markdown(f'<div class="stat-card"><div class="stat-number">{st.session_state.total_tasks}</div><div class="stat-label">📋 المهام المنفذة</div></div>', unsafe_allow_html=True)
     with col2:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">7</div><div class="stat-label">🤖 الوكلاء النشطون</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stat-card"><div class="stat-number">7</div><div class="stat-label">🤖 {t("ag7_active_agents", _ag_lang)}</div></div>', unsafe_allow_html=True)
     with col3:
         has_data = "✅" if st.session_state.get("uploaded_data") is not None else "—"
-        st.markdown(f'<div class="stat-card"><div class="stat-number">{has_data}</div><div class="stat-label">📁 البيانات المرفوعة</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stat-card"><div class="stat-number">{has_data}</div><div class="stat-label">📁 {t("ag7_uploaded", _ag_lang)}</div></div>', unsafe_allow_html=True)
     with col4:
         st.markdown(f'<div class="stat-card"><div class="stat-number">🌐</div><div class="stat-label">Tavily: متصل</div></div>', unsafe_allow_html=True)
 
@@ -219,7 +221,7 @@ def show_agents_full():
     # ============================================
     # شبكة الوكلاء العصرية
     # ============================================
-    st.markdown("### 🕸️ شبكة الوكلاء الذكية")
+    st.markdown(f"### {t('ag7_network_header', _ag_lang)}")
 
     agents_info = [
         ("👔", "CEO", "المنسق الرئيسي", "#00d4ff", "#0088cc"),
@@ -266,7 +268,7 @@ def show_agents_full():
         st.session_state.messages = []
 
     # ===== منطقة المحادثة =====
-    st.markdown("### 💬 المحادثة")
+    st.markdown(f"### {t('ag7_conversation_header', _ag_lang)}")
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
@@ -314,19 +316,19 @@ def show_agents_full():
                 st.markdown(f'<div class="data-badge">📊 {df.shape[0]} صف × {df.shape[1]} عمود</div>', unsafe_allow_html=True)
     
         st.markdown("---")
-        st.markdown("### ⚙️ التحكم")
-        if st.button("🗑️ مسح المحادثة"):
+        st.markdown(f"### {t('ag7_control', _ag_lang)}")
+        if st.button(t("ag7_clear_chat", _ag_lang)):
             st.session_state.messages = []
             st.session_state.thread_id = f"user_{os.urandom(4).hex()}"
             st.rerun()
-        if st.button("🔄 إعادة تعيين الإحصائيات"):
+        if st.button(t("ag7_reset_stats", _ag_lang)):
             st.session_state.total_tasks = 0
             st.session_state.agents_used = {"Researcher": 0, "CMO": 0, "SalesRep": 0, "Dev": 0, "DataAnalyst": 0, "Assistant": 0}
             st.rerun()
-        if st.button("🗑️ حذف البيانات المرفوعة"):
+        if st.button(t("ag7_delete_data", _ag_lang)):
             st.session_state.uploaded_data = None
             st.rerun()
-        if st.button("📄 توليد تقرير PDF"):
+        if st.button(t("ag7_generate_pdf", _ag_lang)):
             if st.session_state.get("messages"):
                 try:
                     pdf_path = generate_pdf(st.session_state.messages)

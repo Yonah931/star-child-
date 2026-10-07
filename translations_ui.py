@@ -689,6 +689,31 @@ T = {
 "feat_desc": {"ar": "**الوصف:**", "fr": "**Description :**", "en": "**Description:**"},
     "feat_tech": {"ar": "**التقنية:**", "fr": "**Technologie :**", "en": "**Technology:**"},
 
+# ============ 7 Agents (multiagent) ============
+    "ag7_main_header": {"ar": "🛡️ Sureflow Agentic OS", "fr": "🛡️ Sureflow Agentic OS", "en": "🛡️ Sureflow Agentic OS"},
+    "ag7_subtitle": {"ar": "نظام وكلاء الذكاء الاصطناعي لإدارة الشركة", "fr": "Système d'agents IA pour gérer l'entreprise", "en": "AI Agent System to run the company"},
+    "ag7_network": {"ar": "شبكة الوكلاء الذكية", "fr": "Réseau d'agents intelligents", "en": "Smart Agents Network"},
+    "ag7_state": {"ar": "حالة الوكلاء", "fr": "État des agents", "en": "Agents State"},
+    "ag7_total_tasks": {"ar": "المهام المنفذة", "fr": "Tâches exécutées", "en": "Tasks Executed"},
+    "ag7_active_agents": {"ar": "الوكلاء النشطون", "fr": "Agents actifs", "en": "Active Agents"},
+    "ag7_tavily": {"ar": "منصل Tavily", "fr": "Connecteur Tavily", "en": "Tavily Connector"},
+    "ag7_uploaded": {"ar": "البيانات المرفوعة", "fr": "Données téléchargées", "en": "Uploaded Data"},
+    "ag7_conversation": {"ar": "المحادثة", "fr": "Conversation", "en": "Conversation"},
+    "ag7_input_hint": {"ar": "ما هي المهمة التي تريدها؟", "fr": "Quelle est votre mission ?", "en": "What is your task?"},
+    "ag7_data_badge": {"ar": "📊 {rows} صف × {cols} عمود", "fr": "📊 {rows} lignes × {cols} colonnes", "en": "📊 {rows} rows × {cols} columns"},
+    "ag7_clear_chat": {"ar": "🗑️ مسح المحادثة", "fr": "🗑️ Effacer la conversation", "en": "🗑️ Clear Chat"},
+    "ag7_reset_stats": {"ar": "🔄 إعادة تعيين الإحصائيات", "fr": "🔄 Réinitialiser les statistiques", "en": "🔄 Reset Stats"},
+    "ag7_delete_data": {"ar": "🗑️ حذف البيانات المرفوعة", "fr": "🗑️ Supprimer les données", "en": "🗑️ Delete Data"},
+    "ag7_generate_pdf": {"ar": "📄 توليد تقرير PDF", "fr": "📄 Générer rapport PDF", "en": "📄 Generate PDF Report"},
+    "ag7_no_chat": {"ar": "لا توجد محادثة لتوليد تقرير", "fr": "Aucune conversation pour générer un rapport", "en": "No conversation to generate report"},
+
+"ag7_network_header": {"ar": "🕸️ شبكة الوكلاء الذكية", "fr": "🕸️ Réseau d'agents intelligents", "en": "🕸️ Smart Agents Network"},
+    "ag7_conversation_header": {"ar": "💬 المحادثة", "fr": "💬 Conversation", "en": "💬 Conversation"},
+    "ag7_upload_data": {"ar": "رفع البيانات", "fr": "Télécharger les données", "en": "Upload Data"},
+    "ag7_control": {"ar": "التحكم", "fr": "Contrôle", "en": "Control"},
+    "ag7_sidebar_hint": {"ar": "لتحليل Excel أو CSV، ارفع ملف", "fr": "Pour analyser Excel ou CSV, téléchargez un fichier", "en": "To analyze Excel or CSV, upload a file"},
+    "ag7_sidebar_upload": {"ar": "Upload", "fr": "Upload", "en": "Upload"},
+
 }
 
 
