@@ -822,7 +822,7 @@ def show_my_invoices():
     # جدول الفواتير
     st.markdown("### 📋 الفواتير الأخيرة")
     import pandas as _pd
-    df = _pd.DataFrame(rows, columns=["التاريخ", "رقم الفاتورة", "العميل", "الإجمالي", "TVA", t("hr_language", _hr_lang)])
+    df = _pd.DataFrame(rows, columns=[t("mn_date", _mn_lang), "رقم الفاتورة", "العميل", "الإجمالي", "TVA", t("hr_language", _hr_lang)])
     df["الإجمالي"] = df["الإجمالي"].apply(lambda x: f"{x:,.2f} DH")
     df["TVA"] = df["TVA"].apply(lambda x: f"{int(x * 100)}%")
     st.dataframe(df, width="stretch", hide_index=True)
@@ -891,7 +891,7 @@ def show_stats():
         import pandas as _pd
         df = _pd.DataFrame(
             stats["recent_invoices"],
-            columns=["التاريخ", "رقم الفاتورة", "العميل", "الإجمالي (DH)"]
+            columns=[t("mn_date", _mn_lang), "رقم الفاتورة", "العميل", "الإجمالي (DH)"]
         )
         st.dataframe(df, width="stretch", hide_index=True)
     else:
@@ -1726,7 +1726,8 @@ def show_customer_support():
 
 
 def show_content_writer():
-    st.markdown('<div class="main-header">✍️ Content Writer</div>', unsafe_allow_html=True)
+    _cw_lang = st.session_state.get("lang", "ar")
+    st.markdown(f'<div class="main-header">{t("cw_title", _cw_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">مقالات · وصف منتجات · سوشيال ميديا · إعلانات</div>', unsafe_allow_html=True)
 
     if st.button("⬅️ رجوع", key="cw_back"):
@@ -1744,27 +1745,27 @@ def show_content_writer():
                             format_func=lambda x: agent.TONES[x][lang],
                             key="cw_tone")
     with c3:
-        length = st.selectbox("الطول", list(agent.LENGTHS.keys()),
+        length = st.selectbox(t("cw_length", _cw_lang), list(agent.LENGTHS.keys()),
                               format_func=lambda x: agent.LENGTHS[x][lang],
                               key="cw_length")
 
     c1, c2 = st.columns(2)
     with c1:
-        content_type = st.selectbox("نوع المحتوى", list(agent.CONTENT_TYPES.keys()),
+        content_type = st.selectbox(t("cw_type", _cw_lang), list(agent.CONTENT_TYPES.keys()),
                                     format_func=lambda x: f"{agent.CONTENT_TYPES[x]['icon']} {agent.CONTENT_TYPES[x][lang]}",
                                     key="cw_type")
     with c2:
-        topic = st.text_input("الموضوع *", key="cw_topic", placeholder="مثال: خدمات المحاسبة")
+        topic = st.text_input(t("cw_topic", _cw_lang), key="cw_topic", placeholder=t("cw_topic_placeholder", _cw_lang))
 
     c1, c2 = st.columns(2)
     with c1:
-        audience = st.text_input("الجمهور المستهدف (اختياري)", key="cw_aud")
+        audience = st.text_input(t("cw_audience", _cw_lang), key="cw_aud")
     with c2:
-        keywords = st.text_input("كلمات مفتاحية (اختياري)", key="cw_kw")
+        keywords = st.text_input(t("cw_keywords", _cw_lang), key="cw_kw")
 
-    if st.button("✍️ توليد المحتوى", type="primary", key="cw_generate"):
+    if st.button(t("cw_generate_btn", _cw_lang), type="primary", key="cw_generate"):
         if not topic.strip():
-            st.error("⚠️ اكتب الموضوع أولاً")
+            st.error(t("cw_enter_topic", _cw_lang))
         else:
             with st.spinner(t("hr_generating", _hr_lang)):
                 result = agent.generate(content_type, topic, tone, length, lang, audience, keywords)
@@ -1778,7 +1779,7 @@ def show_content_writer():
             c1, c2 = st.columns(2)
             with c1:
                 st.download_button(
-                    "⬇️ تحميل .txt",
+                    t("cw_download_txt", _cw_lang),
                     data=result["content"],
                     file_name=f"content_{content_type}_{lang}.txt",
                     mime="text/plain",
@@ -1798,19 +1799,20 @@ def show_content_writer():
 
             # Hashtags مقترحة
             if content_type in ["social", "ad"]:
-                st.markdown("### 🔖 Hashtags مقترحة")
+                st.markdown(t("cw_hashtags", _cw_lang))
                 hashtags = agent.suggest_hashtags(topic, lang=lang)
                 st.code(" ".join(hashtags))
 
             # عناوين مقترحة
             if content_type in ["article", "email"]:
-                st.markdown("### 📰 عناوين مقترحة")
+                st.markdown(t("cw_titles", _cw_lang))
                 for t in agent.suggest_titles(topic, lang=lang):
                     st.markdown(f"- {t}")
 
 
 def show_email_agent():
-    st.markdown('<div class="main-header">📧 Email Agent</div>', unsafe_allow_html=True)
+    _em_lang = st.session_state.get("lang", "ar")
+    st.markdown(f'<div class="main-header">{t("em_title", _em_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">ردود · حملات · متابعة · دعوات</div>', unsafe_allow_html=True)
 
     if st.button("⬅️ رجوع", key="em_back"):
@@ -1827,24 +1829,24 @@ def show_email_agent():
                             format_func=lambda x: agent.TONES[x][lang],
                             key="em_tone")
     with c3:
-        email_type = st.selectbox("نوع البريد", list(agent.EMAIL_TYPES.keys()),
+        email_type = st.selectbox(t("em_type", _em_lang), list(agent.EMAIL_TYPES.keys()),
                                   format_func=lambda x: f"{agent.EMAIL_TYPES[x]['icon']} {agent.EMAIL_TYPES[x][lang]}",
                                   key="em_type")
 
-    subject = st.text_input("الموضوع *", key="em_subject", placeholder="مثال: عرض خاص للعملاء")
+    subject = st.text_input(t("cw_topic", _cw_lang), key="em_subject", placeholder=t("em_subject_placeholder", _em_lang))
 
     c1, c2 = st.columns(2)
     with c1:
-        recipient = st.text_input("المستقبل (اختياري)", key="em_recip")
+        recipient = st.text_input(t("em_recipient", _em_lang), key="em_recip")
     with c2:
-        sender = st.text_input("المرسل (اختياري)", key="em_sender")
+        sender = st.text_input(t("em_sender", _em_lang), key="em_sender")
 
-    context = st.text_area("السياق الإضافي (اختياري)", height=100, key="em_context",
-                           placeholder="معلومات إضافية للرد عليها...")
+    context = st.text_area(t("em_context", _em_lang), height=100, key="em_context",
+                           placeholder=t("em_context_placeholder", _em_lang))
 
-    if st.button("📧 توليد البريد", type="primary", key="em_generate"):
+    if st.button(t("em_generate_btn", _em_lang), type="primary", key="em_generate"):
         if not subject.strip():
-            st.error("⚠️ اكتب الموضوع أولاً")
+            st.error(t("cw_enter_topic", _cw_lang))
         else:
             with st.spinner(t("hr_generating", _hr_lang)):
                 result = agent.generate(email_type, subject, context, tone, lang, recipient, sender)
@@ -1853,7 +1855,7 @@ def show_email_agent():
             st.info(f"المصدر: {result['source']} | النوع: {result['type_label']} | النبرة: {result['tone']}")
             st.text_area("البريد", value=result["content"], height=400, key="em_output")
             st.download_button(
-                "⬇️ تحميل .txt",
+                t("cw_download_txt", _cw_lang),
                 data=result["content"],
                 file_name=f"email_{email_type}_{lang}.txt",
                 mime="text/plain",
@@ -1861,12 +1863,13 @@ def show_email_agent():
             )
 
             st.divider()
-            st.markdown("### 💡 عناوين مقترحة")
+            st.markdown(t("em_suggested_subjects", _em_lang))
             for s in agent.suggest_subjects(subject, lang=lang):
                 st.markdown(f"- {s}")
 
 
 def show_social_media():
+    _sm_lang = st.session_state.get("lang", "ar")
     st.markdown('<div class="main-header">📱 Social Media Agent</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">منشورات جاهزة · 6 منصات · 3 لغات</div>', unsafe_allow_html=True)
 
@@ -1880,11 +1883,11 @@ def show_social_media():
     with c1:
         lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="sm_lang")
     with c2:
-        platform = st.selectbox("المنصة", list(agent.PLATFORMS.keys()),
+        platform = st.selectbox(t("sm_platform", _sm_lang), list(agent.PLATFORMS.keys()),
                                 format_func=lambda x: f"{agent.PLATFORMS[x]['icon']} {agent.PLATFORMS[x][lang]}",
                                 key="sm_platform")
     with c3:
-        post_type = st.selectbox("نوع المنشور", list(agent.POST_TYPES.keys()),
+        post_type = st.selectbox(t("sm_post_type", _sm_lang), list(agent.POST_TYPES.keys()),
                                  format_func=lambda x: f"{agent.POST_TYPES[x]['icon']} {agent.POST_TYPES[x][lang]}",
                                  key="sm_type")
 
@@ -1894,13 +1897,13 @@ def show_social_media():
                             format_func=lambda x: agent.TONES[x][lang],
                             key="sm_tone")
     with c2:
-        audience = st.text_input("الجمهور (اختياري)", key="sm_aud")
+        audience = st.text_input(t("sm_audience", _sm_lang), key="sm_aud")
 
-    topic = st.text_input("الموضوع *", key="sm_topic", placeholder="مثال: نصائح إنتاجية")
+    topic = st.text_input(t("cw_topic", _cw_lang), key="sm_topic", placeholder=t("sm_topic_placeholder", _sm_lang))
 
-    if st.button("📱 توليد المنشور", type="primary", key="sm_generate"):
+    if st.button(t("sm_generate_btn", _sm_lang), type="primary", key="sm_generate"):
         if not topic.strip():
-            st.error("⚠️ اكتب الموضوع")
+            st.error(t("sm_enter_topic", _sm_lang))
         else:
             with st.spinner(t("hr_generating", _hr_lang)):
                 r = agent.generate_post(platform, post_type, topic, tone, lang, audience)
@@ -1911,16 +1914,17 @@ def show_social_media():
             st.info(f"المصدر: {r['source']} | {r['platform_icon']} {r['platform_label']} | الأحرف: {r['char_count']}/{best} {status}")
 
             st.text_area("المنشور", value=r["content"], height=300, key="sm_output")
-            st.download_button("⬇️ تحميل .txt", data=r["content"],
+            st.download_button(t("cw_download_txt", _cw_lang), data=r["content"],
                                file_name=f"post_{platform}_{lang}.txt", mime="text/plain",
                                key="sm_dl")
 
-            st.markdown("### 🔖 Hashtags مقترحة")
+            st.markdown(t("cw_hashtags", _cw_lang))
             st.code(" ".join(agent.suggest_hashtags(topic, platform, lang)))
 
 
 def show_meeting_notes():
-    st.markdown('<div class="main-header">📝 Meeting Notes</div>', unsafe_allow_html=True)
+    _mn_lang = st.session_state.get("lang", "ar")
+    st.markdown(f'<div class="main-header">{t("mn_title", _mn_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">محاضر اجتماعات · مهام · قرارات</div>', unsafe_allow_html=True)
 
     if st.button("⬅️ رجوع", key="mn_back"):
@@ -1933,19 +1937,19 @@ def show_meeting_notes():
     with c1:
         lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="mn_lang")
     with c2:
-        mtype = st.selectbox("نوع الاجتماع", list(agent.MEETING_TYPES.keys()),
+        mtype = st.selectbox(t("mn_type", _mn_lang), list(agent.MEETING_TYPES.keys()),
                              format_func=lambda x: f"{agent.MEETING_TYPES[x]['icon']} {agent.MEETING_TYPES[x][lang]}",
                              key="mn_type")
     with c3:
-        date = st.text_input("التاريخ", value=datetime.now().strftime("%Y-%m-%d"), key="mn_date")
+        date = st.text_input(t("mn_date", _mn_lang), value=datetime.now().strftime("%Y-%m-%d"), key="mn_date")
 
-    title = st.text_input("عنوان الاجتماع", key="mn_title", placeholder="مثال: اجتماع شهري")
-    transcript = st.text_area("نص الاجتماع *", height=250, key="mn_text",
-                              placeholder="الصق هنا نص الحوار أو الملاحظات...")
+    title = st.text_input(t("mn_title_input", _mn_lang), key="mn_title", placeholder=t("mn_title_placeholder", _mn_lang))
+    transcript = st.text_area(t("mn_transcript", _mn_lang), height=250, key="mn_text",
+                              placeholder=t("mn_transcript_placeholder", _mn_lang))
 
-    if st.button("📝 توليد المحضر", type="primary", key="mn_generate"):
+    if st.button(t("mn_generate_btn", _mn_lang), type="primary", key="mn_generate"):
         if not transcript.strip():
-            st.error("⚠️ الصق نص الاجتماع")
+            st.error(t("mn_enter_text", _mn_lang))
         else:
             with st.spinner(t("hr_generating", _hr_lang)):
                 r = agent.generate_minutes(transcript, mtype, lang, title, date)
@@ -1953,13 +1957,14 @@ def show_meeting_notes():
             st.divider()
             st.info(f"المصدر: {r['source']} | النوع: {r['type_label']}")
             st.markdown(r["minutes"])
-            st.download_button("⬇️ تحميل المحضر (.md)", data=r["minutes"],
+            st.download_button(t("mn_download_md", _mn_lang), data=r["minutes"],
                                file_name=f"meeting_{date}.md", mime="text/markdown",
                                key="mn_dl")
 
 
 def show_supplier():
-    st.markdown('<div class="main-header">🚚 Supplier Agent</div>', unsafe_allow_html=True)
+    _sp_lang = st.session_state.get("lang", "ar")
+    st.markdown(f'<div class="main-header">{t("sp_title", _sp_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">طلبات · تفاوض · مقارنة الموردين</div>', unsafe_allow_html=True)
 
     if st.button("⬅️ رجوع", key="sp_back"):
@@ -1972,22 +1977,22 @@ def show_supplier():
     with c1:
         lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="sp_lang")
     with c2:
-        rtype = st.selectbox("نوع الرسالة", list(agent.REQUEST_TYPES.keys()),
+        rtype = st.selectbox(t("sp_request_type", _sp_lang), list(agent.REQUEST_TYPES.keys()),
                              format_func=lambda x: f"{agent.REQUEST_TYPES[x]['icon']} {agent.REQUEST_TYPES[x][lang]}",
                              key="sp_type")
 
     c1, c2 = st.columns(2)
     with c1:
-        supplier = st.text_input("اسم المورد", key="sp_sup")
+        supplier = st.text_input(t("sp_supplier", _sp_lang), key="sp_sup")
     with c2:
-        sender = st.text_input("المرسل (شركتك)", key="sp_sender")
+        sender = st.text_input(t("sp_sender", _sp_lang), key="sp_sender")
 
-    context = st.text_area("السياق *", height=120, key="sp_ctx",
+    context = st.text_area(t("sp_context", _sp_lang), height=120, key="sp_ctx",
                            placeholder="مثال: توريد 100 وحدة، ميزانية محددة، شروط...")
 
-    if st.button("🚚 توليد الرسالة", type="primary", key="sp_gen"):
+    if st.button(t("sp_generate_btn", _sp_lang), type="primary", key="sp_gen"):
         if not context.strip():
-            st.error("⚠️ اكتب السياق")
+            st.error(t("sp_enter_context", _sp_lang))
         else:
             with st.spinner(t("hr_generating", _hr_lang)):
                 r = agent.generate_request(rtype, supplier, context, lang, sender)
