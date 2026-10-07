@@ -643,7 +643,7 @@ def show_settings():
         st.text_input("الاسم الكامل", value=name, disabled=True, key="set_name")
     with c2:
         st.text_input("الأدوار", value=", ".join(roles), disabled=True, key="set_roles")
-        st.text_input("الحالة", value="✅ نشط", disabled=True, key="set_status")
+        st.text_input(t("ma_status", _ma_lang), value="✅ نشط", disabled=True, key="set_status")
 
     st.divider()
 
@@ -822,7 +822,7 @@ def show_my_invoices():
     # جدول الفواتير
     st.markdown("### 📋 الفواتير الأخيرة")
     import pandas as _pd
-    df = _pd.DataFrame(rows, columns=["التاريخ", "رقم الفاتورة", "العميل", "الإجمالي", "TVA", "اللغة"])
+    df = _pd.DataFrame(rows, columns=["التاريخ", "رقم الفاتورة", "العميل", "الإجمالي", "TVA", t("hr_language", _hr_lang)])
     df["الإجمالي"] = df["الإجمالي"].apply(lambda x: f"{x:,.2f} DH")
     df["TVA"] = df["TVA"].apply(lambda x: f"{int(x * 100)}%")
     st.dataframe(df, width="stretch", hide_index=True)
@@ -1200,13 +1200,14 @@ def show_agents():
 # الصفحة 4: وكيل HR
 # ============================================================
 def show_hr():
+    _hr_lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
         if st.button("← الرئيسية", key="back_hr"):
             st.session_state.page = "landing"
             st.rerun()
 
-    st.markdown('<div class="main-header">👥 وكيل الموارد البشرية</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">{t("hr_title", _hr_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">فرز CV • إعلانات توظيف • أسئلة مقابلات</div>', unsafe_allow_html=True)
 
     # التبويبات
@@ -1217,7 +1218,7 @@ def show_hr():
         st.markdown("### ارفع ملف السير الذاتية (Excel/CSV)")
         st.markdown("يجب أن يحتوي الملف على أعمدة: `Name`, `Email`, `Experience`, `Skills`")
 
-        uploaded = st.file_uploader("اختر الملف", type=['xlsx', 'xls', 'csv'], key="hr_cv_upload")
+        uploaded = st.file_uploader(t("hr_choose_file", _hr_lang), type=['xlsx', 'xls', 'csv'], key="hr_cv_upload")
 
         if uploaded:
             temp_path = f"/tmp/{uploaded.name}"
@@ -1237,11 +1238,11 @@ def show_hr():
 
                 col1, col2 = st.columns(2)
                 with col1:
-                    skills_input = st.text_input("المهارات المطلوبة (مفصولة بفاصلة)", "Python, Git, SQL")
+                    skills_input = st.text_input(t("hr_required_skills", _hr_lang), "Python, Git, SQL")
                 with col2:
-                    min_exp = st.number_input("الحد الأدنى للخبرة (سنوات)", 0, 20, 2)
+                    min_exp = st.number_input(t("hr_min_exp", _hr_lang), 0, 20, 2)
 
-                if st.button("🔍 ابدأ الفرز", key="hr_screen_btn", width="stretch"):
+                if st.button(t("hr_start_screening", _hr_lang), key="hr_screen_btn", width="stretch"):
                     skills = [s.strip() for s in skills_input.split(',')]
                     candidates = hr.screen_cvs(required_skills=skills, min_experience=min_exp, lang='ar')
                     stats = hr.get_statistics()
@@ -1274,12 +1275,12 @@ def show_hr():
 
                     # === زر تقرير PDF ===
                     st.markdown("---")
-                    st.markdown("### 📄 توليد التقرير")
+                    st.markdown(t("hr_report_header", _hr_lang))
 
                     col_a, col_b = st.columns(2)
                     with col_a:
-                        if st.button("📥 تقرير PDF (عربي)", key="hr_pdf_ar", width="stretch"):
-                            with st.spinner("جاري التوليد..."):
+                        if st.button(t("hr_pdf_ar", _hr_lang), key="hr_pdf_ar", width="stretch"):
+                            with st.spinner(t("hr_generating", _hr_lang)):
                                 pdf_path = generate_hr_report(candidates, stats, lang='ar')
                                 with open(pdf_path, "rb") as f:
                                     st.session_state['hr_pdf_ar_bytes'] = f.read()
@@ -1312,11 +1313,11 @@ def show_hr():
 
     # === تبويب 2: إعلان توظيف ===
     with tab2:
-        st.markdown("### 📢 توليد إعلان توظيف")
+        st.markdown(t("hr_job_header", _hr_lang))
 
         col1, col2 = st.columns(2)
         with col1:
-            job_type = st.selectbox("نوع الوظيفة",
+            job_type = st.selectbox(t("hr_job_type", _hr_lang),
                 options=["developer", "accountant", "sales", "marketing", "hr"],
                 format_func=lambda x: {
                     "developer": "💻 مطور برمجيات",
@@ -1326,9 +1327,9 @@ def show_hr():
                     "hr": "👥 مسؤول HR"
                 }[x])
         with col2:
-            company_name = st.text_input("اسم الشركة", "Yonah Tech")
+            company_name = st.text_input(t("hr_company_name", _hr_lang), "Yonah Tech")
 
-        lang_job = st.selectbox("اللغة", ["ar", "fr", "en"],
+        lang_job = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"],
             format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
 
         if st.button("📢 توليد الإعلان", key="hr_job_btn", width="stretch"):
@@ -1340,17 +1341,17 @@ def show_hr():
 
     # === تبويب 3: أسئلة المقابلة ===
     with tab3:
-        st.markdown("### ❓ أسئلة المقابلة")
+        st.markdown(t("hr_questions_header", _hr_lang))
 
         col1, col2 = st.columns(2)
         with col1:
-            category = st.selectbox("الفئة", ["general", "technical"],
+            category = st.selectbox(t("hr_category", _hr_lang), ["general", "technical"],
                 format_func=lambda x: {"general": "📋 عامة", "technical": "💼 تقنية"}[x])
         with col2:
             lang_q = st.selectbox("اللغة ", ["ar", "fr", "en"],
                 format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
 
-        if st.button("❓ توليد الأسئلة", key="hr_q_btn", width="stretch"):
+        if st.button(t("hr_generate_questions", _hr_lang), key="hr_q_btn", width="stretch"):
             hr = HRAgent()
             questions = hr.get_interview_questions(category, lang_q)
             st.markdown("---")
@@ -1468,7 +1469,7 @@ def show_cfo():
     col_a, col_b = st.columns(2)
     with col_a:
         if st.button(f"📥 {t('cfo_generate_report', _cfo_lang)}", key="cfo_pdf_ar", width="stretch"):
-            with st.spinner("جاري التوليد..."):
+            with st.spinner(t("hr_generating", _hr_lang)):
                 pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='ar')
                 with open(pdf_path, "rb") as f:
                     st.session_state['cfo_pdf_ar_bytes'] = f.read()
@@ -1567,7 +1568,7 @@ def show_invoice():
         c3.metric("المجموع TTC", f"{inv['total']:.2f} DH")
         if st.button(f"{t('inv_generate_pdf', _inv_lang)}", type="primary", key="inv_pdf"):
             try:
-                with st.spinner("جاري التوليد..."):
+                with st.spinner(t("hr_generating", _hr_lang)):
                     agent = InvoiceAgent()
                     pdf_path = agent.generate_pdf(inv, lang=lang)
                 if pdf_path and os.path.exists(pdf_path):
@@ -1591,67 +1592,68 @@ def show_invoice():
 # Router
 # ============================================================
 def show_moroccan_admin():
+    _ma_lang = st.session_state.get("lang", "ar")
     st.markdown('<div class="main-header">🇲🇦 Moroccan Admin</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">TVA · IS · IR · CNSS · Payroll</div>', unsafe_allow_html=True)
-    if st.button("⬅️ رجوع", key="ma_back"):
+    if st.button(t("back_short", _ma_lang), key="ma_back"):
         st.session_state.page = "landing"
         st.rerun()
 
     admin = MoroccanAdmin()
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 TVA", "💰 IS", "👥 Payroll", "📅 التقويم"])
+    tab1, tab2, tab3, tab4 = st.tabs([t("ma_tab_tva", _ma_lang), t("ma_tab_is", _ma_lang), t("ma_tab_payroll", _ma_lang), t("ma_tab_calendar", _ma_lang)])
 
     with tab1:
-        st.markdown("### حساب TVA")
+        st.markdown(t("ma_calc_tva", _ma_lang))
         c1, c2 = st.columns(2)
         with c1:
-            sales = st.number_input("المبيعات HT (DH)", min_value=0.0, value=100000.0, step=1000.0, key="ma_sales")
+            sales = st.number_input(t("ma_sales_ht", _ma_lang), min_value=0.0, value=100000.0, step=1000.0, key="ma_sales")
         with c2:
-            purchases = st.number_input("المشتريات HT (DH)", min_value=0.0, value=40000.0, step=1000.0, key="ma_purch")
-        rate = st.selectbox("المعدل", ["standard", "reduced1", "reduced2", "reduced3", "exempt"],
+            purchases = st.number_input(t("ma_purchases_ht", _ma_lang), min_value=0.0, value=40000.0, step=1000.0, key="ma_purch")
+        rate = st.selectbox(t("ma_rate", _ma_lang), ["standard", "reduced1", "reduced2", "reduced3", "exempt"],
                             format_func=lambda x: {"standard":"20%","reduced1":"14%","reduced2":"10%","reduced3":"7%","exempt":"معفى"}[x],
                             key="ma_rate")
         if st.button("احسب TVA", type="primary", key="ma_calc_tva"):
             r = admin.calculate_tva(sales, purchases, rate)
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("TVA محصلة", f"{r['tva_collected']:,.2f} DH")
-            c2.metric("TVA قابلة للخصم", f"{r['tva_deductible']:,.2f} DH")
-            c3.metric("TVA المستحقة", f"{r['tva_due']:,.2f} DH")
-            c4.metric("الحالة", r["status"])
+            c1.metric(t("ma_tva_collected", _ma_lang), f"{r['tva_collected']:,.2f} DH")
+            c2.metric(t("ma_tva_deductible", _ma_lang), f"{r['tva_deductible']:,.2f} DH")
+            c3.metric(t("ma_tva_due", _ma_lang), f"{r['tva_due']:,.2f} DH")
+            c4.metric(t("ma_status", _ma_lang), r["status"])
 
     with tab2:
-        st.markdown("### حساب IS (ضريبة الشركات)")
+        st.markdown(t("ma_calc_is", _ma_lang))
         c1, c2 = st.columns(2)
         with c1:
-            revenue = st.number_input("الإيرادات السنوية (DH)", min_value=0.0, value=500000.0, step=10000.0, key="ma_rev")
+            revenue = st.number_input(t("ma_revenue_annual", _ma_lang), min_value=0.0, value=500000.0, step=10000.0, key="ma_rev")
         with c2:
-            expenses = st.number_input("المصاريف السنوية (DH)", min_value=0.0, value=300000.0, step=10000.0, key="ma_exp")
+            expenses = st.number_input(t("ma_expenses_annual", _ma_lang), min_value=0.0, value=300000.0, step=10000.0, key="ma_exp")
         if st.button("احسب IS", type="primary", key="ma_calc_is"):
             r = admin.calculate_is(revenue, expenses)
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("الربح", f"{r['profit']:,.2f} DH")
+            c1.metric(t("ma_profit", _ma_lang), f"{r['profit']:,.2f} DH")
             c2.metric("IS", f"{r['is_due']:,.2f} DH")
-            c3.metric("المعدل الفعال", f"{r['effective_rate']}%")
-            c4.metric("الحالة", r["status"])
+            c3.metric(t("ma_effective_rate", _ma_lang), f"{r['effective_rate']}%")
+            c4.metric(t("ma_status", _ma_lang), r["status"])
 
     with tab3:
-        st.markdown("### حساب Payroll (كشف الراتب)")
-        salary = st.number_input("الأجر الخام الشهري (DH)", min_value=0.0, value=8000.0, step=500.0, key="ma_sal")
+        st.markdown(t("ma_calc_payroll", _ma_lang))
+        salary = st.number_input(t("ma_salary_brut", _ma_lang), min_value=0.0, value=8000.0, step=500.0, key="ma_sal")
         if st.button("احسب Payroll", type="primary", key="ma_calc_pay"):
             r = admin.calculate_payroll(salary)
-            st.markdown("**خصومات الموظف:**")
+            st.markdown(t("ma_employee_deductions", _ma_lang))
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("CNSS", f"{r['cnss_employee']} DH")
             c2.metric("AMO", f"{r['amo_employee']} DH")
             c3.metric("IR", f"{r['ir_monthly']} DH")
-            c4.metric("✅ الصافي", f"{r['net_salary']:,.2f} DH")
-            st.markdown("**على صاحب العمل:**")
+            c4.metric(t("ma_net_salary", _ma_lang), f"{r['net_salary']:,.2f} DH")
+            st.markdown(t("ma_employer_costs", _ma_lang))
             c1, c2 = st.columns(2)
-            c1.metric("CNSS صاحب العمل", f"{r['cnss_employer']} DH")
-            c2.metric("💰 التكلفة الكلية", f"{r['total_cost_employer']:,.2f} DH")
+            c1.metric(t("ma_employer_cnss", _ma_lang), f"{r['cnss_employer']} DH")
+            c2.metric(t("ma_total_cost", _ma_lang), f"{r['total_cost_employer']:,.2f} DH")
 
     with tab4:
-        st.markdown("### 📅 التقويم الضريبي")
-        days = st.slider("الأيام القادمة", 7, 90, 30, key="ma_days")
+        st.markdown(t("ma_tax_calendar", _ma_lang))
+        days = st.slider(t("ma_days_ahead", _ma_lang), 7, 90, 30, key="ma_days")
         deadlines = admin.get_upcoming_deadlines(days)
         if deadlines:
             for d in deadlines:
@@ -1661,10 +1663,11 @@ def show_moroccan_admin():
 
 
 def show_customer_support():
-    st.markdown('<div class="main-header">📞 Customer Support</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">تصنيف التذاكر · ردود ذكية · إجراءات مقترحة</div>', unsafe_allow_html=True)
+    _cs_lang = st.session_state.get("lang", "ar")
+    st.markdown(f'<div class="main-header">{t("cs_title", _cs_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("cs_subtitle", _cs_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="cs_back"):
+    if st.button(t("back_short", _cs_lang), key="cs_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1672,50 +1675,50 @@ def show_customer_support():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="cs_lang")
+        lang = st.selectbox(t("cs_lang", _cs_lang), ["ar", "fr", "en"], key="cs_lang")
     with c2:
-        tone = st.selectbox("النبرة", ["formal", "friendly", "apologetic"],
+        tone = st.selectbox(t("cs_tone", _cs_lang), ["formal", "friendly", "apologetic"],
                             format_func=lambda x: {"formal":"رسمي","friendly":"ودي","apologetic":"اعتذاري"}[x],
                             key="cs_tone")
     with c3:
-        client_name = st.text_input("اسم العميل (اختياري)", key="cs_name")
+        client_name = st.text_input(t("cs_client_name", _cs_lang), key="cs_name")
 
-    text = st.text_area("نص تذكرة العميل", height=150, key="cs_text",
-                        placeholder="الصق هنا رسالة العميل...")
+    text = st.text_area(t("cs_ticket_text", _cs_lang), height=150, key="cs_text",
+                        placeholder=t("cs_placeholder", _cs_lang))
 
-    if st.button("🔍 تحليل وتوليد رد", type="primary", key="cs_analyze"):
+    if st.button(t("cs_analyze_btn", _cs_lang), type="primary", key="cs_analyze"):
         if not text.strip():
-            st.error("⚠️ اكتب نص التذكرة أولاً")
+            st.error(t("cs_enter_ticket", _cs_lang))
         else:
             result = agent.classify_ticket(text, lang=lang)
             result["client_name"] = client_name
 
             st.divider()
-            st.markdown("### 📊 التصنيف")
+            st.markdown(t("cs_classification", _cs_lang))
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("النوع", f"{result['type_icon']} {result['type_label']}")
-            c2.metric("الأولوية", f"{result['priority_icon']} {result['priority_label']}")
-            c3.metric("المشاعر", f"{result['sentiment_emoji']} {result['sentiment_label']}")
-            c4.metric("التصعيد", "⚠️ نعم" if result['needs_escalation'] else "✅ لا")
+            c1.metric(t("cs_type", _cs_lang), f"{result['type_icon']} {result['type_label']}")
+            c2.metric(t("cs_priority", _cs_lang), f"{result['priority_icon']} {result['priority_label']}")
+            c3.metric(t("cs_sentiment", _cs_lang), f"{result['sentiment_emoji']} {result['sentiment_label']}")
+            c4.metric(t("cs_escalation", _cs_lang), "⚠️ نعم" if result['needs_escalation'] else "✅ لا")
             if result['needs_escalation']:
                 st.warning(f"⚠️ يحتاج تصعيد: {result['escalation_reason']}")
 
             st.divider()
-            st.markdown("### ✉️ الرد المقترح")
-            with st.spinner("جاري توليد الرد..."):
+            st.markdown(t("cs_response", _cs_lang))
+            with st.spinner(t("cs_generating", _cs_lang)):
                 resp = agent.generate_response(result, tone=tone, lang=lang)
             st.info(f"المصدر: {resp['source']}")
             st.text_area("الرد", value=resp["text"], height=200, key="cs_response")
-            st.download_button("⬇️ تحميل الرد", data=resp["text"],
+            st.download_button(t("cs_download_response", _cs_lang), data=resp["text"],
                                file_name=f"response_{lang}.txt", mime="text/plain",
                                key="cs_dl")
 
             st.divider()
-            st.markdown("### 🎯 الإجراءات المقترحة")
+            st.markdown(t("cs_actions", _cs_lang))
             for action in agent.suggest_actions(result, lang=lang):
                 st.markdown(f"- {action}")
 
-    with st.expander("📚 الأسئلة الشائعة"):
+    with st.expander(t("cs_faq", _cs_lang)):
         faqs = agent.get_faq(lang=lang)
         for faq in faqs:
             st.markdown(f"**{faq['q']}**")
@@ -1735,9 +1738,9 @@ def show_content_writer():
     # الإعدادات
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="cw_lang")
+        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="cw_lang")
     with c2:
-        tone = st.selectbox("النبرة", list(agent.TONES.keys()),
+        tone = st.selectbox(t("cs_tone", _cs_lang), list(agent.TONES.keys()),
                             format_func=lambda x: agent.TONES[x][lang],
                             key="cw_tone")
     with c3:
@@ -1763,7 +1766,7 @@ def show_content_writer():
         if not topic.strip():
             st.error("⚠️ اكتب الموضوع أولاً")
         else:
-            with st.spinner("جاري التوليد..."):
+            with st.spinner(t("hr_generating", _hr_lang)):
                 result = agent.generate(content_type, topic, tone, length, lang, audience, keywords)
 
             st.divider()
@@ -1818,9 +1821,9 @@ def show_email_agent():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="em_lang")
+        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="em_lang")
     with c2:
-        tone = st.selectbox("النبرة", list(agent.TONES.keys()),
+        tone = st.selectbox(t("cs_tone", _cs_lang), list(agent.TONES.keys()),
                             format_func=lambda x: agent.TONES[x][lang],
                             key="em_tone")
     with c3:
@@ -1843,7 +1846,7 @@ def show_email_agent():
         if not subject.strip():
             st.error("⚠️ اكتب الموضوع أولاً")
         else:
-            with st.spinner("جاري التوليد..."):
+            with st.spinner(t("hr_generating", _hr_lang)):
                 result = agent.generate(email_type, subject, context, tone, lang, recipient, sender)
 
             st.divider()
@@ -1875,7 +1878,7 @@ def show_social_media():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="sm_lang")
+        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="sm_lang")
     with c2:
         platform = st.selectbox("المنصة", list(agent.PLATFORMS.keys()),
                                 format_func=lambda x: f"{agent.PLATFORMS[x]['icon']} {agent.PLATFORMS[x][lang]}",
@@ -1887,7 +1890,7 @@ def show_social_media():
 
     c1, c2 = st.columns(2)
     with c1:
-        tone = st.selectbox("النبرة", list(agent.TONES.keys()),
+        tone = st.selectbox(t("cs_tone", _cs_lang), list(agent.TONES.keys()),
                             format_func=lambda x: agent.TONES[x][lang],
                             key="sm_tone")
     with c2:
@@ -1899,7 +1902,7 @@ def show_social_media():
         if not topic.strip():
             st.error("⚠️ اكتب الموضوع")
         else:
-            with st.spinner("جاري التوليد..."):
+            with st.spinner(t("hr_generating", _hr_lang)):
                 r = agent.generate_post(platform, post_type, topic, tone, lang, audience)
 
             st.divider()
@@ -1928,7 +1931,7 @@ def show_meeting_notes():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="mn_lang")
+        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="mn_lang")
     with c2:
         mtype = st.selectbox("نوع الاجتماع", list(agent.MEETING_TYPES.keys()),
                              format_func=lambda x: f"{agent.MEETING_TYPES[x]['icon']} {agent.MEETING_TYPES[x][lang]}",
@@ -1944,7 +1947,7 @@ def show_meeting_notes():
         if not transcript.strip():
             st.error("⚠️ الصق نص الاجتماع")
         else:
-            with st.spinner("جاري التوليد..."):
+            with st.spinner(t("hr_generating", _hr_lang)):
                 r = agent.generate_minutes(transcript, mtype, lang, title, date)
 
             st.divider()
@@ -1967,7 +1970,7 @@ def show_supplier():
 
     c1, c2 = st.columns(2)
     with c1:
-        lang = st.selectbox("اللغة", ["ar", "fr", "en"], key="sp_lang")
+        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="sp_lang")
     with c2:
         rtype = st.selectbox("نوع الرسالة", list(agent.REQUEST_TYPES.keys()),
                              format_func=lambda x: f"{agent.REQUEST_TYPES[x]['icon']} {agent.REQUEST_TYPES[x][lang]}",
@@ -1986,7 +1989,7 @@ def show_supplier():
         if not context.strip():
             st.error("⚠️ اكتب السياق")
         else:
-            with st.spinner("جاري التوليد..."):
+            with st.spinner(t("hr_generating", _hr_lang)):
                 r = agent.generate_request(rtype, supplier, context, lang, sender)
             st.divider()
             st.info(f"المصدر: {r['source']} | النوع: {r['type_label']}")
