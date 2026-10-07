@@ -1362,17 +1362,18 @@ def show_hr():
 # الصفحة 5: وكيل CFO
 # ============================================================
 def show_cfo():
+    _cfo_lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
         if st.button("← الرئيسية", key="back_cfo"):
             st.session_state.page = "landing"
             st.rerun()
 
-    st.markdown('<div class="main-header">💰 المدير المالي (CFO)</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">{t("cfo_title", _cfo_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">تحليل الربحية • حساب الضرائب • التدفق النقدي • التوصيات</div>', unsafe_allow_html=True)
 
     with st.sidebar:
-        st.markdown("### 📁 رفع البيانات المالية")
+        st.markdown(f"### {t('cfo_upload', _cfo_lang)}")
         uploaded = st.file_uploader(
             "ملف Excel/CSV",
             type=['xlsx', 'xls', 'csv'],
@@ -1438,14 +1439,14 @@ def show_cfo():
     t4.metric("إجمالي الضرائب", f"{taxes['total_taxes']:,.2f}")
 
     st.markdown("---")
-    st.markdown("### 💵 التدفق النقدي")
+    st.markdown(f"### {t('cfo_cashflow', _cfo_lang)}")
 
     f1, f2 = st.columns(2)
     f1.metric("Cash Flow", f"{summary['cash_flow']:,.2f}")
     f2.metric("معدل الاستهلاك الشهري", f"{summary['monthly_burn']:,.2f}")
 
     st.markdown("---")
-    st.markdown("### 💡 التوصيات الذكية")
+    st.markdown(f"### {t('cfo_insights', _cfo_lang)}")
 
     for insight in cfo.insights:
         itype = insight['type']
@@ -1466,7 +1467,7 @@ def show_cfo():
 
     col_a, col_b = st.columns(2)
     with col_a:
-        if st.button("📥 تقرير PDF (عربي)", key="cfo_pdf_ar", width="stretch"):
+        if st.button(f"📥 {t('cfo_generate_report', _cfo_lang)}", key="cfo_pdf_ar", width="stretch"):
             with st.spinner("جاري التوليد..."):
                 pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='ar')
                 with open(pdf_path, "rb") as f:

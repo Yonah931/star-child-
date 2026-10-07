@@ -415,6 +415,39 @@ T = {
     "inv_clear": {"ar": "🗑️ مسح الفاتورة", "fr": "🗑️ Effacer la Facture", "en": "🗑️ Clear Invoice"},
     "inv_select_lang": {"ar": "اللغة", "fr": "Langue", "en": "Language"},
 
+# ============ CFO Agent ============
+    "cfo_title": {"ar": "💰 المدير المالي (CFO)", "fr": "💰 Directeur Financier (CFO)", "en": "💰 CFO"},
+    "cfo_subtitle": {"ar": "تحليل الربحية · الضرائب · التدفق النقدي", "fr": "Rentabilité · Taxes · Trésorerie", "en": "Profitability · Taxes · Cash Flow"},
+    "cfo_upload": {"ar": "📁 ارفع ملف Excel (Revenus / Dépenses)", "fr": "📁 Télécharger Excel (Revenus / Dépenses)", "en": "📁 Upload Excel (Revenus / Dépenses)"},
+    "cfo_demo_load": {"ar": "⬇️ تحميل ملف تجريبي", "fr": "⬇️ Télécharger démo", "en": "⬇️ Download Demo"},
+    "cfo_analyze": {"ar": "📊 تحليل", "fr": "📊 Analyser", "en": "📊 Analyze"},
+    "cfo_summary": {"ar": "📈 الملخص المالي", "fr": "📈 Résumé Financier", "en": "📈 Financial Summary"},
+    "cfo_revenue": {"ar": "الإيرادات", "fr": "Revenus", "en": "Revenue"},
+    "cfo_expenses": {"ar": "المصاريف", "fr": "Dépenses", "en": "Expenses"},
+    "cfo_profit": {"ar": "الربح الصافي", "fr": "Profit Net", "en": "Net Profit"},
+    "cfo_margin": {"ar": "الهامش", "fr": "Marge", "en": "Margin"},
+    "cfo_taxes": {"ar": "💰 الضرائب", "fr": "💰 Taxes", "en": "💰 Taxes"},
+    "cfo_tva": {"ar": "TVA (20%)", "fr": "TVA (20%)", "en": "VAT (20%)"},
+    "cfo_is": {"ar": "IS (20%)", "fr": "IS (20%)", "en": "IS (20%)"},
+    "cfo_cnss": {"ar": "CNSS (26.77%)", "fr": "CNSS (26.77%)", "en": "CNSS (26.77%)"},
+    "cfo_net_after_tax": {"ar": "الربح بعد الضريبة", "fr": "Profit après impôts", "en": "Profit After Tax"},
+    "cfo_insights": {"ar": "💡 التوصيات", "fr": "💡 Recommandations", "en": "💡 Insights"},
+    "cfo_cashflow": {"ar": "💵 التدفق النقدي", "fr": "💵 Trésorerie", "en": "💵 Cash Flow"},
+    "cfo_monthly_burn": {"ar": "الحرق الشهري", "fr": "Burn mensuel", "en": "Monthly Burn"},
+    "cfo_runway": {"ar": "المدة المتاحة", "fr": "Autonomie", "en": "Runway"},
+    "cfo_generate_report": {"ar": "📄 توليد تقرير PDF", "fr": "📄 Générer rapport PDF", "en": "📄 Generate PDF Report"},
+    "cfo_no_data": {"ar": "⚠️ ارفع ملفاً أولاً", "fr": "⚠️ Téléchargez d'abord un fichier", "en": "⚠️ Upload a file first"},
+
+"cfo_upload_hint": {"ar": "أرفع ملف البيانات المالية من الشريط الجانبي", "fr": "Téléchargez le fichier financier depuis la barre latérale", "en": "Upload the financial file from the sidebar"},
+    "cfo_required_cols": {"ar": "📋 الأعمدة المطلوبة", "fr": "📋 Colonnes requises", "en": "📋 Required Columns"},
+    "cfo_col_revenue": {"ar": "الإيرادات", "fr": "Revenus", "en": "Revenue"},
+    "cfo_col_expenses": {"ar": "المصاريف", "fr": "Dépenses", "en": "Expenses"},
+    "cfo_col_date": {"ar": "التاريخ", "fr": "Date", "en": "Date"},
+    "cfo_col_optional": {"ar": "اختياري", "fr": "optionnel", "en": "optional"},
+    "cfo_upload_file": {"ar": "Upload", "fr": "Upload", "en": "Upload"},
+    "cfo_200mb": {"ar": "200MB لكل ملف · XLSX, XLS, CSV", "fr": "200MB par fichier · XLSX, XLS, CSV", "en": "200MB per file · XLSX, XLS, CSV"},
+    "cfo_sidebar_file": {"ar": "ملف Excel/CSV", "fr": "Fichier Excel/CSV", "en": "Excel/CSV File"},
+
 }
 
 

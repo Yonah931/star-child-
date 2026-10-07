@@ -1,6 +1,28 @@
 """واجهة الوكلاء: بطاقتان بارزتان + صفوف، والصف المحدد بتدرج ماجنتا → سماوي.
 النقر ينتقل مباشرة إلى الصفحة (st.session_state.page)."""
 import streamlit as st
+import json
+from pathlib import Path
+
+# تحميل ترجمات الوكلاء
+_i18n_path = Path(__file__).parent / "agents_i18n.json"
+if _i18n_path.exists():
+    with open(_i18n_path, "r", encoding="utf-8") as _f:
+        AGENTS_I18N = json.load(_f)
+else:
+    AGENTS_I18N = {}
+
+def _localized_agent(agent, lang):
+    """يُرجع نسخة مترجمة من الوكيل حسب اللغة."""
+    if lang == "ar" or agent["id"] not in AGENTS_I18N:
+        return agent
+    tr = AGENTS_I18N[agent["id"]]
+    suffix = "_en" if lang == "en" else "_fr"
+    return {
+        **agent,
+        "name": tr.get(f"name{suffix}", agent["name"]),
+        "desc": tr.get(f"desc{suffix}", agent.get("desc", "")),
+    }
 
 _ICONS = {
     "users": '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17" cy="9" r="2.4"/><path d="M17 14.5c2.5 0 4 1.7 4 4.5"/>',
@@ -58,7 +80,11 @@ def _navigate(page):
     st.session_state.page = page
 
 
-def render_agents_panel(agents):
+def render_agents_panel(agents, lang=None):
+    """يرسم الواجهة. lang: 'ar' | 'fr' | 'en' (افتراضي: session_state)."""
+    if lang is None:
+        lang = st.session_state.get("lang", "ar")
+    agents = [_localized_agent(a, lang) for a in agents]
     """يرسم الواجهة. النقر ينتقل مباشرة للصفحة المحددة في حقل page."""
     st.markdown(_BASE_CSS, unsafe_allow_html=True)
 

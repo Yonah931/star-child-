@@ -1,0 +1,74 @@
+{
+  "accountant": {
+    "name_en": "Smart Accountant",
+    "name_fr": "Comptable Intelligent",
+    "desc_en": "Excel/CSV, error detection, PDF reports",
+    "desc_fr": "Excel/CSV, détection d'erreurs, rapports PDF"
+  },
+  "agents7": {
+    "name_en": "7-Agent System",
+    "name_fr": "Système des 7 Agents",
+    "desc_en": "CEO + 6 specialists to run the business",
+    "desc_fr": "CEO + 6 spécialistes pour gérer l'entreprise"
+  },
+  "hr": {
+    "name_en": "HR Agent",
+    "name_fr": "Agent RH",
+    "desc_en": "CV screening, job ads, interview questions",
+    "desc_fr": "Pré-tri CV, annonces, questions d'entretien"
+  },
+  "cfo": {
+    "name_en": "CFO (Finance Director)",
+    "name_fr": "Directeur Financier (CFO)",
+    "desc_en": "Profitability analysis, TVA/IS/CNSS",
+    "desc_fr": "Analyse de rentabilité, TVA/IS/CNSS"
+  },
+  "invoice": {
+    "name_en": "🧾 Invoice Agent",
+    "name_fr": "🧾 Agent Facturation",
+    "desc_en": "Professional invoices + ICE + TVA",
+    "desc_fr": "Factures pro + ICE + TVA"
+  },
+  "moroccan": {
+    "name_en": "🇲🇦 Moroccan Admin",
+    "name_fr": "🇲🇦 Admin Maroc",
+    "desc_en": "TVA, IS, IR, CNSS, Payroll",
+    "desc_fr": "TVA, IS, IR, CNSS, Paie"
+  },
+  "support": {
+    "name_en": "📞 Customer Support",
+    "name_fr": "📞 Support Client",
+    "desc_en": "Ticket classification + AI responses",
+    "desc_fr": "Classification + réponses IA"
+  },
+  "content": {
+    "name_en": "✍️ Content Writer",
+    "name_fr": "✍️ Rédacteur",
+    "desc_en": "Articles, descriptions, social, ads",
+    "desc_fr": "Articles, descriptions, social, pubs"
+  },
+  "email": {
+    "name_en": "📧 Email Agent",
+    "name_fr": "📧 Agent Email",
+    "desc_en": "Replies, campaigns, follow-ups, invites",
+    "desc_fr": "Réponses, campagnes, suivis, invitations"
+  },
+  "social": {
+    "name_en": "📱 Social Media",
+    "name_fr": "📱 Réseaux Sociaux",
+    "desc_en": "Posts for 6 platforms",
+    "desc_fr": "Publications pour 6 plateformes"
+  },
+  "meeting": {
+    "name_en": "📝 Meeting Notes",
+    "name_fr": "📝 Comptes-rendus",
+    "desc_en": "Summary, decisions, tasks",
+    "desc_fr": "Résumé, décisions, tâches"
+  },
+  "supplier": {
+    "name_en": "🚚 Supplier Agent",
+    "name_fr": "🚚 Agent Fournisseur",
+    "desc_en": "Requests, negotiation, comparison",
+    "desc_fr": "Demandes, négociation, comparaison"
+  }
+}
