@@ -630,6 +630,65 @@ T = {
     "sp_enter_context": {"ar": "⚠️ اكتب السياق", "fr": "⚠️ Saisissez le contexte", "en": "⚠️ Enter context"},
     "sp_back": {"ar": "⬅️ رجوع", "fr": "⬅️ Retour", "en": "⬅️ Back"},
 
+# ============ Accountant Agent ============
+    "ac_title": {"ar": "📊 المحاسب الذكي", "fr": "📊 Comptable Intelligent", "en": "📊 Smart Accountant"},
+    "ac_subtitle": {"ar": "تحليل ومراجعة البيانات المالية", "fr": "Analyse et révision des données financières", "en": "Analysis and review of financial data"},
+    "ac_upload_prompt": {"ar": "👈 الرجاء رفع ملف من الشريط الجانبي لبدء التحليل", "fr": "👈 Téléchargez un fichier depuis la barre latérale pour commencer", "en": "👈 Upload a file from the sidebar to start"},
+    "ac_upload_header": {"ar": "رفع ملف (Excel/CSV)", "fr": "Télécharger un fichier (Excel/CSV)", "en": "Upload File (Excel/CSV)"},
+    "ac_choose_file": {"ar": "اختر ملف Excel أو CSV", "fr": "Choisir un fichier Excel ou CSV", "en": "Choose Excel or CSV file"},
+    "ac_upload": {"ar": "رفع", "fr": "Télécharger", "en": "Upload"},
+    "ac_analysis_header": {"ar": "📊 نتائج التحليل", "fr": "📊 Résultats de l'analyse", "en": "📊 Analysis Results"},
+    "ac_total_debit": {"ar": "إجمالي المدين", "fr": "Total Débit", "en": "Total Debit"},
+    "ac_total_credit": {"ar": "إجمالي الدائن", "fr": "Total Crédit", "en": "Total Credit"},
+    "ac_difference": {"ar": "الفرق", "fr": "Différence", "en": "Difference"},
+    "ac_balance_ok": {"ar": "✅ الميزان متوازن", "fr": "✅ Balance équilibrée", "en": "✅ Balance OK"},
+    "ac_balance_warning": {"ar": "⚠️ الميزان غير متوازن", "fr": "⚠️ Balance non équilibrée", "en": "⚠️ Balance not OK"},
+    "ac_issues_header": {"ar": "⚠️ المشاكل المكتشفة", "fr": "⚠️ Problèmes détectés", "en": "⚠️ Issues Detected"},
+    "ac_no_issues": {"ar": "✅ لا توجد مشاكل", "fr": "✅ Aucun problème", "en": "✅ No issues"},
+    "ac_generate_pdf": {"ar": "📄 توليد التقرير PDF", "fr": "📄 Générer rapport PDF", "en": "📄 Generate PDF Report"},
+    "ac_download_pdf": {"ar": "⬇️ تحميل التقرير", "fr": "⬇️ Télécharger le rapport", "en": "⬇️ Download Report"},
+
+    # ============ Features Page ============
+    "feat_title": {"ar": "✨ الميزات الكاملة", "fr": "✨ Toutes les Fonctionnalités", "en": "✨ Full Features"},
+    "feat_subtitle": {"ar": "12 وكيلاً لإدارة أعمالك", "fr": "12 agents pour gérer votre entreprise", "en": "12 agents to manage your business"},
+    "feat_finance": {"ar": "الوكلاء المالية والمحاسبية", "fr": "Agents Financiers et Comptables", "en": "Financial & Accounting Agents"},
+    "feat_marketing": {"ar": "الوكلاء التسويقية", "fr": "Agents Marketing", "en": "Marketing Agents"},
+    "feat_admin": {"ar": "الوكلاء الإدارية والدعم", "fr": "Agents Administratifs & Support", "en": "Admin & Support Agents"},
+    "feat_extra": {"ar": "🎯 ميزات إضافية", "fr": "🎯 Fonctionnalités additionnelles", "en": "🎯 Additional Features"},
+    "feat_subscribe": {"ar": "💬 اشترك الآن", "fr": "💬 S'abonner", "en": "💬 Subscribe Now"},
+
+    # ============ About Page ============
+    "about_title": {"ar": "👋 من نحن", "fr": "👋 À propos", "en": "👋 About Us"},
+    "about_subtitle": {"ar": "قصة Yonah Ashkenaz Agentic OS", "fr": "L'histoire de Yonah Ashkenaz Agentic OS", "en": "The story of Yonah Ashkenaz Agentic OS"},
+    "about_vision": {"ar": "🎯 رؤيتنا", "fr": "🎯 Notre Vision", "en": "🎯 Our Vision"},
+    "about_why": {"ar": "💡 لماذا؟", "fr": "💡 Pourquoi ?", "en": "💡 Why?"},
+    "about_what": {"ar": "🚀 ما الذي يميزنا؟", "fr": "🚀 Ce qui nous distingue ?", "en": "🚀 What distinguishes us?"},
+    "about_numbers": {"ar": "📊 بالأرقام", "fr": "📊 En chiffres", "en": "📊 By the Numbers"},
+    "about_founder": {"ar": "👤 المؤسس", "fr": "👤 Fondateur", "en": "👤 Founder"},
+    "about_contact": {"ar": "📞 تواصل معنا", "fr": "📞 Contactez-nous", "en": "📞 Contact Us"},
+    "about_copyright": {"ar": "© 2026 Yonah Ashkenaz — Agentic OS. جميع الحقوق محفوظة.", "fr": "© 2026 Yonah Ashkenaz — Agentic OS. Tous droits réservés.", "en": "© 2026 Yonah Ashkenaz — Agentic OS. All rights reserved."},
+
+    # ============ 7 Agents (multiagent) ============
+    "ag7_title": {"ar": "🕸️ نظام الوكلاء السبعة", "fr": "🕸️ Système des 7 Agents", "en": "🕸️ 7-Agent System"},
+    "ag7_subtitle": {"ar": "CEO + 6 متخصصين لإدارة الأعمال", "fr": "CEO + 6 spécialistes", "en": "CEO + 6 specialists"},
+    "ag7_status": {"ar": "System Status", "fr": "System Status", "en": "System Status"},
+    "ag7_operational": {"ar": "تشغيل", "fr": "Opérationnel", "en": "Operational"},
+    "ag7_agents_active": {"ar": "الوكلاء النشطون", "fr": "Agents actifs", "en": "Active Agents"},
+    "ag7_tasks_done": {"ar": "المهام المنفذة", "fr": "Tâches exécutées", "en": "Tasks Done"},
+    "ag7_files_uploaded": {"ar": "البيانات المرفوعة", "fr": "Données téléchargées", "en": "Files Uploaded"},
+    "ag7_network": {"ar": "شبكة الوكلاء الذكية", "fr": "Réseau d'agents intelligents", "en": "Smart Agents Network"},
+    "ag7_conversation": {"ar": "المحادثة", "fr": "Conversation", "en": "Conversation"},
+    "ag7_input_placeholder": {"ar": "ما هي المهمة التي تريدها؟", "fr": "Quelle est votre mission ?", "en": "What is your task?"},
+    "ag7_back": {"ar": "⬅️ رجوع", "fr": "⬅️ Retour", "en": "⬅️ Back"},
+
+    # ============ Common UI ============
+    "loading": {"ar": "جاري التحميل...", "fr": "Chargement...", "en": "Loading..."},
+    "error_generic": {"ar": "حدث خطأ", "fr": "Une erreur est survenue", "en": "An error occurred"},
+    "success": {"ar": "✅ نجح", "fr": "✅ Succès", "en": "✅ Success"},
+
+"feat_desc": {"ar": "**الوصف:**", "fr": "**Description :**", "en": "**Description:**"},
+    "feat_tech": {"ar": "**التقنية:**", "fr": "**Technologie :**", "en": "**Technology:**"},
+
 }
 
 

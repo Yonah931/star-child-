@@ -451,16 +451,17 @@ def show_dashboard():
 
 
 def show_features():
+    _feat_lang = st.session_state.get("lang", "ar")
     """صفحة الميزات التفصيلية"""
-    st.markdown('<div class="main-header">✨ الميزات الكاملة</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">{t("feat_title", _feat_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">12 وكيلاً ذكياً لإدارة أعمالك</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="feat_back"):
+    if st.button(t("back_short", _feat_lang), key="feat_back"):
         st.session_state.page = "landing"
         st.rerun()
 
     st.divider()
-    st.markdown("### 🤖 الوكلاء المالية والمحاسبية")
+    st.markdown(f"### 🤖 {t('feat_finance', _feat_lang)}")
 
     features = [
         ("📊 المحاسب الذكي", "يقرأ Excel/CSV، يكشف الأخطاء، يولّد تقارير PDF بـ 3 لغات", "AI"),
@@ -471,11 +472,11 @@ def show_features():
 
     for name, desc, badge in features:
         with st.expander(f"{name}"):
-            st.markdown(f"**الوصف:** {desc}")
-            st.markdown(f"**التقنية:** {badge}")
+            st.markdown(f"{t("feat_desc", _feat_lang)}: {desc}")
+            st.markdown(f"{t("feat_tech", _feat_lang)}: {badge}")
 
     st.divider()
-    st.markdown("### 📢 الوكلاء التسويقية")
+    st.markdown(f"### 📢 {t('feat_marketing', _feat_lang)}")
 
     marketing = [
         ("✍️ كاتب المحتوى", "مقالات، وصف منتجات، سوشيال ميديا، إعلانات (6 أنواع)"),
@@ -489,7 +490,7 @@ def show_features():
             st.markdown(desc)
 
     st.divider()
-    st.markdown("### 👥 الوكلاء الإدارية والدعم")
+    st.markdown(f"### 👥 {t('feat_admin', _feat_lang)}")
 
     admin = [
         ("👥 HR Agent", "فرز CVs، إعلانات توظيف، أسئلة مقابلات"),
@@ -503,7 +504,7 @@ def show_features():
             st.markdown(desc)
 
     st.divider()
-    st.markdown("### 🎯 ميزات إضافية")
+    st.markdown(f"### {t('feat_extra', _feat_lang)}")
     st.markdown("""
     - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
     - 📄 **تقارير PDF** احترافية
@@ -708,11 +709,12 @@ def show_settings():
 
 
 def show_about():
+    _about_lang = st.session_state.get("lang", "ar")
     """صفحة من نحن"""
-    st.markdown('<div class="main-header">👋 من نحن</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">قصة Yonah Ashkenaz Agentic OS</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">{t("about_title", _about_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("about_subtitle", _about_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="about_back"):
+    if st.button(t("back_short", _about_lang), key="about_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -748,7 +750,7 @@ def show_about():
     st.divider()
 
     # الإحصائيات
-    st.markdown("### 📊 بالأرقام")
+    st.markdown(t("about_numbers", _about_lang))
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("🤖 الوكلاء", "12")
     c2.metric("🌍 اللغات", "3")
@@ -773,7 +775,7 @@ def show_about():
     st.divider()
 
     # تواصل
-    st.markdown("### 📞 تواصل معنا")
+    st.markdown(t("about_contact", _about_lang))
     c1, c2 = st.columns(2)
     with c1:
         st.markdown("""
@@ -787,7 +789,7 @@ def show_about():
         """)
 
     st.divider()
-    st.caption("© 2026 Yonah Ashkenaz — Agentic OS. جميع الحقوق محفوظة.")
+    st.caption(t("about_copyright", _about_lang))
 
 
 def show_my_invoices():
@@ -1081,17 +1083,14 @@ def show_accountant():
             st.session_state.page = "landing"
             st.rerun()
 
+    lang = st.session_state.get("lang", "ar")
+
     with st.sidebar:
-        st.markdown("### 🌍 Language")
-        lang = st.selectbox("Choisir", ["ar", "fr", "en"],
-            format_func=lambda x: {"ar":"🇲🇦 العربية","fr":"🇫🇷 Français","en":"🇬🇧 English"}[x])
-        st.session_state.lang = lang
         st.markdown("---")
         st.markdown(f"### 📁 {get_text(lang, 'upload_file')}")
         uploaded = st.file_uploader(get_text(lang, "choose_file"), type=['xlsx','xls','csv'])
 
-    lang = st.session_state.lang
-    st.markdown('<div class="main-header">📊 المحاسب الذكي</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">{t("ac_title", lang)}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="sub-header">{get_text(lang, "subtitle")}</div>', unsafe_allow_html=True)
 
     if uploaded is None:
@@ -1469,7 +1468,7 @@ def show_cfo():
     col_a, col_b = st.columns(2)
     with col_a:
         if st.button(f"📥 {t('cfo_generate_report', _cfo_lang)}", key="cfo_pdf_ar", width="stretch"):
-            with st.spinner(t("hr_generating", _hr_lang)):
+            with st.spinner(t("cfo_generating", _cfo_lang)):
                 pdf_path = generate_cfo_report(cfo.summary, cfo.taxes, cfo.insights, lang='ar')
                 with open(pdf_path, "rb") as f:
                     st.session_state['cfo_pdf_ar_bytes'] = f.read()
@@ -1520,7 +1519,7 @@ def show_invoice():
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             key="inv_demo_dl",
         )
-    if st.button("⬅️ رجوع", key="inv_back"):
+    if st.button(t("back_short", _inv_lang), key="inv_back"):
         st.session_state.page = "landing"
         st.rerun()
     st.markdown(f"### {t('inv_data_header', _inv_lang)}")
@@ -1568,7 +1567,7 @@ def show_invoice():
         c3.metric("المجموع TTC", f"{inv['total']:.2f} DH")
         if st.button(f"{t('inv_generate_pdf', _inv_lang)}", type="primary", key="inv_pdf"):
             try:
-                with st.spinner(t("hr_generating", _hr_lang)):
+                with st.spinner(t("inv_generating", _inv_lang)):
                     agent = InvoiceAgent()
                     pdf_path = agent.generate_pdf(inv, lang=lang)
                 if pdf_path and os.path.exists(pdf_path):
@@ -1675,7 +1674,7 @@ def show_customer_support():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox(t("cs_lang", _cs_lang), ["ar", "fr", "en"], key="cs_lang")
+        lang = st.selectbox(t("cs_lang", _cs_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="cs_lang")
     with c2:
         tone = st.selectbox(t("cs_tone", _cs_lang), ["formal", "friendly", "apologetic"],
                             format_func=lambda x: {"formal":"رسمي","friendly":"ودي","apologetic":"اعتذاري"}[x],
@@ -1730,7 +1729,7 @@ def show_content_writer():
     st.markdown(f'<div class="main-header">{t("cw_title", _cw_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">مقالات · وصف منتجات · سوشيال ميديا · إعلانات</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="cw_back"):
+    if st.button(t("back_short", _cw_lang), key="cw_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1739,9 +1738,9 @@ def show_content_writer():
     # الإعدادات
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="cw_lang")
+        lang = st.selectbox(t("cw_lang", _cw_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="cw_lang")
     with c2:
-        tone = st.selectbox(t("cs_tone", _cs_lang), list(agent.TONES.keys()),
+        tone = st.selectbox(t("cw_tone", _cw_lang), list(agent.TONES.keys()),
                             format_func=lambda x: agent.TONES[x][lang],
                             key="cw_tone")
     with c3:
@@ -1767,7 +1766,7 @@ def show_content_writer():
         if not topic.strip():
             st.error(t("cw_enter_topic", _cw_lang))
         else:
-            with st.spinner(t("hr_generating", _hr_lang)):
+            with st.spinner(t("cw_generating", _cw_lang)):
                 result = agent.generate(content_type, topic, tone, length, lang, audience, keywords)
 
             st.divider()
@@ -1806,8 +1805,8 @@ def show_content_writer():
             # عناوين مقترحة
             if content_type in ["article", "email"]:
                 st.markdown(t("cw_titles", _cw_lang))
-                for t in agent.suggest_titles(topic, lang=lang):
-                    st.markdown(f"- {t}")
+                for __title in agent.suggest_titles(topic, lang=lang):
+                    st.markdown(f"- {__title}")
 
 
 def show_email_agent():
@@ -1815,7 +1814,7 @@ def show_email_agent():
     st.markdown(f'<div class="main-header">{t("em_title", _em_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">ردود · حملات · متابعة · دعوات</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="em_back"):
+    if st.button(t("back_short", _em_lang), key="em_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1823,9 +1822,9 @@ def show_email_agent():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="em_lang")
+        lang = st.selectbox(t("em_lang", _em_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="em_lang")
     with c2:
-        tone = st.selectbox(t("cs_tone", _cs_lang), list(agent.TONES.keys()),
+        tone = st.selectbox(t("em_tone", _em_lang), list(agent.TONES.keys()),
                             format_func=lambda x: agent.TONES[x][lang],
                             key="em_tone")
     with c3:
@@ -1833,7 +1832,7 @@ def show_email_agent():
                                   format_func=lambda x: f"{agent.EMAIL_TYPES[x]['icon']} {agent.EMAIL_TYPES[x][lang]}",
                                   key="em_type")
 
-    subject = st.text_input(t("cw_topic", _cw_lang), key="em_subject", placeholder=t("em_subject_placeholder", _em_lang))
+    subject = st.text_input(t("em_topic", _em_lang), key="em_subject", placeholder=t("em_subject_placeholder", _em_lang))
 
     c1, c2 = st.columns(2)
     with c1:
@@ -1846,16 +1845,16 @@ def show_email_agent():
 
     if st.button(t("em_generate_btn", _em_lang), type="primary", key="em_generate"):
         if not subject.strip():
-            st.error(t("cw_enter_topic", _cw_lang))
+            st.error(t("em_enter_topic", _em_lang))
         else:
-            with st.spinner(t("hr_generating", _hr_lang)):
+            with st.spinner(t("em_generating", _em_lang)):
                 result = agent.generate(email_type, subject, context, tone, lang, recipient, sender)
 
             st.divider()
             st.info(f"المصدر: {result['source']} | النوع: {result['type_label']} | النبرة: {result['tone']}")
             st.text_area("البريد", value=result["content"], height=400, key="em_output")
             st.download_button(
-                t("cw_download_txt", _cw_lang),
+                t("em_download_txt", _em_lang),
                 data=result["content"],
                 file_name=f"email_{email_type}_{lang}.txt",
                 mime="text/plain",
@@ -1873,7 +1872,7 @@ def show_social_media():
     st.markdown('<div class="main-header">📱 Social Media Agent</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">منشورات جاهزة · 6 منصات · 3 لغات</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="sm_back"):
+    if st.button(t("back_short", _sm_lang), key="sm_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1881,7 +1880,7 @@ def show_social_media():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="sm_lang")
+        lang = st.selectbox(t("sm_lang", _sm_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="sm_lang")
     with c2:
         platform = st.selectbox(t("sm_platform", _sm_lang), list(agent.PLATFORMS.keys()),
                                 format_func=lambda x: f"{agent.PLATFORMS[x]['icon']} {agent.PLATFORMS[x][lang]}",
@@ -1893,19 +1892,19 @@ def show_social_media():
 
     c1, c2 = st.columns(2)
     with c1:
-        tone = st.selectbox(t("cs_tone", _cs_lang), list(agent.TONES.keys()),
+        tone = st.selectbox(t("sm_tone", _sm_lang), list(agent.TONES.keys()),
                             format_func=lambda x: agent.TONES[x][lang],
                             key="sm_tone")
     with c2:
         audience = st.text_input(t("sm_audience", _sm_lang), key="sm_aud")
 
-    topic = st.text_input(t("cw_topic", _cw_lang), key="sm_topic", placeholder=t("sm_topic_placeholder", _sm_lang))
+    topic = st.text_input(t("sm_topic", _sm_lang), key="sm_topic", placeholder=t("sm_topic_placeholder", _sm_lang))
 
     if st.button(t("sm_generate_btn", _sm_lang), type="primary", key="sm_generate"):
         if not topic.strip():
             st.error(t("sm_enter_topic", _sm_lang))
         else:
-            with st.spinner(t("hr_generating", _hr_lang)):
+            with st.spinner(t("sm_generating", _sm_lang)):
                 r = agent.generate_post(platform, post_type, topic, tone, lang, audience)
 
             st.divider()
@@ -1914,11 +1913,11 @@ def show_social_media():
             st.info(f"المصدر: {r['source']} | {r['platform_icon']} {r['platform_label']} | الأحرف: {r['char_count']}/{best} {status}")
 
             st.text_area("المنشور", value=r["content"], height=300, key="sm_output")
-            st.download_button(t("cw_download_txt", _cw_lang), data=r["content"],
+            st.download_button(t("sm_download_txt", _sm_lang), data=r["content"],
                                file_name=f"post_{platform}_{lang}.txt", mime="text/plain",
                                key="sm_dl")
 
-            st.markdown(t("cw_hashtags", _cw_lang))
+            st.markdown(t("sm_hashtags", _sm_lang))
             st.code(" ".join(agent.suggest_hashtags(topic, platform, lang)))
 
 
@@ -1927,7 +1926,7 @@ def show_meeting_notes():
     st.markdown(f'<div class="main-header">{t("mn_title", _mn_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">محاضر اجتماعات · مهام · قرارات</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="mn_back"):
+    if st.button(t("back_short", _mn_lang), key="mn_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1935,7 +1934,7 @@ def show_meeting_notes():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="mn_lang")
+        lang = st.selectbox(t("mn_lang", _mn_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="mn_lang")
     with c2:
         mtype = st.selectbox(t("mn_type", _mn_lang), list(agent.MEETING_TYPES.keys()),
                              format_func=lambda x: f"{agent.MEETING_TYPES[x]['icon']} {agent.MEETING_TYPES[x][lang]}",
@@ -1951,7 +1950,7 @@ def show_meeting_notes():
         if not transcript.strip():
             st.error(t("mn_enter_text", _mn_lang))
         else:
-            with st.spinner(t("hr_generating", _hr_lang)):
+            with st.spinner(t("mn_generating", _mn_lang)):
                 r = agent.generate_minutes(transcript, mtype, lang, title, date)
 
             st.divider()
@@ -1967,7 +1966,7 @@ def show_supplier():
     st.markdown(f'<div class="main-header">{t("sp_title", _sp_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">طلبات · تفاوض · مقارنة الموردين</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="sp_back"):
+    if st.button(t("back_short", _sp_lang), key="sp_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1975,7 +1974,7 @@ def show_supplier():
 
     c1, c2 = st.columns(2)
     with c1:
-        lang = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"], key="sp_lang")
+        lang = st.selectbox(t("sp_lang", _sp_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="sp_lang")
     with c2:
         rtype = st.selectbox(t("sp_request_type", _sp_lang), list(agent.REQUEST_TYPES.keys()),
                              format_func=lambda x: f"{agent.REQUEST_TYPES[x]['icon']} {agent.REQUEST_TYPES[x][lang]}",
@@ -1994,7 +1993,7 @@ def show_supplier():
         if not context.strip():
             st.error(t("sp_enter_context", _sp_lang))
         else:
-            with st.spinner(t("hr_generating", _hr_lang)):
+            with st.spinner(t("sp_generating", _sp_lang)):
                 r = agent.generate_request(rtype, supplier, context, lang, sender)
             st.divider()
             st.info(f"المصدر: {r['source']} | النوع: {r['type_label']}")
