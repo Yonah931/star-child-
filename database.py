@@ -244,3 +244,68 @@ def get_user_activity():
     conn.close()
     return rows
 
+
+
+# ============================================
+# جدول الرسائل (Contact Form)
+# ============================================
+def init_messages_db():
+    """تهيئة جدول الرسائل"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT NOT NULL,
+            name TEXT,
+            email TEXT,
+            phone TEXT,
+            message TEXT,
+            status TEXT DEFAULT 'new'
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+def save_message(name, email, phone, message):
+    """حفظ رسالة عميل"""
+    init_messages_db()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        """INSERT INTO messages (timestamp, name, email, phone, message, status)
+           VALUES (?, ?, ?, ?, ?, 'new')""",
+        (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), name, email, phone, message)
+    )
+    conn.commit()
+    conn.close()
+    return True
+
+
+def get_messages(limit=50):
+    """جلب الرسائل"""
+    init_messages_db()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        """SELECT timestamp, name, email, phone, message, status 
+           FROM messages ORDER BY id DESC LIMIT ?""",
+        (limit,)
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+
+def get_messages_stats():
+    """إحصائيات الرسائل"""
+    init_messages_db()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM messages")
+    total = cursor.fetchone()[0] or 0
+    cursor.execute("SELECT COUNT(*) FROM messages WHERE status = 'new'")
+    new = cursor.fetchone()[0] or 0
+    conn.close()
+    return {"total": total, "new": new}

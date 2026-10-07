@@ -911,6 +911,58 @@ def show_stats():
     st.caption("📊 يتم التحديث تلقائياً عند كل زيارة")
 
 
+
+
+def show_contact():
+    """صفحة تواصل معنا"""
+    st.markdown('<div class="main-header">Contact / تواصل معنا</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">For questions, demos, and custom requests</div>', unsafe_allow_html=True)
+
+    if st.button("Back / رجوع", key="contact_back"):
+        st.session_state.page = "landing"
+        st.rerun()
+
+    st.divider()
+
+    col_info, col_form = st.columns([1, 1.5])
+
+    with col_info:
+        st.markdown("### Direct Contact / تواصل مباشر")
+        st.markdown("""
+        - **Email:** ashkenazyonah@gmail.com
+        - **WhatsApp:** +212719082215
+        - **Country:** Morocco
+        """)
+        st.markdown("---")
+        st.markdown("### Response Time / سرعة الرد")
+        st.markdown("""
+        - Within 24 hours
+        - خــلال 24 ســاعة
+        """)
+
+    with col_form:
+        st.markdown("### Send a Message / أرسل رسالة")
+
+        with st.form("contact_form", clear_on_submit=True):
+            name = st.text_input("Name / الاسم", key="ct_name")
+            email = st.text_input("Email / البريد", key="ct_email")
+            phone = st.text_input("Phone / الهاتف (optional)", key="ct_phone")
+            message = st.text_area("Message / الرسالة", height=140, key="ct_msg")
+
+            submitted = st.form_submit_button("Send / إرسال", type="primary")
+
+            if submitted:
+                if not name.strip() or not message.strip():
+                    st.error("Name and message are required / الاسم والرسالة مطلوبان")
+                else:
+                    try:
+                        database.save_message(name, email, phone, message)
+                        st.success("Message sent. We will reply soon.")
+                        st.info("Sent / تم الإرسال")
+                    except Exception as e:
+                        st.error("Error: " + str(e)[:100])
+
+
 def show_landing():
     # الشعار
     st.markdown("""
@@ -949,7 +1001,7 @@ def show_landing():
 
     # أزرار ثانوية
     st.markdown("---")
-    _colA, _colB = st.columns(2)
+    _colA, _colB, _colC = st.columns(3)
     with _colA:
         if st.button("About / من نحن", width="stretch", key="btn_about2"):
             st.session_state.page = "about"
@@ -957,6 +1009,10 @@ def show_landing():
     with _colB:
         if st.button("Features / الميزات", width="stretch", key="btn_features2"):
             st.session_state.page = "features"
+            st.rerun()
+    with _colC:
+        if st.button("Contact / تواصل", width="stretch", key="btn_contact2"):
+            st.session_state.page = "contact"
             st.rerun()
 
 
@@ -1947,6 +2003,8 @@ elif st.session_state.page == "stats":
     show_stats()
 elif st.session_state.page == "my_invoices":
     show_my_invoices()
+elif st.session_state.page == "contact":
+    show_contact()
 elif st.session_state.page == "about":
     show_about()
 elif st.session_state.page == "settings":
