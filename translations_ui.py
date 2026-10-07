@@ -387,6 +387,34 @@ T = {
         "en": "Phone",
     },
 
+# ============ Invoice Agent ============
+    "inv_title": {"ar": "🧾 Yonah Invoice", "fr": "🧾 Yonah Facturation", "en": "🧾 Yonah Invoice"},
+    "inv_download_demo": {"ar": "⬇️ تحميل نموذج Excel", "fr": "⬇️ Télécharger modèle Excel", "en": "⬇️ Download Excel Template"},
+    "inv_data_header": {"ar": "📝 بيانات الفاتورة", "fr": "📝 Données de la Facture", "en": "📝 Invoice Data"},
+    "inv_client_name": {"ar": "اسم العميل *", "fr": "Nom du client *", "en": "Client Name *"},
+    "inv_client_address": {"ar": "عنوان العميل (اختياري)", "fr": "Adresse du client (optionnel)", "en": "Client Address (optional)"},
+    "inv_items_count": {"ar": "عدد البنود", "fr": "Nombre d'articles", "en": "Number of Items"},
+    "inv_item_n": {"ar": "البند", "fr": "Article", "en": "Item"},
+    "inv_desc": {"ar": "الوصف", "fr": "Description", "en": "Description"},
+    "inv_quantity": {"ar": "الكمية", "fr": "Quantité", "en": "Quantity"},
+    "inv_price": {"ar": "السعر (درهم)", "fr": "Prix (DH)", "en": "Price (DH)"},
+    "inv_create_btn": {"ar": "🔨 إنشاء الفاتورة", "fr": "🔨 Créer la Facture", "en": "🔨 Create Invoice"},
+    "inv_success_created": {"ar": "✅ تم إنشاء الفاتورة", "fr": "✅ Facture créée", "en": "✅ Invoice Created"},
+    "inv_error_client": {"ar": "⚠️ اسم العميل مطلوب", "fr": "⚠️ Nom du client requis", "en": "⚠️ Client name required"},
+    "inv_preview": {"ar": "👁️ معاينة الفاتورة", "fr": "👁️ Aperçu de la Facture", "en": "👁️ Invoice Preview"},
+    "inv_number": {"ar": "رقم الفاتورة", "fr": "Numéro de Facture", "en": "Invoice Number"},
+    "inv_date": {"ar": "التاريخ", "fr": "Date", "en": "Date"},
+    "inv_client": {"ar": "العميل", "fr": "Client", "en": "Client"},
+    "inv_subtotal": {"ar": "المجموع HT", "fr": "Sous-total HT", "en": "Subtotal HT"},
+    "inv_tva": {"ar": "TVA", "fr": "TVA", "en": "VAT"},
+    "inv_total_ttc": {"ar": "المجموع TTC", "fr": "Total TTC", "en": "Total TTC"},
+    "inv_generate_pdf": {"ar": "📄 توليد PDF", "fr": "📄 Générer PDF", "en": "📄 Generate PDF"},
+    "inv_generating": {"ar": "جاري توليد الفاتورة...", "fr": "Génération en cours...", "en": "Generating invoice..."},
+    "inv_pdf_success": {"ar": "✅ تم توليد الفاتورة", "fr": "✅ Facture générée", "en": "✅ Invoice Generated"},
+    "inv_download_pdf": {"ar": "⬇️ تحميل PDF", "fr": "⬇️ Télécharger PDF", "en": "⬇️ Download PDF"},
+    "inv_clear": {"ar": "🗑️ مسح الفاتورة", "fr": "🗑️ Effacer la Facture", "en": "🗑️ Clear Invoice"},
+    "inv_select_lang": {"ar": "اللغة", "fr": "Langue", "en": "Language"},
+
 }
 
 

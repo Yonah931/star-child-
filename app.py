@@ -972,7 +972,7 @@ def show_landing():
         <div class="brand-icon">🤖</div>
         <div class="brand-text">Yonah Ashkenaz</div>
     </div>
-    <div class="brand-tagline">منصة الذكاء الاصطناعي لإدارة الأعمال</div>
+    <div class="brand-tagline">{t('brand_tagline', _lang)}</div>
     """, unsafe_allow_html=True)
 
     # عدّاد الوكلاء
@@ -1501,7 +1501,8 @@ def show_cfo():
 
 # ============================================================
 def show_invoice():
-    lang = st.selectbox("Choix", ["fr", "ar", "en"], key="inv_lang_main")
+    _inv_lang = st.session_state.get("lang", "ar")
+    lang = _inv_lang
     st.markdown('<div class="main-header">🧾 Yonah Invoice</div>', unsafe_allow_html=True)
     st.session_state.lang = lang
 
@@ -1511,7 +1512,7 @@ def show_invoice():
         with open(demo_path, "rb") as f:
             demo_bytes = f.read()
         st.download_button(
-            "⬇️ تحميل نموذج Excel",
+            f"{t('inv_download_demo', _inv_lang)}",
             data=demo_bytes,
             file_name="demo_invoice.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1520,20 +1521,20 @@ def show_invoice():
     if st.button("⬅️ رجوع", key="inv_back"):
         st.session_state.page = "landing"
         st.rerun()
-    st.markdown("### 📝 بيانات الفاتورة")
-    client_name = st.text_input("اسم العميل *", key="inv_client")
-    client_address = st.text_input("عنوان العميل", key="inv_addr")
-    n_items = st.number_input("عدد البنود", min_value=1, max_value=20, value=1, step=1, key="inv_n")
+    st.markdown(f"### {t('inv_data_header', _inv_lang)}")
+    client_name = st.text_input(f"{t('inv_client_name', _inv_lang)}", key="inv_client")
+    client_address = st.text_input(f"{t('inv_client_address', _inv_lang)}", key="inv_addr")
+    n_items = st.number_input(f"{t('inv_items_count', _inv_lang)}", min_value=1, max_value=20, value=1, step=1, key="inv_n")
     items = []
     for i in range(int(n_items)):
-        st.markdown(f"**البند {i+1}**")
-        desc = st.text_input("الوصف", key=f"inv_desc_{i}")
-        qty = st.number_input("الكمية", min_value=0.01, value=1.0, step=1.0, key=f"inv_qty_{i}")
-        price = st.number_input("السعر (درهم)", min_value=0.0, value=100.0, step=10.0, key=f"inv_price_{i}")
+        st.markdown(f"**{t('inv_item_n', _inv_lang)} {i+1}**")
+        desc = st.text_input(f"{t('inv_desc', _inv_lang)}", key=f"inv_desc_{i}")
+        qty = st.number_input(f"{t('inv_quantity', _inv_lang)}", min_value=0.01, value=1.0, step=1.0, key=f"inv_qty_{i}")
+        price = st.number_input(f"{t('inv_price', _inv_lang)}", min_value=0.0, value=100.0, step=10.0, key=f"inv_price_{i}")
         items.append({"description": desc or f"بند {i+1}", "quantity": qty, "unit_price": price})
-    if st.button("🔨 إنشاء الفاتورة", type="primary", key="inv_create"):
+    if st.button(f"{t('inv_create_btn', _inv_lang)}", type="primary", key="inv_create"):
         if not client_name.strip():
-            st.error("⚠️ اسم العميل مطلوب")
+            st.error(f"{t('inv_error_client', _inv_lang)}")
         else:
             try:
                 agent = InvoiceAgent()
@@ -1554,16 +1555,16 @@ def show_invoice():
     if "inv_dict" in st.session_state:
         inv = st.session_state["inv_dict"]
         st.divider()
-        st.markdown("### 👁️ معاينة الفاتورة")
+        st.markdown(f"### {t('inv_preview', _inv_lang)}")
         st.markdown(f"**رقم الفاتورة:** {inv['number']} | **التاريخ:** {inv['date']}")
         st.markdown(f"**العميل:** {inv['client_name']}")
-        items_display = [{"الوصف": it["description"], "الكمية": it["quantity"], "السعر": f"{it['unit_price']:.2f}", "المجموع": f"{it['quantity'] * it['unit_price']:.2f}"} for it in inv["items"]]
+        items_display = [{f"{t('inv_desc', _inv_lang)}": it["description"], f"{t('inv_quantity', _inv_lang)}": it["quantity"], "السعر": f"{it['unit_price']:.2f}", "المجموع": f"{it['quantity'] * it['unit_price']:.2f}"} for it in inv["items"]]
         st.dataframe(items_display, width="stretch", hide_index=True)
         c1, c2, c3 = st.columns(3)
         c1.metric("المجموع HT", f"{inv['subtotal']:.2f} DH")
         c2.metric(f"TVA {int(inv['tax_rate'] * 100)}%", f"{inv['tax']:.2f} DH")
         c3.metric("المجموع TTC", f"{inv['total']:.2f} DH")
-        if st.button("📄 توليد PDF", type="primary", key="inv_pdf"):
+        if st.button(f"{t('inv_generate_pdf', _inv_lang)}", type="primary", key="inv_pdf"):
             try:
                 with st.spinner("جاري التوليد..."):
                     agent = InvoiceAgent()
@@ -1573,14 +1574,14 @@ def show_invoice():
                         pdf_bytes = f.read()
                     st.session_state["inv_pdf_bytes"] = pdf_bytes
                     st.session_state["inv_pdf_name"] = pdf_path
-                    st.success("✅ تم توليد الفاتورة")
+                    st.success(f"{t('inv_pdf_success', _inv_lang)}")
                 else:
                     st.error(f"❌ لم يُنشأ الملف: {pdf_path}")
             except Exception as e:
                 st.error(f"خطأ: {e}")
         if st.session_state.get("inv_pdf_bytes"):
-            st.download_button("⬇️ تحميل PDF", data=st.session_state["inv_pdf_bytes"], file_name=os.path.basename(st.session_state["inv_pdf_name"]), mime="application/pdf", width="stretch", key="inv_dl")
-        if st.button("🗑️ مسح", key="inv_clear"):
+            st.download_button(f"{t('inv_download_pdf', _inv_lang)}", data=st.session_state["inv_pdf_bytes"], file_name=os.path.basename(st.session_state["inv_pdf_name"]), mime="application/pdf", width="stretch", key="inv_dl")
+        if st.button(f"{t('inv_clear', _inv_lang)}", key="inv_clear"):
             for k in ["inv_dict", "inv_pdf_bytes", "inv_pdf_name"]:
                 st.session_state.pop(k, None)
             st.rerun()
