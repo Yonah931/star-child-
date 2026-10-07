@@ -4,6 +4,7 @@ import time as _time
 from datetime import datetime
 from accountant import AccountantAgent, generate_accounting_pdf
 from translations import get_text
+from translations_ui import t
 from hr import HRAgent
 from cfo import CFOAgent
 from reports import generate_hr_report, generate_cfo_report
@@ -385,7 +386,7 @@ if "lang" not in st.session_state:
 def make_whatsapp_link(plan_name, price):
     import urllib.parse
     number = "212719082215"
-    message = f"مرحباً، أرغب في الاشتراك في حزمة *{plan_name}* ({price} درهم/شهر). هل يمكنكم مساعدتي؟"
+    message = f"مرحباً، أرغب في الاشتراك في حزمة *{plan_name}* ({price} {t('per_month', _lang)}). هل يمكنكم مساعدتي؟"
     return f"https://wa.me/{number}?text={urllib.parse.quote(message)}"
 
 def show_dashboard():
@@ -513,7 +514,7 @@ def show_features():
     """)
 
     st.divider()
-    if st.button("💬 اشترك الآن", type="primary", key="feat_subscribe"):
+    if st.button("💬 {t('subscribe_now', _lang)}", type="primary", key="feat_subscribe"):
         st.markdown("[اضغط هنا للاشتراك عبر واتساب](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحباً، أرغب في الاشتراك في منصة Yonah Ashkenaz") + ")")
 
 
@@ -739,7 +740,7 @@ def show_about():
     - 🇲🇦 **مصمّمة للمغرب:** TVA, IS, IR, CNSS, ICE, OMPIC
     - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
     - 🤖 **12 وكيلاً ذكياً:** محاسبة، HR، CFO، تسويق، دعم
-    - 💰 **أسعار بالدرهم:** تبدأ من 500 درهم/شهر
+    - 💰 **أسعار بالدرهم:** تبدأ من 500 {t('per_month', _lang)}
     - ⚡ **سريعة:** نتائج في ثوانٍ
     - 🔒 **آمنة:** تسجيل دخول + حماية متقدمة
     """)
@@ -964,8 +965,9 @@ def show_contact():
 
 
 def show_landing():
+    _lang = st.session_state.get("lang", "ar")
     # الشعار
-    st.markdown("""
+    st.markdown(f"""
     <div class="brand-logo">
         <div class="brand-icon">🤖</div>
         <div class="brand-text">Yonah Ashkenaz</div>
@@ -982,7 +984,7 @@ def show_landing():
         '</div>',
         unsafe_allow_html=True
     )
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align:center; padding:3rem 1rem;
         background:linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
         border-radius:20px; margin-bottom:2rem;">
@@ -1003,64 +1005,64 @@ def show_landing():
     st.markdown("---")
     _colA, _colB, _colC = st.columns(3)
     with _colA:
-        if st.button("About / من نحن", width="stretch", key="btn_about2"):
+        if st.button(f"About / {t('about', _lang)}", width="stretch", key="btn_about2"):
             st.session_state.page = "about"
             st.rerun()
     with _colB:
-        if st.button("Features / الميزات", width="stretch", key="btn_features2"):
+        if st.button(f"Features / {t('features_short', _lang)}", width="stretch", key="btn_features2"):
             st.session_state.page = "features"
             st.rerun()
     with _colC:
-        if st.button("Contact / تواصل", width="stretch", key="btn_contact2"):
+        if st.button(f"Contact / {t('contact_us', _lang)}", width="stretch", key="btn_contact2"):
             st.session_state.page = "contact"
             st.rerun()
 
 
     st.markdown("---")
-    st.markdown("## 💰 الأسعار")
+    st.markdown(f"## {t('see_pricing', _lang)}")
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="price-card">
             <h3>Starter</h3>
-            <div class="price-amount">500 <span class="price-currency">درهم/شهر</span></div>
+            <div class="price-amount">500 <span class="price-currency">{t('per_month', _lang)}</span></div>
             <p>✅ وكيل واحد من اختيارك</p>
             <p>✅ 20 مهمة شهرياً</p>
             <p>✅ دعم واتساب</p>
-        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Starter%20%28500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 اشترك الآن</a>
+        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Starter%20%28500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 {t('subscribe_now', _lang)}</a>
         </div>
         """, unsafe_allow_html=True)
     with col2:
-        st.markdown("""
+        st.markdown(f"""
         <div class="price-card featured">
             <h3>Pro 🔥</h3>
-            <div class="price-amount">1,200 <span class="price-currency">درهم/شهر</span></div>
+            <div class="price-amount">1,200 <span class="price-currency">{t('per_month', _lang)}</span></div>
             <p>✅ 3 وكلاء</p>
             <p>✅ 100 مهمة شهرياً</p>
             <p>✅ كل الميزات</p>
             <p>✅ دعم أولوية</p>
-        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Pro%20%281200%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 اشترك الآن</a>
+        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Pro%20%281200%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 {t('subscribe_now', _lang)}</a>
         </div>
         """, unsafe_allow_html=True)
     with col3:
-        st.markdown("""
+        st.markdown(f"""
         <div class="price-card">
             <h3>Business</h3>
-            <div class="price-amount">2,500 <span class="price-currency">درهم/شهر</span></div>
+            <div class="price-amount">2,500 <span class="price-currency">{t('per_month', _lang)}</span></div>
             <p>✅ كل الوكلاء (8)</p>
             <p>✅ غير محدود</p>
             <p>✅ تخصيص كامل</p>
             <p>✅ دعم 24/7</p>
-        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Business%20%282500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 اشترك الآن</a>
+        <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Business%20%282500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 {t('subscribe_now', _lang)}</a>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align:center; padding:2rem;">
         <h2>📞 ابدأ اليوم</h2>
-        <p>جرّب مجاناً لمدة 7 أيام، بدون التزام.</p>
+        <p>{t('free_trial_7days', _lang)}.</p>
         <p style="direction:ltr;">
             📧 <b>ashkenazyonah@gmail.com</b><br>
             💬 <b>WhatsApp: +212719082215</b>

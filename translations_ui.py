@@ -280,6 +280,113 @@ T = {
         "fr": "🌍 Langue",
         "en": "🌍 Language",
     },
+# ============ Additional Keys ============
+    "main_header": {
+        "ar": "اختر الحل المناسب لك",
+        "fr": "Choisissez votre solution",
+        "en": "Choose Your Solution",
+    },
+    "see_pricing": {
+        "ar": "💰 الأسعار",
+        "fr": "💰 Tarifs",
+        "en": "💰 Pricing",
+    },
+    "starter": {
+        "ar": "Starter",
+        "fr": "Starter",
+        "en": "Starter",
+    },
+    "pro": {
+        "ar": "Pro 🔥",
+        "fr": "Pro 🔥",
+        "en": "Pro 🔥",
+    },
+    "business": {
+        "ar": "Business",
+        "fr": "Business",
+        "en": "Business",
+    },
+    "per_month": {
+        "ar": "درهم/شهر",
+        "fr": "DH/mois",
+        "en": "DH/month",
+    },
+    "subscribe_now": {
+        "ar": "اشترك الآن",
+        "fr": "S'abonner",
+        "en": "Subscribe Now",
+    },
+    "start_today": {
+        "ar": "ابدأ اليوم",
+        "fr": "Commencez aujourd'hui",
+        "en": "Start Today",
+    },
+    "free_trial_7days": {
+        "ar": "جرّب مجاناً لمدة 7 أيام، بدون التزام",
+        "fr": "Essayez gratuitement 7 jours, sans engagement",
+        "en": "Try free for 7 days, no commitment",
+    },
+    "contact_us": {
+        "ar": "تواصل معنا",
+        "fr": "Contactez-nous",
+        "en": "Contact Us",
+    },
+    "features_short": {
+        "ar": "الميزات",
+        "fr": "Fonctionnalités",
+        "en": "Features",
+    },
+    "agent_hr_desc": {
+        "ar": "الفرز الأولي للمرشحين وصياغة الإعلانات",
+        "fr": "Pré-tri des candidats et rédaction d'annonces",
+        "en": "Initial screening and ad writing",
+    },
+    "agent_cfo_desc": {
+        "ar": "تحليل الربحية، حساب الضرائب، التوصيات المالية",
+        "fr": "Analyse de rentabilité, calcul des taxes, recommandations",
+        "en": "Profitability analysis, tax calculations, financial advice",
+    },
+    "agent_agents7_desc": {
+        "ar": "CEO + 6 متخصصين لإدارة الأعمال",
+        "fr": "CEO + 6 spécialistes pour gérer l'entreprise",
+        "en": "CEO + 6 specialists to run the company",
+    },
+    "agent_accountant_desc": {
+        "ar": "المحاسبة في ثوانٍ Excel حلل ملفات",
+        "fr": "Analysez Excel en secondes",
+        "en": "Analyze Excel in seconds",
+    },
+    "phone_whatsapp": {
+        "ar": "واتساب",
+        "fr": "WhatsApp",
+        "en": "WhatsApp",
+    },
+    "email_label": {
+        "ar": "البريد",
+        "fr": "Email",
+        "en": "Email",
+    },
+    "name_label": {
+        "ar": "الاسم",
+        "fr": "Nom",
+        "en": "Name",
+    },
+    "message_label": {
+        "ar": "الرسالة",
+        "fr": "Message",
+        "en": "Message",
+    },
+    "send": {
+        "ar": "إرسال",
+        "fr": "Envoyer",
+        "en": "Send",
+    },
+    "phone_label": {
+        "ar": "الهاتف",
+        "fr": "Téléphone",
+        "en": "Phone",
+    },
+
 }
 
 
