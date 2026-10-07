@@ -669,18 +669,8 @@ T = {
     "about_copyright": {"ar": "© 2026 Yonah Ashkenaz — Agentic OS. جميع الحقوق محفوظة.", "fr": "© 2026 Yonah Ashkenaz — Agentic OS. Tous droits réservés.", "en": "© 2026 Yonah Ashkenaz — Agentic OS. All rights reserved."},
 
     # ============ 7 Agents (multiagent) ============
-    "ag7_title": {"ar": "🕸️ نظام الوكلاء السبعة", "fr": "🕸️ Système des 7 Agents", "en": "🕸️ 7-Agent System"},
-    "ag7_subtitle": {"ar": "CEO + 6 متخصصين لإدارة الأعمال", "fr": "CEO + 6 spécialistes", "en": "CEO + 6 specialists"},
-    "ag7_status": {"ar": "System Status", "fr": "System Status", "en": "System Status"},
-    "ag7_operational": {"ar": "تشغيل", "fr": "Opérationnel", "en": "Operational"},
     "ag7_agents_active": {"ar": "الوكلاء النشطون", "fr": "Agents actifs", "en": "Active Agents"},
-    "ag7_tasks_done": {"ar": "المهام المنفذة", "fr": "Tâches exécutées", "en": "Tasks Done"},
-    "ag7_files_uploaded": {"ar": "البيانات المرفوعة", "fr": "Données téléchargées", "en": "Files Uploaded"},
-    "ag7_network": {"ar": "شبكة الوكلاء الذكية", "fr": "Réseau d'agents intelligents", "en": "Smart Agents Network"},
-    "ag7_conversation": {"ar": "المحادثة", "fr": "Conversation", "en": "Conversation"},
     "ag7_input_placeholder": {"ar": "ما هي المهمة التي تريدها؟", "fr": "Quelle est votre mission ?", "en": "What is your task?"},
-    "ag7_back": {"ar": "⬅️ رجوع", "fr": "⬅️ Retour", "en": "⬅️ Back"},
-
     # ============ Common UI ============
     "loading": {"ar": "جاري التحميل...", "fr": "Chargement...", "en": "Loading..."},
     "error_generic": {"ar": "حدث خطأ", "fr": "Une erreur est survenue", "en": "An error occurred"},
@@ -690,16 +680,13 @@ T = {
     "feat_tech": {"ar": "**التقنية:**", "fr": "**Technologie :**", "en": "**Technology:**"},
 
 # ============ 7 Agents (multiagent) ============
-    "ag7_main_header": {"ar": "🛡️ Sureflow Agentic OS", "fr": "🛡️ Sureflow Agentic OS", "en": "🛡️ Sureflow Agentic OS"},
     "ag7_subtitle": {"ar": "نظام وكلاء الذكاء الاصطناعي لإدارة الشركة", "fr": "Système d'agents IA pour gérer l'entreprise", "en": "AI Agent System to run the company"},
     "ag7_network": {"ar": "شبكة الوكلاء الذكية", "fr": "Réseau d'agents intelligents", "en": "Smart Agents Network"},
-    "ag7_state": {"ar": "حالة الوكلاء", "fr": "État des agents", "en": "Agents State"},
     "ag7_total_tasks": {"ar": "المهام المنفذة", "fr": "Tâches exécutées", "en": "Tasks Executed"},
     "ag7_active_agents": {"ar": "الوكلاء النشطون", "fr": "Agents actifs", "en": "Active Agents"},
     "ag7_tavily": {"ar": "منصل Tavily", "fr": "Connecteur Tavily", "en": "Tavily Connector"},
     "ag7_uploaded": {"ar": "البيانات المرفوعة", "fr": "Données téléchargées", "en": "Uploaded Data"},
     "ag7_conversation": {"ar": "المحادثة", "fr": "Conversation", "en": "Conversation"},
-    "ag7_input_hint": {"ar": "ما هي المهمة التي تريدها؟", "fr": "Quelle est votre mission ?", "en": "What is your task?"},
     "ag7_data_badge": {"ar": "📊 {rows} صف × {cols} عمود", "fr": "📊 {rows} lignes × {cols} colonnes", "en": "📊 {rows} rows × {cols} columns"},
     "ag7_clear_chat": {"ar": "🗑️ مسح المحادثة", "fr": "🗑️ Effacer la conversation", "en": "🗑️ Clear Chat"},
     "ag7_reset_stats": {"ar": "🔄 إعادة تعيين الإحصائيات", "fr": "🔄 Réinitialiser les statistiques", "en": "🔄 Reset Stats"},
@@ -712,8 +699,37 @@ T = {
     "ag7_upload_data": {"ar": "رفع البيانات", "fr": "Télécharger les données", "en": "Upload Data"},
     "ag7_control": {"ar": "التحكم", "fr": "Contrôle", "en": "Control"},
     "ag7_sidebar_hint": {"ar": "لتحليل Excel أو CSV، ارفع ملف", "fr": "Pour analyser Excel ou CSV, téléchargez un fichier", "en": "To analyze Excel or CSV, upload a file"},
-    "ag7_sidebar_upload": {"ar": "Upload", "fr": "Upload", "en": "Upload"},
-
+    # ============ Multiagent — Session 2 (new keys) ============
+    "ag7_agents_working": {
+        "ar": "⏳ الوكلاء يعملون...",
+        "fr": "⏳ Les agents travaillent...",
+        "en": "⏳ Agents are working...",
+    },
+    "ag7_no_result": {
+        "ar": "لا توجد نتيجة",
+        "fr": "Aucun résultat",
+        "en": "No result",
+    },
+    "ag7_loaded_ok": {
+        "ar": "✅ تم تحميل: {rows} صف × {cols} عمود",
+        "fr": "✅ Chargé : {rows} lignes × {cols} colonnes",
+        "en": "✅ Loaded: {rows} rows × {cols} columns",
+    },
+    "ag7_preview_data": {
+        "ar": "👁️ معاينة البيانات",
+        "fr": "👁️ Aperçu des données",
+        "en": "👁️ Data Preview",
+    },
+    "ag7_read_error": {
+        "ar": "❌ خطأ في قراءة الملف: {err}",
+        "fr": "❌ Erreur de lecture : {err}",
+        "en": "❌ File read error: {err}",
+    },
+    "ag7_download_report": {
+        "ar": "⬇️ تحميل التقرير",
+        "fr": "⬇️ Télécharger le rapport",
+        "en": "⬇️ Download Report",
+    },
 }
 
 

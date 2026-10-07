@@ -207,14 +207,14 @@ def show_agents_full():
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">{st.session_state.total_tasks}</div><div class="stat-label">📋 المهام المنفذة</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stat-card"><div class="stat-number">{st.session_state.total_tasks}</div><div class="stat-label">📋 {t("ag7_total_tasks", _ag_lang)}</div></div>', unsafe_allow_html=True)
     with col2:
         st.markdown(f'<div class="stat-card"><div class="stat-number">7</div><div class="stat-label">🤖 {t("ag7_active_agents", _ag_lang)}</div></div>', unsafe_allow_html=True)
     with col3:
         has_data = "✅" if st.session_state.get("uploaded_data") is not None else "—"
         st.markdown(f'<div class="stat-card"><div class="stat-number">{has_data}</div><div class="stat-label">📁 {t("ag7_uploaded", _ag_lang)}</div></div>', unsafe_allow_html=True)
     with col4:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">🌐</div><div class="stat-label">Tavily: متصل</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stat-card"><div class="stat-number">🌐</div><div class="stat-label">{t("ag7_tavily", _ag_lang)}</div></div>', unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -274,17 +274,17 @@ def show_agents_full():
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if prompt := st.chat_input("ما هي المهمة التي تريدها؟"):
+    if prompt := st.chat_input(t("ag7_input_placeholder", _ag_lang)):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
     
         with st.chat_message("assistant"):
-            with st.spinner("⏳ الوكلاء يعملون..."):
+            with st.spinner(t("ag7_agents_working", _ag_lang)):
                 history = [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[:-1]]
                 config = {"configurable": {"thread_id": st.session_state.thread_id}}
                 final_state = app.invoke({"task": prompt, "history": history}, config=config)
-                result = final_state.get("result", "لا توجد نتيجة")
+                result = final_state.get("result", t("ag7_no_result", _ag_lang))
                 next_agent = final_state.get("next_agent", "")
                 st.markdown(result)
     
@@ -296,8 +296,8 @@ def show_agents_full():
 
     # ===== الشريط الجانبي =====
     with st.sidebar:
-        st.markdown("### 📁 رفع البيانات")
-        uploaded_file = st.file_uploader("ارفع ملف CSV أو Excel للتحليل", type=["csv", "xlsx", "xls"])
+        st.markdown(f"### {t('ag7_upload_data', _ag_lang)}")
+        uploaded_file = st.file_uploader(t("ag7_sidebar_hint", _ag_lang), type=["csv", "xlsx", "xls"])
         if uploaded_file is not None:
             try:
                 if uploaded_file.name.endswith(".csv"):
@@ -305,11 +305,11 @@ def show_agents_full():
                 else:
                     df = pd.read_excel(uploaded_file)
                 st.session_state.uploaded_data = df
-                st.success(f"✅ تم تحميل: {df.shape[0]} صف × {df.shape[1]} عمود")
-                with st.expander("👁️ معاينة البيانات"):
+                st.success(t("ag7_loaded_ok", _ag_lang).format(rows=df.shape[0], cols=df.shape[1]))
+                with st.expander(t("ag7_preview_data", _ag_lang)):
                     st.dataframe(df.head(10))
             except Exception as e:
-                st.error(f"خطأ في قراءة الملف: {str(e)}")
+                st.error(t("ag7_read_error", _ag_lang).format(err=str(e)))
         else:
             if st.session_state.get("uploaded_data") is not None:
                 df = st.session_state.uploaded_data
@@ -333,8 +333,8 @@ def show_agents_full():
                 try:
                     pdf_path = generate_pdf(st.session_state.messages)
                     with open(pdf_path, "rb") as f:
-                        st.download_button("⬇️ تحميل التقرير", f, file_name="sureflow_report.pdf", mime="application/pdf")
+                        st.download_button(t("ag7_download_report", _ag_lang), f, file_name="sureflow_report.pdf", mime="application/pdf")
                 except Exception as e:
                     st.error(f"خطأ: {str(e)}")
             else:
-                st.warning("لا توجد محادثة لتوليد تقرير")
+                st.warning(t("ag7_no_chat", _ag_lang))
