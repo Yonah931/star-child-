@@ -1077,13 +1077,12 @@ def show_landing():
 # الصفحة 2: المحاسب
 # ============================================================
 def show_accountant():
+    lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
-        if st.button("← الرئيسية", key="back_acc"):
+        if st.button(t("back_short", lang), key="back_acc"):
             st.session_state.page = "landing"
             st.rerun()
-
-    lang = st.session_state.get("lang", "ar")
 
     with st.sidebar:
         st.markdown("---")
