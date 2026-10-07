@@ -25,3 +25,4 @@ app_accountant.py
 accountant_app.py
 agents_module.py
 login_attempts.json
+vercel.json
