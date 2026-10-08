@@ -4,6 +4,7 @@ Admin Panel — إدارة المستخدمين
 import os
 import yaml
 from datetime import datetime
+from translations_ui import t
 from streamlit_authenticator.utilities.hasher import Hasher
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,11 +35,11 @@ def list_users():
     return result
 
 
-def add_user(username, email, first_name, last_name, password, role="user"):
+def add_user(username, email, first_name, last_name, password, role="user", lang="ar"):
     config = load_config()
     users = config["credentials"]["usernames"]
     if username in users:
-        return False, "المستخدم موجود مسبقاً"
+        return False, t("adm_user_exists", lang)
     users[username] = {
         "email": email,
         "first_name": first_name,
@@ -50,21 +51,21 @@ def add_user(username, email, first_name, last_name, password, role="user"):
     return True, f"تمت إضافة {username}"
 
 
-def delete_user(username):
+def delete_user(username, lang="ar"):
     config = load_config()
     users = config["credentials"]["usernames"]
     if username not in users:
-        return False, "المستخدم غير موجود"
+        return False, t("adm_user_not_found", lang)
     del users[username]
     save_config(config)
     return True, f"تم حذف {username}"
 
 
-def change_password(username, new_password):
+def change_password(username, new_password, lang="ar"):
     config = load_config()
     users = config["credentials"]["usernames"]
     if username not in users:
-        return False, "المستخدم غير موجود"
+        return False, t("adm_user_not_found", lang)
     users[username]["password"] = Hasher.hash(new_password)
     save_config(config)
     return True, f"تم تغيير كلمة سر {username}"

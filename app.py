@@ -520,63 +520,64 @@ def show_features():
 
 
 def show_admin():
+    _ad_lang = st.session_state.get("lang", "ar")
     """لوحة تحكم المدير — إدارة المستخدمين"""
     # حماية: admin فقط
     roles = st.session_state.get("roles") or []
     if "admin" not in roles:
-        st.error("⛔ هذه الصفحة للمدير فقط")
-        if st.button("⬅️ رجوع", key="admin_unauth_back"):
+        st.error(t("adm_err_forbidden", _ad_lang))
+        if st.button(t("back_short", _ad_lang), key="admin_unauth_back"):
             st.session_state.page = "landing"
             st.rerun()
         return
 
     st.markdown('<div class="main-header">⚙️ لوحة المدير</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">إدارة المستخدمين والاشتراكات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("adm_subtitle", _ad_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="admin_back"):
+    if st.button(t("back_short", _ad_lang), key="admin_back"):
         st.session_state.page = "landing"
         st.rerun()
 
     # إحصائيات
     s = admin_panel.stats()
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("👥 المجموع", s["total"])
-    c2.metric("👑 مدراء", s["admins"])
-    c3.metric("👤 عاديون", s["regular"])
-    c4.metric("🕐 آخر تحديث", s["updated"].split()[1])
+    c1.metric(t("adm_metric_total", _ad_lang), s["total"])
+    c2.metric(t("adm_metric_admins", _ad_lang), s["admins"])
+    c3.metric(t("adm_metric_regular", _ad_lang), s["regular"])
+    c4.metric(t("adm_metric_updated", _ad_lang), s["updated"].split()[1])
 
     st.divider()
 
     # عرض المستخدمين
-    st.markdown("### 👥 المستخدمون")
+    st.markdown(f"### {t('adm_users_title', _ad_lang)}")
     users = admin_panel.list_users()
     if users:
         import pandas as _pd
         df = _pd.DataFrame(users)
-        df.columns = ["اسم المستخدم", "البريد", "الاسم", "الأدوار"]
+        df.columns = [t("adm_col_username", _ad_lang), t("adm_col_email", _ad_lang), t("adm_col_name", _ad_lang), t("adm_col_roles", _ad_lang)]
         st.dataframe(df, width="stretch", hide_index=True)
     else:
-        st.info("لا يوجد مستخدمون")
+        st.info(t("adm_no_users", _ad_lang))
 
     st.divider()
 
     # إضافة مستخدم
-    st.markdown("### ➕ إضافة مستخدم جديد")
+    st.markdown(f"### {t('adm_add_title', _ad_lang)}")
     with st.form("add_user_form"):
         c1, c2 = st.columns(2)
         with c1:
             new_username = st.text_input("اسم المستخدم *")
             new_email = st.text_input("البريد الإلكتروني *")
-            new_first = st.text_input("الاسم الأول")
+            new_first = st.text_input(t("adm_fld_first", _ad_lang))
         with c2:
-            new_last = st.text_input("الاسم الأخير")
+            new_last = st.text_input(t("adm_fld_last", _ad_lang))
             new_password = st.text_input("كلمة السر *", type="password")
-            new_role = st.selectbox("الدور", ["user", "admin"])
+            new_role = st.selectbox(t("adm_fld_role", _ad_lang), ["user", "admin"])
 
-        submitted = st.form_submit_button("➕ إضافة", type="primary")
+        submitted = st.form_submit_button(t("adm_btn_add", _ad_lang), type="primary")
         if submitted:
             if not new_username or not new_password:
-                st.error("⚠️ اسم المستخدم وكلمة السر مطلوبان")
+                st.error(t("adm_err_required", _ad_lang))
             else:
                 ok, msg = admin_panel.add_user(
                     new_username, new_email, new_first, new_last, new_password, new_role
@@ -590,13 +591,13 @@ def show_admin():
     st.divider()
 
     # حذف مستخدم
-    st.markdown("### 🗑️ حذف مستخدم")
+    st.markdown(f"### {t('adm_del_title', _ad_lang)}")
     usernames = [u["username"] for u in users]
     if usernames:
-        target = st.selectbox("اختر مستخدماً", usernames, key="admin_del_target")
-        if st.button(f"🗑️ حذف {target}", key="admin_del_btn"):
+        target = st.selectbox(t("adm_select_user", _ad_lang), usernames, key="admin_del_target")
+        if st.button(t("adm_btn_delete", _ad_lang).format(target=target), key="admin_del_btn"):
             if target == st.session_state.get("username"):
-                st.error("⛔ لا يمكنك حذف حسابك الحالي")
+                st.error(t("adm_err_cant_delete_self", _ad_lang))
             else:
                 ok, msg = admin_panel.delete_user(target)
                 if ok:
@@ -608,13 +609,13 @@ def show_admin():
     st.divider()
 
     # تغيير كلمة السر
-    st.markdown("### 🔑 تغيير كلمة السر")
+    st.markdown(f"### {t('adm_pwd_title', _ad_lang)}")
     if usernames:
-        target_pwd = st.selectbox("اختر مستخدماً", usernames, key="admin_pwd_target")
-        new_pwd = st.text_input("كلمة السر الجديدة", type="password", key="admin_new_pwd")
-        if st.button("🔑 تغيير كلمة السر", key="admin_change_pwd"):
+        target_pwd = st.selectbox(t("adm_select_user", _ad_lang), usernames, key="admin_pwd_target")
+        new_pwd = st.text_input(t("adm_fld_new_pwd", _ad_lang), type="password", key="admin_new_pwd")
+        if st.button(t("adm_btn_change_pwd", _ad_lang), key="admin_change_pwd"):
             if len(new_pwd) < 6:
-                st.error("⚠️ كلمة السر يجب أن تكون 6 أحرف على الأقل")
+                st.error(t("adm_err_pwd_short", _ad_lang))
             else:
                 ok, msg = admin_panel.change_password(target_pwd, new_pwd)
                 if ok:
@@ -624,11 +625,12 @@ def show_admin():
 
 
 def show_settings():
+    _st_lang = st.session_state.get("lang", "ar")
     """إعدادات المستخدم"""
-    st.markdown('<div class="main-header">⚙️ الإعدادات</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">إدارة حسابك وتفضيلاتك</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">{t("set_title", _st_lang)}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("set_subtitle", _st_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="settings_back"):
+    if st.button(t("back_short", _st_lang), key="settings_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -637,75 +639,75 @@ def show_settings():
     roles = st.session_state.get("roles") or []
 
     # القسم 1: معلومات الحساب
-    st.markdown("### 👤 معلومات الحساب")
+    st.markdown(f"### {t('set_info_title', _st_lang)}")
     c1, c2 = st.columns(2)
     with c1:
-        st.text_input("اسم المستخدم", value=username, disabled=True, key="set_username")
-        st.text_input("الاسم الكامل", value=name, disabled=True, key="set_name")
+        st.text_input(t("set_fld_username", _st_lang), value=username, disabled=True, key="set_username")
+        st.text_input(t("set_fld_fullname", _st_lang), value=name, disabled=True, key="set_name")
     with c2:
-        st.text_input("الأدوار", value=", ".join(roles), disabled=True, key="set_roles")
-        st.text_input(t("ma_status", _ma_lang), value="✅ نشط", disabled=True, key="set_status")
+        st.text_input(t("set_fld_roles", _st_lang), value=", ".join(roles), disabled=True, key="set_roles")
+        st.text_input(t("ma_status", _ma_lang), value=t("set_status_active", _st_lang), disabled=True, key="set_status")
 
     st.divider()
 
     # القسم 2: تغيير كلمة السر
-    st.markdown("### 🔑 تغيير كلمة السر")
+    st.markdown(f"### {t('adm_pwd_title', _st_lang)}")
     with st.form("change_pwd_form"):
-        current_pwd = st.text_input("كلمة السر الحالية", type="password")
+        current_pwd = st.text_input(t("set_pwd_current", _st_lang), type="password")
         new_pwd = st.text_input("كلمة السر الجديدة", type="password")
-        confirm_pwd = st.text_input("تأكيد كلمة السر الجديدة", type="password")
+        confirm_pwd = st.text_input(t("set_pwd_confirm", _st_lang), type="password")
 
-        submitted = st.form_submit_button("💾 تحديث كلمة السر", type="primary")
+        submitted = st.form_submit_button(t("set_btn_update_pwd", _st_lang), type="primary")
         if submitted:
             if not current_pwd or not new_pwd or not confirm_pwd:
-                st.error("⚠️ جميع الحقول مطلوبة")
+                st.error(t("set_err_fields_required", _st_lang))
             elif new_pwd != confirm_pwd:
-                st.error("⚠️ كلمتا السر غير متطابقتين")
+                st.error(t("set_err_pwd_mismatch", _st_lang))
             elif len(new_pwd) < 6:
-                st.error("⚠️ كلمة السر يجب أن تكون 6 أحرف على الأقل")
+                st.error(t("adm_err_pwd_short", _ad_lang))
             else:
                 ok, msg = admin_panel.change_password(username, new_pwd)
                 if ok:
-                    st.success(f"✅ {msg} (ستحتاج لإعادة تسجيل الدخول)")
+                    st.success(t("set_success_pwd", _st_lang).format(msg=msg))
                 else:
                     st.error(f"❌ {msg}")
 
     st.divider()
 
     # القسم 3: تفضيلات اللغة
-    st.markdown("### 🌍 تفضيلات اللغة")
+    st.markdown(f"### {t('set_lang_title', _st_lang)}")
     current_lang = st.session_state.get("lang", "ar")
     lang = st.selectbox(
-        "اللغة الافتراضية",
+        t("set_lang_label", _st_lang),
         ["ar", "fr", "en"],
         index=["ar", "fr", "en"].index(current_lang),
         format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x],
         key="set_lang",
     )
-    if st.button("💾 حفظ التفضيلات", key="save_settings"):
+    if st.button(t("set_btn_save", _st_lang), key="save_settings"):
         st.session_state["lang"] = lang
-        st.success(f"✅ تم حفظ اللغة: {lang}")
+        st.success(t("set_success_lang", _st_lang).format(lang=lang))
 
     st.divider()
 
-    # القسم 4: معلومات الاشتراك
-    st.markdown("### 💎 الاشتراك")
+    st.markdown(f"### {t('set_sub_title', _st_lang)}")
+    st.markdown(f"### {t('set_sub_title', _st_lang)}")
     plan = "Business" if "admin" in roles else "Starter"
     c1, c2, c3 = st.columns(3)
-    c1.metric("الحزمة الحالية", plan)
-    c2.metric("الوكلاء المتاحون", "12")
-    c3.metric("الاستخدام", "غير محدود")
+    c1.metric(t("set_metric_plan", _st_lang), plan)
+    c2.metric(t("set_metric_agents", _st_lang), "12")
+    c3.metric(t("set_metric_usage", _st_lang), t("set_usage_unlimited", _st_lang))
 
-    if st.button("💬 ترقية الاشتراك", key="upgrade"):
+    if st.button(t("set_btn_upgrade", _st_lang), key="upgrade"):
         st.markdown("[اضغط للتواصل عبر واتساب](https://wa.me/212719082215)")
 
     st.divider()
 
     # القسم 5: الحساب الخطير
-    st.markdown("### ⚠️ منطقة الخطر")
-    st.caption("حذف الحساب لا يمكن التراجع عنه.")
-    if st.button("🗑️ حذف حسابي", key="delete_me"):
-        st.warning("⚠️ للتواصل مع الإدارة لحذف الحساب: ashkenazyonah@gmail.com")
+    st.markdown(f"### {t('set_danger_title', _st_lang)}")
+    st.caption(t("set_danger_caption", _st_lang))
+    if st.button(t("set_btn_delete_me", _st_lang), key="delete_me"):
+        st.warning(t("set_delete_contact", _st_lang))
 
 
 def show_about():
@@ -847,7 +849,7 @@ def show_stats():
     """لوحة الإحصائيات — للمدير فقط"""
     roles = st.session_state.get("roles") or []
     if "admin" not in roles:
-        st.error("⛔ هذه الصفحة للمدير فقط")
+        st.error(t("adm_err_forbidden", _ad_lang))
         if st.button("⬅️ رجوع", key="stats_unauth"):
             st.session_state.page = "landing"
             st.rerun()
