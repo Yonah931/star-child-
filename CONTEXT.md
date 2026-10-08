@@ -153,3 +153,40 @@ generate_pdf(invoice, lang='ar'/'fr', filename=None) -> path
 - صفحة شروط الاستخدام
 - نموذج "تواصل معنا"
 - تسويق LinkedIn + قائمة عملاء
+## 30. جلسة 2026-10-07 (ترجمة AR/FR/EN)
+### المُنجز:
+- قائمة اللغة العالمية (ar/fr/en) + format_func
+- 357 مفتاح في translations_ui.py
+- ترجمة 15 صفحة من 15:
+  1. الرئيسية ✅
+  2. المحاسب ✅ (كامل)
+  3. HR ✅
+  4. CFO ✅
+  5. Invoice ✅
+  6. Moroccan Admin ✅
+  7. Customer Support ✅
+  8. Content Writer ✅
+  9. Email ✅
+  10. Social Media ✅
+  11. Meeting Notes ✅
+  12. Supplier ✅
+  13. الميزات (Features) ✅
+  14. من نحن (About) ✅
+  15. 7 وكلاء (multiagent) ✅ 70%
+
+### المتبقي (جلسة جديدة):
+- 6 نصوص في multiagent.py:
+  - "المهام المنفذة" (بطاقة إحصائية)
+  - "البيانات المرفوعة" (بطاقة إحصائية)
+  - "شبكة الوكلاء الذكية" (عنوان)
+  - "المحادثة" (عنوان)
+  - "ما هي المهمة التي تريدها؟" (placeholder)
+  - شريط جانبي: "رفع البيانات" + "التحكم"
+- 5 صفحات:
+  - Admin Panel
+  - Settings
+  - My Invoices
+  - Dashboard
+  - Stats
+
+### آخر commit: [ضع رقم commit هنا]
