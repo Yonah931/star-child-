@@ -528,8 +528,8 @@ def show_features():
         st.markdown(f"[{t('wa_subscribe_here', _feat_lang)}](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحبا، أرغب في الاشتراك في Yonah Ashkenaz") + ")")
 def show_admin():
     _ad_lang = st.session_state.get("lang", "ar")
-    # حماية: admin فقط
     roles = st.session_state.get("roles") or []
+
     if "admin" not in roles:
         st.error(t("adm_err_forbidden", _ad_lang))
         if st.button(t("back_short", _ad_lang), key="admin_unauth_back"):
@@ -537,25 +537,27 @@ def show_admin():
             st.rerun()
         return
 
-    st.markdown('<div class="main-header">⚙️ لوحة المدير</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">{t("adm_subtitle", _ad_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">👑 {t("adm_title", _ad_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("adm_subtitle", _ad_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _ad_lang), key="admin_back"):
         st.session_state.page = "landing"
         st.rerun()
 
-    # إحصائيات
+    st.divider()
+
+    # ─── إحصائيات ───
     s = admin_panel.stats()
     c1, c2, c3, c4 = st.columns(4)
     c1.metric(t("adm_metric_total", _ad_lang), s["total"])
     c2.metric(t("adm_metric_admins", _ad_lang), s["admins"])
     c3.metric(t("adm_metric_regular", _ad_lang), s["regular"])
-    c4.metric(t("adm_metric_updated", _ad_lang), s["updated"].split()[1])
+    c4.metric(t("adm_metric_updated", _ad_lang), s["updated"].split()[1] if s.get("updated") else "—")
 
     st.divider()
 
-    # عرض المستخدمين
-    st.markdown(f"### {t('adm_users_title', _ad_lang)}")
+    # ─── جدول المستخدمين ───
+    st.markdown(f"### 👥 {t('adm_users_title', _ad_lang)}")
     users = admin_panel.list_users()
     if users:
         import pandas as _pd
@@ -567,17 +569,17 @@ def show_admin():
 
     st.divider()
 
-    # إضافة مستخدم
-    st.markdown(f"### {t('adm_add_title', _ad_lang)}")
-    with st.form("add_user_form"):
+    # ─── إضافة مستخدم ───
+    st.markdown(f"### ➕ {t('adm_add_title', _ad_lang)}")
+    with st.form("add_user_form", clear_on_submit=True):
         c1, c2 = st.columns(2)
         with c1:
-            new_username = st.text_input("اسم المستخدم *")
-            new_email = st.text_input("البريد الإلكتروني *")
+            new_username = st.text_input(f"* {t('adm_fld_username', _ad_lang)}")
+            new_email = st.text_input(f"* {t('adm_fld_email', _ad_lang)}")
             new_first = st.text_input(t("adm_fld_first", _ad_lang))
         with c2:
             new_last = st.text_input(t("adm_fld_last", _ad_lang))
-            new_password = st.text_input("كلمة السر *", type="password")
+            new_password = st.text_input(f"* {t('adm_fld_password', _ad_lang)}", type="password")
             new_role = st.selectbox(t("adm_fld_role", _ad_lang), ["user", "admin"])
 
         submitted = st.form_submit_button(t("adm_btn_add", _ad_lang), type="primary")
@@ -585,9 +587,7 @@ def show_admin():
             if not new_username or not new_password:
                 st.error(t("adm_err_required", _ad_lang))
             else:
-                ok, msg = admin_panel.add_user(
-                    new_username, new_email, new_first, new_last, new_password, new_role
-                )
+                ok, msg = admin_panel.add_user(new_username, new_email, new_first, new_last, new_password, new_role, lang=_ad_lang)
                 if ok:
                     st.success(f"✅ {msg}")
                     st.rerun()
@@ -596,8 +596,8 @@ def show_admin():
 
     st.divider()
 
-    # حذف مستخدم
-    st.markdown(f"### {t('adm_del_title', _ad_lang)}")
+    # ─── حذف مستخدم ───
+    st.markdown(f"### 🗑️ {t('adm_del_title', _ad_lang)}")
     usernames = [u["username"] for u in users]
     if usernames:
         target = st.selectbox(t("adm_select_user", _ad_lang), usernames, key="admin_del_target")
@@ -605,7 +605,7 @@ def show_admin():
             if target == st.session_state.get("username"):
                 st.error(t("adm_err_cant_delete_self", _ad_lang))
             else:
-                ok, msg = admin_panel.delete_user(target)
+                ok, msg = admin_panel.delete_user(target, lang=_ad_lang)
                 if ok:
                     st.success(f"✅ {msg}")
                     st.rerun()
@@ -614,8 +614,8 @@ def show_admin():
 
     st.divider()
 
-    # تغيير كلمة السر
-    st.markdown(f"### {t('adm_pwd_title', _ad_lang)}")
+    # ─── تغيير كلمة السر ───
+    st.markdown(f"### 🔑 {t('adm_pwd_title', _ad_lang)}")
     if usernames:
         target_pwd = st.selectbox(t("adm_select_user", _ad_lang), usernames, key="admin_pwd_target")
         new_pwd = st.text_input(t("adm_fld_new_pwd", _ad_lang), type="password", key="admin_new_pwd")
@@ -623,13 +623,11 @@ def show_admin():
             if len(new_pwd) < 6:
                 st.error(t("adm_err_pwd_short", _ad_lang))
             else:
-                ok, msg = admin_panel.change_password(target_pwd, new_pwd)
+                ok, msg = admin_panel.change_password(target_pwd, new_pwd, lang=_ad_lang)
                 if ok:
                     st.success(f"✅ {msg}")
                 else:
                     st.error(f"❌ {msg}")
-
-
 def show_settings():
     _st_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("set_title", _st_lang)}</div>', unsafe_allow_html=True)

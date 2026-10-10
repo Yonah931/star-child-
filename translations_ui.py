@@ -1204,3 +1204,50 @@ try:
     _i18n_stats_merge(T)
 except NameError:
     pass
+
+# --- i18n: admin rebuild keys ---
+_I18N_ADMIN = {
+    'adm_title': {'ar': 'لوحة المدير', 'fr': 'Panneau Admin', 'en': 'Admin Panel'},
+    'adm_subtitle': {'ar': 'إدارة المستخدمين والاشتراكات', 'fr': 'Gestion des utilisateurs et abonnements', 'en': 'Manage users & subscriptions'},
+    'adm_metric_total': {'ar': '📊 الإجمالي', 'fr': '📊 Total', 'en': '📊 Total'},
+    'adm_metric_admins': {'ar': '👑 مدراء', 'fr': '👑 Admins', 'en': '👑 Admins'},
+    'adm_metric_regular': {'ar': '👤 عاديون', 'fr': '👤 Utilisateurs', 'en': '👤 Regular'},
+    'adm_metric_updated': {'ar': '🕐 آخر تحديث', 'fr': '🕐 Dernière MAJ', 'en': '🕐 Last update'},
+    'adm_users_title': {'ar': 'المستخدمون', 'fr': 'Utilisateurs', 'en': 'Users'},
+    'adm_col_username': {'ar': 'اسم المستخدم', 'fr': "Nom d'utilisateur", 'en': 'Username'},
+    'adm_col_email': {'ar': 'البريد', 'fr': 'Email', 'en': 'Email'},
+    'adm_col_name': {'ar': 'الاسم', 'fr': 'Nom', 'en': 'Name'},
+    'adm_col_roles': {'ar': 'الأدوار', 'fr': 'Rôles', 'en': 'Roles'},
+    'adm_no_users': {'ar': 'لا يوجد مستخدمون', 'fr': 'Aucun utilisateur', 'en': 'No users'},
+    'adm_add_title': {'ar': 'إضافة مستخدم جديد', 'fr': 'Ajouter un utilisateur', 'en': 'Add new user'},
+    'adm_fld_username': {'ar': 'اسم المستخدم', 'fr': "Nom d'utilisateur", 'en': 'Username'},
+    'adm_fld_email': {'ar': 'البريد الإلكتروني', 'fr': 'Email', 'en': 'Email'},
+    'adm_fld_first': {'ar': 'الاسم الأول', 'fr': 'Prénom', 'en': 'First name'},
+    'adm_fld_last': {'ar': 'الاسم الأخير', 'fr': 'Nom', 'en': 'Last name'},
+    'adm_fld_password': {'ar': 'كلمة السر', 'fr': 'Mot de passe', 'en': 'Password'},
+    'adm_fld_role': {'ar': 'الدور', 'fr': 'Rôle', 'en': 'Role'},
+    'adm_btn_add': {'ar': '➕ إضافة', 'fr': '➕ Ajouter', 'en': '➕ Add'},
+    'adm_err_required': {'ar': '⚠️ اسم المستخدم وكلمة السر مطلوبان', 'fr': '⚠️ Nom et mot de passe requis', 'en': '⚠️ Username & password required'},
+    'adm_del_title': {'ar': 'حذف مستخدم', 'fr': 'Supprimer un utilisateur', 'en': 'Delete user'},
+    'adm_select_user': {'ar': 'اختر مستخدماً', 'fr': 'Choisir un utilisateur', 'en': 'Select a user'},
+    'adm_btn_delete': {'ar': '🗑️ حذف {target}', 'fr': '🗑️ Supprimer {target}', 'en': '🗑️ Delete {target}'},
+    'adm_err_cant_delete_self': {'ar': '❌ لا يمكنك حذف حسابك الحالي', 'fr': '❌ Impossible de vous supprimer', 'en': "❌ Can't delete your own account"},
+    'adm_pwd_title': {'ar': 'تغيير كلمة السر', 'fr': 'Changer le mot de passe', 'en': 'Change password'},
+    'adm_fld_new_pwd': {'ar': 'كلمة السر الجديدة', 'fr': 'Nouveau mot de passe', 'en': 'New password'},
+    'adm_btn_change_pwd': {'ar': '🔑 تغيير كلمة السر', 'fr': '🔑 Changer', 'en': '🔑 Change password'},
+    'adm_err_pwd_short': {'ar': '⚠️ كلمة السر يجب أن تكون 6 أحرف على الأقل', 'fr': '⚠️ Minimum 6 caractères', 'en': '⚠️ Min 6 characters'},
+}
+
+def _i18n_admin_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_ADMIN.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_ADMIN.items():
+            _T.setdefault(_k, dict(_v))
+
+try:
+    _i18n_admin_merge(T)
+except NameError:
+    pass
