@@ -842,6 +842,33 @@ T = {
     "dash_new_content": {"ar": "✍️ محتوى جديد", "fr": "✍️ Nouveau contenu", "en": "✍️ New content"},
     "dash_contact": {"ar": "📞 تواصل مع الدعم", "fr": "📞 Contact support", "en": "📞 Contact support"},
 
+    # ─── Features page ───
+    "feat_subtitle": {"ar": "12 وكيل ذكي لإدارة أعمالك", "fr": "12 agents IA pour votre business", "en": "12 AI agents for your business"},
+    "feat_fin_acc_desc": {"ar": "Excel/CSV. مولّد تقارير PDF مع 3 لغات", "fr": "Excel/CSV. Rapports PDF en 3 langues", "en": "Excel/CSV. PDF reports in 3 languages"},
+    "feat_fin_cfo_desc": {"ar": "TVA/IS/CNSS. تحليل، مراجعة، توصيات ذكية", "fr": "TVA/IS/CNSS. Analyse et recommandations", "en": "TVA/IS/CNSS. Analysis & smart recommendations"},
+    "feat_fin_adm_desc": {"ar": "TVA, IS, IR, CNSS, Payroll. فهم القوانين المغربية", "fr": "TVA, IS, IR, CNSS, Payroll. Lois marocaines", "en": "TVA, IS, IR, CNSS, Payroll. Moroccan laws"},
+    "feat_fin_inv_desc": {"ar": "ICE, TVA. فواتير مع PDF بـ 3 لغات", "fr": "ICE, TVA. Factures PDF en 3 langues", "en": "ICE, TVA. PDF invoices in 3 languages"},
+    "feat_mkt_cw_desc": {"ar": "مقالات، وصف منتجات، سوشيال ميديا، إعلانات (6 أنواع)", "fr": "Articles, descriptions, réseaux sociaux (6 types)", "en": "Articles, product descriptions, social media (6 types)"},
+    "feat_mkt_sm_desc": {"ar": "منشورات لـ 6 منصات (Facebook, Instagram, LinkedIn, X, TikTok, WhatsApp)", "fr": "Posts pour 6 plateformes", "en": "Posts for 6 platforms"},
+    "feat_mkt_em_desc": {"ar": "ردود، حملات، متابعة، دعوات (7 أنواع)", "fr": "Réponses, campagnes, relances (7 types)", "en": "Replies, campaigns, follow-ups (7 types)"},
+    "feat_mkt_cmo_desc": {"ar": "استراتيجيات تسويق متكاملة", "fr": "Stratégies marketing complètes", "en": "Complete marketing strategies"},
+    "feat_adm_hr_desc": {"ar": "إعلانات توظيف، أسئلة مقابلات، فحص CVs", "fr": "Offres, questions d'entretien, analyse CVs", "en": "Job posts, interview questions, CV screening"},
+    "feat_adm_cs_desc": {"ar": "اقتراح AI، تصنيف التذاكر، ردود، إجراءات", "fr": "Suggestion IA, tri tickets, réponses", "en": "AI suggestions, ticket triage, replies"},
+    "feat_adm_mn_desc": {"ar": "محاضر اجتماعات مع مهام وقرارات", "fr": "Comptes-rendus avec actions", "en": "Meeting minutes with action items"},
+    "feat_adm_sup_desc": {"ar": "طلبات، تفاوض، مقارنة موردين", "fr": "Devis, négociation, comparaison", "en": "Quotes, negotiation, comparison"},
+    "feat_langs_label": {"ar": "لغات", "fr": "Langues", "en": "Languages"},
+    "feat_langs_val": {"ar": "عربي، فرنسي، إنجليزي", "fr": "Arabe, Français, Anglais", "en": "Arabic, French, English"},
+    "feat_pdf_label": {"ar": "احترافية PDF", "fr": "PDF pro", "en": "Pro PDF"},
+    "feat_pdf_val": {"ar": "تقارير", "fr": "Rapports", "en": "Reports"},
+    "feat_login_label": {"ar": "تسجيل دخول آمن", "fr": "Connexion sécurisée", "en": "Secure login"},
+    "feat_fast_label": {"ar": "سريع", "fr": "Rapide", "en": "Fast"},
+    "feat_fast_val": {"ar": "(نتائج في ثوان)", "fr": "(résultats en secondes)", "en": "(results in seconds)"},
+    "feat_cloud_label": {"ar": "سحابي", "fr": "Cloud", "en": "Cloud"},
+    "feat_cloud_val": {"ar": "(يعمل من أي جهاز)", "fr": "(depuis n'importe quel appareil)", "en": "(from any device)"},
+    "feat_support_label": {"ar": "دعم واتساب مباشر", "fr": "Support WhatsApp direct", "en": "Direct WhatsApp support"},
+    "feat_hr_agent": {"ar": "HR Agent", "fr": "Agent RH", "en": "HR Agent"},
+    "feat_cmo_agent": {"ar": "المسؤول التسويقي (CMO)", "fr": "Directeur Marketing (CMO)", "en": "CMO"},
+
 }
 
 

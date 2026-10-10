@@ -465,10 +465,10 @@ def show_features():
     st.markdown(f"### 🤖 {t('feat_finance', _feat_lang)}")
 
     features = [
-        ("📊 المحاسب الذكي", "يقرأ Excel/CSV، يكشف الأخطاء، يولّد تقارير PDF بـ 3 لغات", "AI"),
-        ("💰 المدير المالي (CFO)", "تحليل الربحية، حساب TVA/IS/CNSS، توصيات ذكية", "AI"),
-        ("🇲🇦 Moroccan Admin", "TVA، IS، IR، CNSS، Payroll، تقويم ضريبي مغربي", "AI"),
-        ("🧾 وكيل الفواتير", "فواتير احترافية مع ICE، TVA تلقائي، PDF بـ 3 لغات", "AI"),
+        ("📊 " + t("accountant", _feat_lang), t("feat_fin_acc_desc", _feat_lang), "AI"),
+        ("💰 " + t("cfo", _feat_lang), t("feat_fin_cfo_desc", _feat_lang), "AI"),
+        ("🏛️ " + t("moroccan_admin", _feat_lang), t("feat_fin_adm_desc", _feat_lang), "AI"),
+        ("🧾 " + t("invoice", _feat_lang), t("feat_fin_inv_desc", _feat_lang), "AI"),
     ]
 
     for name, desc, badge in features:
@@ -480,10 +480,10 @@ def show_features():
     st.markdown(f"### 📢 {t('feat_marketing', _feat_lang)}")
 
     marketing = [
-        ("✍️ كاتب المحتوى", "مقالات، وصف منتجات، سوشيال ميديا، إعلانات (6 أنواع)"),
-        ("📱 Social Media", "منشورات لـ 6 منصات (Facebook, Instagram, LinkedIn, X, TikTok, WhatsApp)"),
-        ("📧 البريد الإلكتروني", "ردود، حملات، متابعة، دعوات (7 أنواع)"),
-        ("🎨 CMO (المسؤول التسويقي)", "استراتيجيات تسويق متكاملة"),
+        ("✍️ " + t("content_writer", _feat_lang), t("feat_mkt_cw_desc", _feat_lang)),
+        ("📱 " + t("social_media", _feat_lang), t("feat_mkt_sm_desc", _feat_lang)),
+        ("📧 " + t("email_agent", _feat_lang), t("feat_mkt_em_desc", _feat_lang)),
+        ("📈 " + t("feat_cmo_agent", _feat_lang), t("feat_mkt_cmo_desc", _feat_lang)),
     ]
 
     for name, desc in marketing:
@@ -494,10 +494,10 @@ def show_features():
     st.markdown(f"### 👥 {t('feat_admin', _feat_lang)}")
 
     admin = [
-        ("👥 HR Agent", "فرز CVs، إعلانات توظيف، أسئلة مقابلات"),
-        ("📞 Customer Support", "تصنيف التذاكر، ردود AI، اقتراح إجراءات"),
-        ("📝 Meeting Notes", "محاضر اجتماعات مع مهام وقرارات"),
-        ("🚚 Supplier Agent", "طلبات، تفاوض، مقارنة موردين"),
+        ("👥 " + t("feat_hr_agent", _feat_lang), t("feat_adm_hr_desc", _feat_lang)),
+        ("💬 " + t("customer_support", _feat_lang), t("feat_adm_cs_desc", _feat_lang)),
+        ("📝 " + t("meeting_notes", _feat_lang), t("feat_adm_mn_desc", _feat_lang)),
+        ("🚚 " + t("supplier", _feat_lang), t("feat_adm_sup_desc", _feat_lang)),
     ]
 
     for name, desc in admin:
