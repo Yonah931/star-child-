@@ -825,6 +825,23 @@ T = {
     "stats_tasks": {"ar": "📋 المهام", "fr": "📋 Tâches", "en": "📋 Tasks"},
     "stats_top_agents": {"ar": "🏆 الوكلاء الأكثر استخداماً", "fr": "🏆 Top agents", "en": "🏆 Top Agents"},
 
+    # ─── Dashboard ───
+    "dash_title": {"ar": "📊 لوحة التحكم", "fr": "📊 Tableau de bord", "en": "📊 Dashboard"},
+    "dash_subtitle": {"ar": "نظرة عامة على حسابك", "fr": "Aperçu du compte", "en": "Account overview"},
+    "dash_user": {"ar": "👤 المستخدم", "fr": "👤 Utilisateur", "en": "👤 User"},
+    "dash_account": {"ar": "🆔 الحساب", "fr": "🆔 Compte", "en": "🆔 Account"},
+    "dash_plan": {"ar": "💎 الخدمة", "fr": "💎 Forfait", "en": "💎 Plan"},
+    "dash_quick_stats": {"ar": "📊 إحصائيات سريعة", "fr": "📊 Stats rapides", "en": "📊 Quick Stats"},
+    "dash_available_agents": {"ar": "🤖 الوكلاء المتاحون", "fr": "🤖 Agents dispo", "en": "🤖 Available agents"},
+    "dash_completed_tasks": {"ar": "📋 المهام المنفذة", "fr": "📋 Tâches faites", "en": "📋 Completed tasks"},
+    "dash_since_register": {"ar": "📅 منذ التسجيل", "fr": "📅 Depuis inscription", "en": "📅 Since signup"},
+    "dash_usage": {"ar": "⚡ الاستخدام", "fr": "⚡ Utilisation", "en": "⚡ Usage"},
+    "dash_shortcuts": {"ar": "⚡ اختصارات سريعة", "fr": "⚡ Raccourcis", "en": "⚡ Shortcuts"},
+    "dash_new_invoice": {"ar": "🧾 فاتورة جديدة", "fr": "🧾 Nouvelle facture", "en": "🧾 New invoice"},
+    "dash_cs": {"ar": "💬 دعم العملاء", "fr": "💬 Support client", "en": "💬 Customer support"},
+    "dash_new_content": {"ar": "✍️ محتوى جديد", "fr": "✍️ Nouveau contenu", "en": "✍️ New content"},
+    "dash_contact": {"ar": "📞 تواصل مع الدعم", "fr": "📞 Contact support", "en": "📞 Contact support"},
+
 }
 
 

@@ -390,12 +390,13 @@ def make_whatsapp_link(plan_name, price):
     return f"https://wa.me/{number}?text={urllib.parse.quote(message)}"
 
 def show_dashboard():
+    _dash_lang = st.session_state.get("lang", "ar")
     """لوحة تحكم العميل"""
-    st.markdown('<div class="main-header">📊 لوحة التحكم</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">نظرة عامة على حسابك</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">{t("dash_title", _dash_lang)}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("dash_subtitle", _dash_lang)}</div>', unsafe_allow_html=True)
 
     # معلومات المستخدم
-    if st.button("⬅️ رجوع", key="dash_back"):
+    if st.button(t("back_short", _dash_lang), key="dash_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -405,45 +406,45 @@ def show_dashboard():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.metric("👤 المستخدم", name)
+        st.metric(t("dash_user", _dash_lang), name)
     with c2:
-        st.metric("🏷️ الحساب", username)
+        st.metric(t("dash_account", _dash_lang), username)
     with c3:
         plan = "Business" if "admin" in roles else "Starter"
-        st.metric("💎 الحزمة", plan)
+        st.metric(t("dash_plan", _dash_lang), plan)
 
     st.divider()
 
     # إحصائيات سريعة
-    st.markdown("### 📈 إحصائيات سريعة")
+    st.markdown(f"### {t('dash_quick_stats', _dash_lang)}")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("🤖 الوكلاء المتاحون", "12")
-    c2.metric("🌍 اللغات المدعومة", "3")
-    c3.metric("📅 منذ التسجيل", "اليوم")
-    c4.metric("⚡ الاستخدام", "غير محدود")
+    c1.metric(t("dash_available_agents", _dash_lang), "12")
+    c2.metric(t("dash_completed_tasks", _dash_lang), "3")
+    c3.metric(t("dash_since_register", _dash_lang), "اليوم")
+    c4.metric(t("dash_usage", _dash_lang), t("set_usage_unlimited", _dash_lang))
 
     st.divider()
 
     # اختصارات سريعة
-    st.markdown("### ⚡ اختصارات سريعة")
+    st.markdown(f"### {t('dash_shortcuts', _dash_lang)}")
     c1, c2, c3 = st.columns(3)
     with c1:
-        if st.button("🧾 فاتورة جديدة", width="stretch", key="dash_inv"):
+        if st.button(t("dash_new_invoice", _dash_lang), width="stretch", key="dash_inv"):
             st.session_state.page = "invoice"
             st.rerun()
     with c2:
-        if st.button("📞 دعم العملاء", width="stretch", key="dash_cs"):
+        if st.button(t("dash_cs", _dash_lang), width="stretch", key="dash_cs"):
             st.session_state.page = "customer_support"
             st.rerun()
     with c3:
-        if st.button("✍️ محتوى جديد", width="stretch", key="dash_cw"):
+        if st.button(t("dash_new_content", _dash_lang), width="stretch", key="dash_cw"):
             st.session_state.page = "content_writer"
             st.rerun()
 
     st.divider()
 
     # التواصل
-    st.markdown("### 📞 تواصل مع الدعم")
+    st.markdown(f"### {t('dash_contact', _dash_lang)}")
     st.markdown("""
     - 📧 **البريد:** ashkenazyonah@gmail.com
     - 💬 **واتساب:** +212719082215
