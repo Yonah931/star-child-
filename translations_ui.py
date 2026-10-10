@@ -1004,6 +1004,14 @@ T = {
     "stats_upload_hint": {"ar": "لا يوجد رفع ملفات", "fr": "Pas d'upload", "en": "No upload"},
     "supplier_subtitle": {"ar": "طلبات، تفاوض، مقارنة موردين", "fr": "Devis, négociation, comparaison", "en": "Quotes, negotiation, comparison"},
     "supplier_upload_hint": {"ar": "ارفع ملف الموردين", "fr": "Chargez le fichier fournisseurs", "en": "Upload suppliers file"},
+    "about_why_title": {"ar": "💡 لماذا؟ نحن مختلفون", "fr": "💡 Pourquoi ? Nous sommes différents", "en": "💡 Why? We are different"},
+    "about_why_scope": {"ar": "💼 نطاق المغرب: TVA, IS, IR, CNSS, ICE, OMPIC", "fr": "💼 Périmètre Maroc : TVA, IS, IR, CNSS, ICE, OMPIC", "en": "💼 Morocco scope: TVA, IS, IR, CNSS, ICE, OMPIC"},
+    "about_why_langs2": {"ar": "🌐 3 لغات: عربي، فرنسي، إنجليزي", "fr": "🌐 3 langues : Arabe, Français, Anglais", "en": "🌐 3 languages: Arabic, French, English"},
+    "about_why_agents": {"ar": "🤖 12 وكيل ذكي: محاسبة، HR، CFO، دعم، تسويق", "fr": "🤖 12 agents IA : compta, RH, CFO, support, marketing", "en": "🤖 12 AI agents: accounting, HR, CFO, support, marketing"},
+    "about_why_price": {"ar": "💰 500 درهم للبدء", "fr": "💰 À partir de 500 DH", "en": "💰 From 500 DH"},
+    "about_why_fast": {"ar": "⚡ سريعة: نتائج في ثوان", "fr": "⚡ Rapide : résultats en secondes", "en": "⚡ Fast: results in seconds"},
+    "about_why_secure": {"ar": "🔒 آمنة: تسجيل دخول + حماية متقدمة", "fr": "🔒 Sécurisé : login + protection avancée", "en": "🔒 Secure: login + advanced protection"},
+
 }
 
 

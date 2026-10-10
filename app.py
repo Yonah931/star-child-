@@ -414,7 +414,7 @@ def show_dashboard():
 
     st.divider()
 
-    # إحصائيات سريعة
+    {t("about_why_fast", _about_lang)}
     st.markdown(f"### {t('dash_quick_stats', _dash_lang)}")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric(t("dash_available_agents", _dash_lang), "12")
@@ -424,7 +424,7 @@ def show_dashboard():
 
     st.divider()
 
-    # اختصارات سريعة
+    {t("about_why_fast", _about_lang)}
     st.markdown(f"### {t('dash_shortcuts', _dash_lang)}")
     c1, c2, c3 = st.columns(3)
     with c1:
@@ -505,7 +505,7 @@ def show_features():
     st.divider()
     st.markdown(f"### {t('feat_extra', _feat_lang)}")
     st.markdown("""
-    - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
+    - {t("about_why_langs2", _about_lang)}
     - 📄 **تقارير PDF** احترافية
     - 🔒 **تسجيل دخول آمن**
     - ⚡ **سريع** (نتائج في ثوانٍ)
@@ -738,11 +738,11 @@ def show_about():
     ### 🚀 ما الذي يميزنا؟
     
     - 🇲🇦 **مصمّمة للمغرب:** TVA, IS, IR, CNSS, ICE, OMPIC
-    - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
+    - {t("about_why_langs2", _about_lang)}
     - 🤖 **12 وكيلاً ذكياً:** محاسبة، HR، CFO، تسويق، دعم
-    - 💰 **أسعار بالدرهم:** تبدأ من 500 {t('per_month', _lang)}
-    - ⚡ **سريعة:** نتائج في ثوانٍ
-    - 🔒 **آمنة:** تسجيل دخول + حماية متقدمة
+    - 💰 **أسعار بالدرهم:** تبدأ من 500 {t('per_month', _about_lang)}
+    - {t("about_why_fast", _about_lang)}
+    - {t("about_why_secure", _about_lang)}
     """)
 
     st.divider()
@@ -983,7 +983,7 @@ def show_landing():
         '<div style="text-align:center; margin: 20px 0; font-size:1.4rem; color:#00d4ff;">'
         '🎯 <strong>{t("land_agents_12", _lang)}</strong> · '
         '7 مدعومة بالذكاء الاصطناعي · '
-        '3 لغات (عربي · فرنسي · إنجليزي)'
+        {t("about_why_langs2", _about_lang)}
         '</div>',
         unsafe_allow_html=True
     )
