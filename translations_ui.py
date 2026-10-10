@@ -1251,3 +1251,39 @@ try:
     _i18n_admin_merge(T)
 except NameError:
     pass
+
+# --- i18n: dashboard rebuild keys ---
+_I18N_DASH = {
+    'dash_title': {'ar': 'لوحتي', 'fr': 'Tableau de bord', 'en': 'Dashboard'},
+    'dash_subtitle': {'ar': 'نظرة عامة على حسابك', 'fr': "Vue d'ensemble de votre compte", 'en': 'Account overview'},
+    'dash_user': {'ar': '👤 المستخدم', 'fr': '👤 Utilisateur', 'en': '👤 User'},
+    'dash_account': {'ar': '🆔 الحساب', 'fr': '🆔 Compte', 'en': '🆔 Account'},
+    'dash_plan': {'ar': '💎 الخدمة', 'fr': '💎 Forfait', 'en': '💎 Plan'},
+    'dash_plan_business': {'ar': 'Business', 'fr': 'Business', 'en': 'Business'},
+    'dash_plan_starter': {'ar': 'Starter', 'fr': 'Starter', 'en': 'Starter'},
+    'dash_quick_stats': {'ar': 'إحصائيات سريعة', 'fr': 'Statistiques rapides', 'en': 'Quick stats'},
+    'dash_available_agents': {'ar': '🤖 الوكلاء المتاحون', 'fr': '🤖 Agents disponibles', 'en': '🤖 Available agents'},
+    'dash_completed_tasks': {'ar': '📋 المهام المنفذة', 'fr': '📋 Tâches exécutées', 'en': '📋 Completed tasks'},
+    'dash_since_register': {'ar': '📅 منذ التسجيل', 'fr': '📅 Depuis inscription', 'en': '📅 Since signup'},
+    'dash_today': {'ar': 'اليوم', 'fr': "Aujourd'hui", 'en': 'Today'},
+    'dash_usage': {'ar': '⚡ الاستخدام', 'fr': '⚡ Utilisation', 'en': '⚡ Usage'},
+    'dash_shortcuts': {'ar': 'اختصارات سريعة', 'fr': 'Raccourcis rapides', 'en': 'Quick shortcuts'},
+    'dash_new_invoice': {'ar': '🧾 فاتورة جديدة', 'fr': '🧾 Nouvelle facture', 'en': '🧾 New invoice'},
+    'dash_cs': {'ar': '💬 دعم العملاء', 'fr': '💬 Support client', 'en': '💬 Customer support'},
+    'dash_new_content': {'ar': '✍️ محتوى جديد', 'fr': '✍️ Nouveau contenu', 'en': '✍️ New content'},
+    'dash_contact': {'ar': 'تواصل مع الدعم', 'fr': 'Contacter le support', 'en': 'Contact support'},
+}
+
+def _i18n_dash_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_DASH.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_DASH.items():
+            _T.setdefault(_k, dict(_v))
+
+try:
+    _i18n_dash_merge(T)
+except NameError:
+    pass

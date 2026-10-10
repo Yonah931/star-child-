@@ -403,66 +403,64 @@ def make_whatsapp_link(plan_name, price):
     return f"https://wa.me/{number}?text={urllib.parse.quote(message)}"
 
 def show_dashboard():
-    _dash_lang = st.session_state.get("lang", "ar")
-    st.markdown('<div class="main-header">{t("dash_title", _dash_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">{t("dash_subtitle", _dash_lang)}</div>', unsafe_allow_html=True)
+    _dsh_lang = st.session_state.get("lang", "ar")
 
-    # معلومات المستخدم
-    if st.button(t("back_short", _dash_lang), key="dash_back"):
+    st.markdown(f'<div class="main-header">📊 {t("dash_title", _dsh_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("dash_subtitle", _dsh_lang)}</div>', unsafe_allow_html=True)
+
+    if st.button(t("back_short", _dsh_lang), key="dash_back"):
         st.session_state.page = "landing"
         st.rerun()
 
-    name = st.session_state.get("name", "مستخدم")
-    username = st.session_state.get("username", "")
+    st.divider()
+
+    # ─── معلومات المستخدم ───
+    name = st.session_state.get("name", "—")
+    username = st.session_state.get("username", "—")
     roles = st.session_state.get("roles") or []
 
     c1, c2, c3 = st.columns(3)
-    with c1:
-        st.metric(t("dash_user", _dash_lang), name)
-    with c2:
-        st.metric(t("dash_account", _dash_lang), username)
-    with c3:
-        plan = "Business" if "admin" in roles else "Starter"
-        st.metric(t("dash_plan", _dash_lang), plan)
+    c1.metric(t("dash_user", _dsh_lang), name)
+    c2.metric(t("dash_account", _dsh_lang), username)
+    plan = t("dash_plan_business", _dsh_lang) if "admin" in roles else t("dash_plan_starter", _dsh_lang)
+    c3.metric(t("dash_plan", _dsh_lang), plan)
 
     st.divider()
 
-    # إحصائيات سريعة
-    st.markdown(f"### {t('dash_quick_stats', _dash_lang)}")
+    # ─── إحصائيات سريعة ───
+    st.markdown(f"### 📊 {t('dash_quick_stats', _dsh_lang)}")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric(t("dash_available_agents", _dash_lang), "12")
-    c2.metric(t("dash_completed_tasks", _dash_lang), "3")
-    c3.metric(t("dash_since_register", _dash_lang), "اليوم")
-    c4.metric(t("dash_usage", _dash_lang), t("set_usage_unlimited", _dash_lang))
+    c1.metric(t("dash_available_agents", _dsh_lang), "12")
+    c2.metric(t("dash_completed_tasks", _dsh_lang), "3")
+    c3.metric(t("dash_since_register", _dsh_lang), t("dash_today", _dsh_lang))
+    c4.metric(t("dash_usage", _dsh_lang), t("set_usage_unlimited", _dsh_lang))
 
     st.divider()
 
-    # اختصارات سريعة
-    st.markdown(f"### {t('dash_shortcuts', _dash_lang)}")
+    # ─── اختصارات سريعة ───
+    st.markdown(f"### ⚡ {t('dash_shortcuts', _dsh_lang)}")
     c1, c2, c3 = st.columns(3)
     with c1:
-        if st.button(t("dash_new_invoice", _dash_lang), width="stretch", key="dash_inv"):
+        if st.button(t("dash_new_invoice", _dsh_lang), width="stretch", key="dash_inv"):
             st.session_state.page = "invoice"
             st.rerun()
     with c2:
-        if st.button(t("dash_cs", _dash_lang), width="stretch", key="dash_cs"):
+        if st.button(t("dash_cs", _dsh_lang), width="stretch", key="dash_cs"):
             st.session_state.page = "customer_support"
             st.rerun()
     with c3:
-        if st.button(t("dash_new_content", _dash_lang), width="stretch", key="dash_cw"):
+        if st.button(t("dash_new_content", _dsh_lang), width="stretch", key="dash_cw"):
             st.session_state.page = "content_writer"
             st.rerun()
 
     st.divider()
 
-    # التواصل
-    st.markdown(f"### {t('dash_contact', _dash_lang)}")
-    st.markdown("""
-    - 📧 **البريد:** ashkenazyonah@gmail.com
-    - 💬 **واتساب:** +212719082215
-    """)
-
-
+    # ─── تواصل ───
+    st.markdown(f"### 📞 {t('dash_contact', _dsh_lang)}")
+    st.markdown(f"""
+- 📧 **{t('about_contact_email', _dsh_lang)}:** ashkenazyonah@gmail.com
+- 💬 **{t('about_contact_wa', _dsh_lang)}:** +212719082215
+""")
 def show_features():
     _feat_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("feat_title", _feat_lang)}</div>', unsafe_allow_html=True)
