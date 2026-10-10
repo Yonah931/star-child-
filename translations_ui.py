@@ -1114,3 +1114,61 @@ try:
     _i18n_about_merge(T)
 except NameError:
     pass
+
+# --- i18n: stats cols ---
+_I18N_STATS = {
+    'stat_inv_num': {'ar': 'رقم الفاتورة', 'fr': 'N° Facture', 'en': 'Invoice #'},
+    'stat_client': {'ar': 'العميل', 'fr': 'Client', 'en': 'Client'},
+    'stat_total_dh': {'ar': 'الإجمالي (DH)', 'fr': 'Total (DH)', 'en': 'Total (DH)'},
+    'stat_recent': {'ar': 'آخر الفواتير', 'fr': 'Dernières factures', 'en': 'Recent invoices'},
+}
+
+def _i18n_stats_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_STATS.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_STATS.items():
+            _T.setdefault(_k, dict(_v))
+
+try:
+    _i18n_stats_merge(T)
+except NameError:
+    pass
+
+# --- i18n: my_invoices rebuild keys ---
+_I18N_MYINV = {
+    'myinv_title': {'ar': 'فواتيري', 'fr': 'Mes factures', 'en': 'My Invoices'},
+    'myinv_subtitle': {'ar': 'سجل الفواتير الشخصية', 'fr': 'Historique de vos factures', 'en': 'Your invoice history'},
+    'myinv_count': {'ar': '📊 عدد الفواتير', 'fr': '📊 Nombre', 'en': '📊 Count'},
+    'myinv_total': {'ar': '💰 الإجمالي', 'fr': '💰 Total', 'en': '💰 Total'},
+    'myinv_avg': {'ar': '📈 المتوسط', 'fr': '📈 Moyenne', 'en': '📈 Average'},
+    'myinv_empty': {'ar': 'لا توجد فواتير بعد. اذهب إلى وكيل الفواتير وأنشئ واحدة.', 'fr': "Aucune facture. Créez-en une via l'Agent Facturation.", 'en': 'No invoices yet. Create one via Invoice Agent.'},
+    'myinv_create': {'ar': '➕ إنشاء فاتورة', 'fr': '➕ Créer une facture', 'en': '➕ Create invoice'},
+    'myinv_recent': {'ar': 'الفواتير الأخيرة', 'fr': 'Factures récentes', 'en': 'Recent invoices'},
+    'myinv_col_number': {'ar': 'رقم الفاتورة', 'fr': 'N° Facture', 'en': 'Invoice #'},
+    'myinv_col_client': {'ar': 'العميل', 'fr': 'Client', 'en': 'Client'},
+    'myinv_col_date': {'ar': 'التاريخ', 'fr': 'Date', 'en': 'Date'},
+    'myinv_col_total': {'ar': 'الإجمالي', 'fr': 'Total', 'en': 'Total'},
+    'myinv_col_tva': {'ar': 'TVA', 'fr': 'TVA', 'en': 'TVA'},
+    'myinv_col_lang': {'ar': 'اللغة', 'fr': 'Langue', 'en': 'Language'},
+    'myinv_load': {'ar': 'تحميل فاتورة برقم', 'fr': 'Charger par numéro', 'en': 'Load by number'},
+    'myinv_select': {'ar': 'اختر رقم الفاتورة', 'fr': 'Choisir N°', 'en': 'Select invoice #'},
+    'myinv_view': {'ar': '👁️ عرض التفاصيل', 'fr': '👁️ Voir les détails', 'en': '👁️ View details'},
+    'myinv_not_found': {'ar': '❌ الفاتورة غير موجودة', 'fr': '❌ Facture introuvable', 'en': '❌ Invoice not found'},
+}
+
+def _i18n_myinv_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_MYINV.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_MYINV.items():
+            _T.setdefault(_k, dict(_v))
+
+try:
+    _i18n_myinv_merge(T)
+except NameError:
+    pass

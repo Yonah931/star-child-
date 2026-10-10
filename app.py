@@ -101,34 +101,47 @@ if _os.path.exists(_auth_file):
         st.session_state["lang"] = _selected_lang
         st.rerun()
 
-        # عرض شريط علوي مع اسم المستخدم وزر خروج
-        _col1, _col2 = st.columns([4, 1])
-        with _col1:
-            st.caption(f"👋 مرحباً **{st.session_state.get('name', 'مستخدم')}**")
-        with _col2:
-            if st.button(t("my_dashboard", st.session_state.get("lang", "ar")), key="goto_dash"):
-                st.session_state.page = "dashboard"
-                st.rerun()
-            if st.button(t("my_invoices", st.session_state.get("lang", "ar")), key="goto_myinv"):
-                st.session_state.page = "my_invoices"
-                st.rerun()
-        with _col2:
-            if st.button(t("settings", st.session_state.get("lang", "ar")), key="goto_settings"):
-                st.session_state.page = "settings"
-                st.rerun()
-        _admin_roles = st.session_state.get("roles") or []
-        if "admin" in _admin_roles:
-            if st.button(t("stats", st.session_state.get("lang", "ar")), key="goto_stats"):
-                st.session_state.page = "stats"
-                st.rerun()
-            if st.button(t("admin", st.session_state.get("lang", "ar")), key="goto_admin"):
-                st.session_state.page = "admin"
-                st.rerun()
-        with st.container():
-            _authenticator.logout(location="main", key="main_logout")
+        # ═══════════════════════════════════════════════════════
+# 🔒 STRICT AUTH GUARD — لا يمكن الوصول بدون تسجيل دخول
+# ═══════════════════════════════════════════════════════
+if st.session_state.get("authentication_status") is not True:
+    st.stop()
 
+# ═══════════════════════════════════════════════════════
+# شريط علوي — Top bar
+# ═══════════════════════════════════════════════════════
+_top_lang = st.session_state.get("lang", "ar")
+_top_name = st.session_state.get("name", "User")
+_top_roles = st.session_state.get("roles") or []
 
+st.markdown(f"👋 {t('welcome', _top_lang)}, **{_top_name}**")
 
+_nav = st.columns([1, 1, 1, 1, 1, 1, 2])
+with _nav[0]:
+    if st.button(t("my_dashboard", _top_lang), key="tb_dash", use_container_width=True):
+        st.session_state.page = "dashboard"
+        st.rerun()
+with _nav[1]:
+    if st.button(t("my_invoices", _top_lang), key="tb_myinv", use_container_width=True):
+        st.session_state.page = "my_invoices"
+        st.rerun()
+with _nav[2]:
+    if st.button(t("settings", _top_lang), key="tb_set", use_container_width=True):
+        st.session_state.page = "settings"
+        st.rerun()
+if "admin" in _top_roles:
+    with _nav[3]:
+        if st.button(t("stats", _top_lang), key="tb_stats", use_container_width=True):
+            st.session_state.page = "stats"
+            st.rerun()
+    with _nav[4]:
+        if st.button(t("admin", _top_lang), key="tb_admin", use_container_width=True):
+            st.session_state.page = "admin"
+            st.rerun()
+with _nav[6]:
+    _authenticator.logout(location="main", key="main_logout")
+
+st.markdown("---")
 st.markdown("""
 <style>
 
@@ -619,7 +632,7 @@ def show_admin():
 
 def show_settings():
     _st_lang = st.session_state.get("lang", "ar")
-    st.markdown('<div class="main-header">{t("set_title", _st_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">{t("set_title", _st_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">{t("set_subtitle", _st_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _st_lang), key="settings_back"):
@@ -638,7 +651,7 @@ def show_settings():
         st.text_input(t("set_fld_fullname", _st_lang), value=name, disabled=True, key="set_name")
     with c2:
         st.text_input(t("set_fld_roles", _st_lang), value=", ".join(roles), disabled=True, key="set_roles")
-        st.text_input(t("ma_status", _ma_lang), value=t("set_status_active", _st_lang), disabled=True, key="set_status")
+        st.text_input(t("ma_status", _st_lang), value=t("set_status_active", _st_lang), disabled=True, key="set_status")
 
     st.divider()
 
@@ -780,12 +793,12 @@ def show_about():
     st.divider()
     st.caption(t("about_copyright", _about_lang))
 def show_my_invoices():
-    _my_i_lang = st.session_state.get("lang", "ar")
-    _myinv_lang = st.session_state.get("lang", "ar")
-    st.markdown('<div class="main-header">📁 فواتيري</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">{t("my_invoices_subtitle", _my_i_lang)}</div>', unsafe_allow_html=True)
+    _mi_lang = st.session_state.get("lang", "ar")
 
-    if st.button(t("back_short", _myinv_lang), key="myinv_back"):
+    st.markdown(f'<div class="main-header">🧾 {t("myinv_title", _mi_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("myinv_subtitle", _mi_lang)}</div>', unsafe_allow_html=True)
+
+    if st.button(t("back_short", _mi_lang), key="myinv_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -793,44 +806,65 @@ def show_my_invoices():
     rows = database.get_invoices(username=username, limit=100)
     stats = database.get_invoices_stats(username=username)
 
+    st.divider()
+
     # إحصائيات
     c1, c2, c3 = st.columns(3)
-    c1.metric(t("myinv_count", _myinv_lang), stats["count"])
-    c2.metric("💰 الإجمالي", f"{stats['total']:,.2f} DH")
+    c1.metric(t("myinv_count", _mi_lang), stats["count"])
+    c2.metric(t("myinv_total", _mi_lang), f"{stats['total']:,.2f} DH")
     avg = stats["total"] / stats["count"] if stats["count"] > 0 else 0
-    c3.metric(t("myinv_avg", _myinv_lang), f"{avg:,.2f} DH")
+    c3.metric(t("myinv_avg", _mi_lang), f"{avg:,.2f} DH")
 
     st.divider()
 
     if not rows:
-        st.info(t("myinv_empty", _myinv_lang))
-        if st.button(t("myinv_create", _myinv_lang), type="primary", key="myinv_create"):
+        st.info(t("myinv_empty", _mi_lang))
+        if st.button(t("myinv_create", _mi_lang), type="primary", key="myinv_create"):
             st.session_state.page = "invoice"
             st.rerun()
         return
 
     # جدول الفواتير
-    st.markdown(f"### {t('myinv_recent', _myinv_lang)}")
+    st.markdown(f"### 📋 {t('myinv_recent', _mi_lang)}")
     import pandas as _pd
-    df = _pd.DataFrame(rows, columns=[t("mn_date", _myinv_lang), "رقم الفاتورة", "العميل", "الإجمالي", "TVA", t("hr_language", _myinv_lang)])
-    df["الإجمالي"] = df["الإجمالي"].apply(lambda x: f"{x:,.2f} DH")
-    df["TVA"] = df["TVA"].apply(lambda x: f"{int(x * 100)}%")
+
+    df = _pd.DataFrame(rows)
+    _keep = ["number", "client_name", "date", "total", "tax_rate", "lang"]
+    for _c in _keep:
+        if _c not in df.columns:
+            df[_c] = ""
+    df = df[_keep]
+
+    df.columns = [
+        t("myinv_col_number", _mi_lang),
+        t("myinv_col_client", _mi_lang),
+        t("myinv_col_date", _mi_lang),
+        t("myinv_col_total", _mi_lang),
+        t("myinv_col_tva", _mi_lang),
+        t("myinv_col_lang", _mi_lang),
+    ]
+
+    _total_col = t("myinv_col_total", _mi_lang)
+    _tva_col = t("myinv_col_tva", _mi_lang)
+    df[_total_col] = df[_total_col].apply(lambda x: f"{float(x or 0):,.2f} DH")
+    df[_tva_col] = df[_tva_col].apply(lambda x: f"{int(float(x or 0) * 100)}%")
+
     st.dataframe(df, width="stretch", hide_index=True)
 
     st.divider()
 
     # تحميل فاتورة بالرقم
-    st.markdown(f"### {t('myinv_load', _myinv_lang)}")
-    numbers = [row[1] for row in rows]
-    selected = st.selectbox(t("myinv_select", _myinv_lang), numbers, key="myinv_select")
-    if st.button(t("myinv_view", _myinv_lang), key="myinv_view"):
-        inv = database.get_invoice_by_number(selected)
-        if inv:
-            st.json(inv)
-        else:
-            st.error(t("myinv_not_found", _myinv_lang))
-
-
+    st.markdown(f"### 🔍 {t('myinv_load', _mi_lang)}")
+    numbers = [r[1] for r in rows] if len(rows[0]) > 1 else [str(r.get("number", "")) for r in rows]
+    numbers = [n for n in numbers if n]
+    if numbers:
+        selected = st.selectbox(t("myinv_select", _mi_lang), numbers, key="myinv_select")
+        if st.button(t("myinv_view", _mi_lang), key="myinv_view"):
+            inv = database.get_invoice_by_number(selected)
+            if inv:
+                st.json(inv)
+            else:
+                st.error(t("myinv_not_found", _mi_lang))
 def show_stats():
     _stat_lang = st.session_state.get("lang", "ar")
     _stats_lang = st.session_state.get("lang", "ar")
@@ -877,16 +911,16 @@ def show_stats():
     st.divider()
 
     # آخر الفواتير
-    st.markdown("### 🕐 آخر الفواتير")
+    st.markdown(f"### 📊 {t('stat_recent', _stat_lang)}")
     if stats["recent_invoices"]:
         import pandas as _pd
         df = _pd.DataFrame(
             stats["recent_invoices"],
-            columns=[t("mn_date", _mn_lang), "رقم الفاتورة", "العميل", "الإجمالي (DH)"]
+            columns=[t("mn_date", _stat_lang), t("stat_inv_num", _stat_lang), t("stat_client", _stat_lang), t("stat_total_dh", _stat_lang)]
         )
         st.dataframe(df, width="stretch", hide_index=True)
     else:
-        st.info(t("myinv_empty", _myinv_lang))
+        st.info(t("myinv_empty", _my_lang))
 
     st.divider()
 
@@ -1579,68 +1613,68 @@ def show_invoice():
 # ============================================================
 def show_moroccan_admin():
     _moro_lang = st.session_state.get("lang", "ar")
-    _ma_lang = st.session_state.get("lang", "ar")
+    _st_lang = st.session_state.get("lang", "ar")
     st.markdown('<div class="main-header">🇲🇦 Moroccan Admin</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">{t("moroccan_admin_subtitle", _moro_lang)}</div>', unsafe_allow_html=True)
-    if st.button(t("back_short", _ma_lang), key="ma_back"):
+    if st.button(t("back_short", _st_lang), key="ma_back"):
         st.session_state.page = "landing"
         st.rerun()
 
     admin = MoroccanAdmin()
-    tab1, tab2, tab3, tab4 = st.tabs([t("ma_tab_tva", _ma_lang), t("ma_tab_is", _ma_lang), t("ma_tab_payroll", _ma_lang), t("ma_tab_calendar", _ma_lang)])
+    tab1, tab2, tab3, tab4 = st.tabs([t("ma_tab_tva", _st_lang), t("ma_tab_is", _st_lang), t("ma_tab_payroll", _st_lang), t("ma_tab_calendar", _st_lang)])
 
     with tab1:
-        st.markdown(t("ma_calc_tva", _ma_lang))
+        st.markdown(t("ma_calc_tva", _st_lang))
         c1, c2 = st.columns(2)
         with c1:
-            sales = st.number_input(t("ma_sales_ht", _ma_lang), min_value=0.0, value=100000.0, step=1000.0, key="ma_sales")
+            sales = st.number_input(t("ma_sales_ht", _st_lang), min_value=0.0, value=100000.0, step=1000.0, key="ma_sales")
         with c2:
-            purchases = st.number_input(t("ma_purchases_ht", _ma_lang), min_value=0.0, value=40000.0, step=1000.0, key="ma_purch")
-        rate = st.selectbox(t("ma_rate", _ma_lang), ["standard", "reduced1", "reduced2", "reduced3", "exempt"],
+            purchases = st.number_input(t("ma_purchases_ht", _st_lang), min_value=0.0, value=40000.0, step=1000.0, key="ma_purch")
+        rate = st.selectbox(t("ma_rate", _st_lang), ["standard", "reduced1", "reduced2", "reduced3", "exempt"],
                             format_func=lambda x: {"standard":"20%","reduced1":"14%","reduced2":"10%","reduced3":"7%","exempt":"معفى"}[x],
                             key="ma_rate")
         if st.button("احسب TVA", type="primary", key="ma_calc_tva"):
             r = admin.calculate_tva(sales, purchases, rate)
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric(t("ma_tva_collected", _ma_lang), f"{r['tva_collected']:,.2f} DH")
-            c2.metric(t("ma_tva_deductible", _ma_lang), f"{r['tva_deductible']:,.2f} DH")
-            c3.metric(t("ma_tva_due", _ma_lang), f"{r['tva_due']:,.2f} DH")
-            c4.metric(t("ma_status", _ma_lang), r["status"])
+            c1.metric(t("ma_tva_collected", _st_lang), f"{r['tva_collected']:,.2f} DH")
+            c2.metric(t("ma_tva_deductible", _st_lang), f"{r['tva_deductible']:,.2f} DH")
+            c3.metric(t("ma_tva_due", _st_lang), f"{r['tva_due']:,.2f} DH")
+            c4.metric(t("ma_status", _st_lang), r["status"])
 
     with tab2:
-        st.markdown(t("ma_calc_is", _ma_lang))
+        st.markdown(t("ma_calc_is", _st_lang))
         c1, c2 = st.columns(2)
         with c1:
-            revenue = st.number_input(t("ma_revenue_annual", _ma_lang), min_value=0.0, value=500000.0, step=10000.0, key="ma_rev")
+            revenue = st.number_input(t("ma_revenue_annual", _st_lang), min_value=0.0, value=500000.0, step=10000.0, key="ma_rev")
         with c2:
-            expenses = st.number_input(t("ma_expenses_annual", _ma_lang), min_value=0.0, value=300000.0, step=10000.0, key="ma_exp")
+            expenses = st.number_input(t("ma_expenses_annual", _st_lang), min_value=0.0, value=300000.0, step=10000.0, key="ma_exp")
         if st.button("احسب IS", type="primary", key="ma_calc_is"):
             r = admin.calculate_is(revenue, expenses)
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric(t("ma_profit", _ma_lang), f"{r['profit']:,.2f} DH")
+            c1.metric(t("ma_profit", _st_lang), f"{r['profit']:,.2f} DH")
             c2.metric("IS", f"{r['is_due']:,.2f} DH")
-            c3.metric(t("ma_effective_rate", _ma_lang), f"{r['effective_rate']}%")
-            c4.metric(t("ma_status", _ma_lang), r["status"])
+            c3.metric(t("ma_effective_rate", _st_lang), f"{r['effective_rate']}%")
+            c4.metric(t("ma_status", _st_lang), r["status"])
 
     with tab3:
-        st.markdown(t("ma_calc_payroll", _ma_lang))
-        salary = st.number_input(t("ma_salary_brut", _ma_lang), min_value=0.0, value=8000.0, step=500.0, key="ma_sal")
+        st.markdown(t("ma_calc_payroll", _st_lang))
+        salary = st.number_input(t("ma_salary_brut", _st_lang), min_value=0.0, value=8000.0, step=500.0, key="ma_sal")
         if st.button("احسب Payroll", type="primary", key="ma_calc_pay"):
             r = admin.calculate_payroll(salary)
-            st.markdown(t("ma_employee_deductions", _ma_lang))
+            st.markdown(t("ma_employee_deductions", _st_lang))
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("CNSS", f"{r['cnss_employee']} DH")
             c2.metric("AMO", f"{r['amo_employee']} DH")
             c3.metric("IR", f"{r['ir_monthly']} DH")
-            c4.metric(t("ma_net_salary", _ma_lang), f"{r['net_salary']:,.2f} DH")
-            st.markdown(t("ma_employer_costs", _ma_lang))
+            c4.metric(t("ma_net_salary", _st_lang), f"{r['net_salary']:,.2f} DH")
+            st.markdown(t("ma_employer_costs", _st_lang))
             c1, c2 = st.columns(2)
-            c1.metric(t("ma_employer_cnss", _ma_lang), f"{r['cnss_employer']} DH")
-            c2.metric(t("ma_total_cost", _ma_lang), f"{r['total_cost_employer']:,.2f} DH")
+            c1.metric(t("ma_employer_cnss", _st_lang), f"{r['cnss_employer']} DH")
+            c2.metric(t("ma_total_cost", _st_lang), f"{r['total_cost_employer']:,.2f} DH")
 
     with tab4:
-        st.markdown(t("ma_tax_calendar", _ma_lang))
-        days = st.slider(t("ma_days_ahead", _ma_lang), 7, 90, 30, key="ma_days")
+        st.markdown(t("ma_tax_calendar", _st_lang))
+        days = st.slider(t("ma_days_ahead", _st_lang), 7, 90, 30, key="ma_days")
         deadlines = admin.get_upcoming_deadlines(days)
         if deadlines:
             for d in deadlines:
@@ -1914,11 +1948,11 @@ def show_social_media():
 
 def show_meeting_notes():
     _meet_lang = st.session_state.get("lang", "ar")
-    _mn_lang = st.session_state.get("lang", "ar")
-    st.markdown(f'<div class="main-header">{t("mn_title", _mn_lang)}</div>', unsafe_allow_html=True)
+    _stat_lang = st.session_state.get("lang", "ar")
+    st.markdown(f'<div class="main-header">{t("mn_title", _stat_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">{t("meeting_notes_subtitle", _meet_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button(t("back_short", _mn_lang), key="mn_back"):
+    if st.button(t("back_short", _stat_lang), key="mn_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -1926,29 +1960,29 @@ def show_meeting_notes():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        lang = st.selectbox(t("mn_lang", _mn_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="mn_lang")
+        lang = st.selectbox(t("mn_lang", _stat_lang), ["ar", "fr", "en"], format_func=lambda x: {"ar": "العربية", "fr": "Français", "en": "English"}[x], key="mn_lang")
     with c2:
-        mtype = st.selectbox(t("mn_type", _mn_lang), list(agent.MEETING_TYPES.keys()),
+        mtype = st.selectbox(t("mn_type", _stat_lang), list(agent.MEETING_TYPES.keys()),
                              format_func=lambda x: f"{agent.MEETING_TYPES[x]['icon']} {agent.MEETING_TYPES[x][lang]}",
                              key="mn_type")
     with c3:
-        date = st.text_input(t("mn_date", _mn_lang), value=datetime.now().strftime("%Y-%m-%d"), key="mn_date")
+        date = st.text_input(t("mn_date", _stat_lang), value=datetime.now().strftime("%Y-%m-%d"), key="mn_date")
 
-    title = st.text_input(t("mn_title_input", _mn_lang), key="mn_title", placeholder=t("mn_title_placeholder", _mn_lang))
-    transcript = st.text_area(t("mn_transcript", _mn_lang), height=250, key="mn_text",
-                              placeholder=t("mn_transcript_placeholder", _mn_lang))
+    title = st.text_input(t("mn_title_input", _stat_lang), key="mn_title", placeholder=t("mn_title_placeholder", _stat_lang))
+    transcript = st.text_area(t("mn_transcript", _stat_lang), height=250, key="mn_text",
+                              placeholder=t("mn_transcript_placeholder", _stat_lang))
 
-    if st.button(t("mn_generate_btn", _mn_lang), type="primary", key="mn_generate"):
+    if st.button(t("mn_generate_btn", _stat_lang), type="primary", key="mn_generate"):
         if not transcript.strip():
-            st.error(t("mn_enter_text", _mn_lang))
+            st.error(t("mn_enter_text", _stat_lang))
         else:
-            with st.spinner(t("mn_generating", _mn_lang)):
+            with st.spinner(t("mn_generating", _stat_lang)):
                 r = agent.generate_minutes(transcript, mtype, lang, title, date)
 
             st.divider()
             st.info(f"المصدر: {r['source']} | النوع: {r['type_label']}")
             st.markdown(r["minutes"])
-            st.download_button(t("mn_download_md", _mn_lang), data=r["minutes"],
+            st.download_button(t("mn_download_md", _stat_lang), data=r["minutes"],
                                file_name=f"meeting_{date}.md", mime="text/markdown",
                                key="mn_dl")
 
