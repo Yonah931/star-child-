@@ -985,7 +985,7 @@ def show_landing():
     # عدّاد الوكلاء
     st.markdown(
         '<div style="text-align:center; margin: 20px 0; font-size:1.4rem; color:#00d4ff;">'
-        '🎯 <strong>12 وكيلاً ذكياً</strong> · '
+        '🎯 <strong>{t("land_agents_12", _lang)}</strong> · '
         '7 مدعومة بالذكاء الاصطناعي · '
         '3 لغات (عربي · فرنسي · إنجليزي)'
         '</div>',
@@ -995,9 +995,7 @@ def show_landing():
     <div style="text-align:center; padding:3rem 1rem;
         background:linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
         border-radius:20px; margin-bottom:2rem;">
-        <div style="color:#a8b4c8; font-size:1.2rem; margin-top:1rem;">
-            منصة الذكاء الاصطناعي لإدارة الأعمال
-        </div>
+        <div style="color:#a8b4c8; font-size:1.2rem; margin-top:1rem;">{t("land_platform_tag", _lang)}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1068,7 +1066,7 @@ def show_landing():
     st.markdown("---")
     st.markdown(f"""
     <div style="text-align:center; padding:2rem;">
-        <h2>📞 ابدأ اليوم</h2>
+        <h2>{t("land_start_today", _lang)}</h2>
         <p>{t('free_trial_7days', _lang)}.</p>
         <p style="direction:ltr;">
             📧 <b>ashkenazyonah@gmail.com</b><br>

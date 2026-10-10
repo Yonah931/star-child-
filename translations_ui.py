@@ -936,6 +936,22 @@ T = {
     "inv_total_ttc": {"ar": "المجموع TTC", "fr": "Total TTC", "en": "Total TTC"},
     "inv_file_error": {"ar": "❌ لم يتم إنشاء الملف: {path}", "fr": "❌ Fichier non créé : {path}", "en": "❌ File not created: {path}"},
 
+    # ─── Landing page ───
+    "land_agents_12": {"ar": "12 وكيلاً ذكياً مدعومة بالذكاء الاصطناعي، 7 لغات (عربي، فرنسي، إنجليزي)", "fr": "12 agents IA, 7 propulsés par IA, 3 langues (AR/FR/EN)", "en": "12 smart agents, 7 AI-powered, 3 languages (AR/FR/EN)"},
+    "land_platform_tag": {"ar": "منصة الذكاء الاصطناعي لإدارة الأعمال", "fr": "Plateforme d'IA pour la gestion d'entreprise", "en": "AI Platform for Business Management"},
+    "land_starter_1": {"ar": "وكيل واحد من اختيارك", "fr": "1 agent au choix", "en": "1 agent of your choice"},
+    "land_starter_2": {"ar": "20 مهمة شهرياً", "fr": "20 tâches/mois", "en": "20 tasks/month"},
+    "land_starter_3": {"ar": "دعم واتساب", "fr": "Support WhatsApp", "en": "WhatsApp support"},
+    "land_pro_1": {"ar": "3 وكلاء", "fr": "3 agents", "en": "3 agents"},
+    "land_pro_2": {"ar": "100 مهمة شهرياً", "fr": "100 tâches/mois", "en": "100 tasks/month"},
+    "land_pro_3": {"ar": "كل الميزات", "fr": "Toutes les fonctionnalités", "en": "All features"},
+    "land_pro_4": {"ar": "دعم أولوية", "fr": "Support prioritaire", "en": "Priority support"},
+    "land_biz_1": {"ar": "كل الوكلاء (8)", "fr": "Tous les agents (8)", "en": "All agents (8)"},
+    "land_biz_2": {"ar": "غير محدود", "fr": "Illimité", "en": "Unlimited"},
+    "land_biz_3": {"ar": "تخصيص كامل", "fr": "Personnalisation complète", "en": "Full customization"},
+    "land_biz_4": {"ar": "دعم 24/7", "fr": "Support 24/7", "en": "24/7 Support"},
+    "land_start_today": {"ar": "ابدأ اليوم", "fr": "Commencez aujourd'hui", "en": "Start today"},
+
 }
 
 
