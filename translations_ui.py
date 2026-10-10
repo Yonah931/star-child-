@@ -797,6 +797,34 @@ T = {
 "set_danger_caption": {"ar": "حذف الحساب لا يمكن التراجع عنه.", "fr": "La suppression est irréversible.", "en": "Deletion cannot be undone."},
 "set_btn_delete_me": {"ar": "🗑️ حذف حسابي", "fr": "🗑️ Supprimer mon compte", "en": "🗑️ Delete my account"},
 "set_delete_contact": {"ar": "⚠️ للتواصل مع الإدارة لحذف الحساب: ashkenazyona@gmail.com", "fr": "⚠️ Contactez : ashkenazyona@gmail.com", "en": "⚠️ Contact: ashkenazyona@gmail.com"},
+    # ─── My Invoices ───
+    "myinv_title": {"ar": "🧾 فواتيري", "fr": "🧾 Mes factures", "en": "🧾 My Invoices"},
+    "myinv_subtitle": {"ar": "سجل الفواتير الشخصية", "fr": "Historique personnel", "en": "Personal invoice history"},
+    "myinv_count": {"ar": "🧾 عدد الفواتير", "fr": "🧾 Nombre", "en": "🧾 Count"},
+    "myinv_total": {"ar": "💰 الإجمالي", "fr": "💰 Total", "en": "💰 Total"},
+    "myinv_avg": {"ar": "📊 المتوسط", "fr": "📊 Moyenne", "en": "📊 Average"},
+    "myinv_empty": {"ar": "⚠️ لا توجد فواتير بعد.", "fr": "⚠️ Aucune facture.", "en": "⚠️ No invoices."},
+    "myinv_create": {"ar": "➕ إنشاء فاتورة", "fr": "➕ Créer", "en": "➕ Create"},
+    "myinv_recent": {"ar": "🧾 الفواتير الأخيرة", "fr": "🧾 Récentes", "en": "🧾 Recent"},
+    "myinv_load": {"ar": "🔍 تحميل فاتورة", "fr": "🔍 Charger", "en": "🔍 Load"},
+    "myinv_select": {"ar": "اختر رقم", "fr": "Choisir N°", "en": "Select #"},
+    "myinv_view": {"ar": "👁️ عرض", "fr": "👁️ Voir", "en": "👁️ View"},
+    "myinv_not_found": {"ar": "❌ غير موجودة", "fr": "❌ Introuvable", "en": "❌ Not found"},
+    "myinv_col_total": {"ar": "الإجمالي", "fr": "Total", "en": "Total"},
+    "myinv_col_number": {"ar": "رقم الفاتورة", "fr": "N° Facture", "en": "Invoice #"},
+    "myinv_col_client": {"ar": "العميل", "fr": "Client", "en": "Client"},
+    "myinv_col_date": {"ar": "التاريخ", "fr": "Date", "en": "Date"},
+    "myinv_language": {"ar": "اللغة", "fr": "Langue", "en": "Language"},
+    # ─── Stats ───
+    "stats_title": {"ar": "📊 إحصائيات", "fr": "📊 Statistiques", "en": "📊 Statistics"},
+    "stats_subtitle": {"ar": "نظرة شاملة", "fr": "Vue d'ensemble", "en": "Overview"},
+    "stats_key_numbers": {"ar": "📊 الأرقام الرئيسية", "fr": "📊 Chiffres clés", "en": "📊 Key Numbers"},
+    "stats_invoices": {"ar": "🧾 الفواتير", "fr": "🧾 Factures", "en": "🧾 Invoices"},
+    "stats_total_ttc": {"ar": "💰 إجمالي TTC", "fr": "💰 Total TTC", "en": "💰 Total TTC"},
+    "stats_total_ht": {"ar": "💵 إجمالي HT", "fr": "💵 Total HT", "en": "💵 Total HT"},
+    "stats_tasks": {"ar": "📋 المهام", "fr": "📋 Tâches", "en": "📋 Tasks"},
+    "stats_top_agents": {"ar": "🏆 الوكلاء الأكثر استخداماً", "fr": "🏆 Top agents", "en": "🏆 Top Agents"},
+
 }
 
 

@@ -795,11 +795,12 @@ def show_about():
 
 
 def show_my_invoices():
+    _myinv_lang = st.session_state.get("lang", "ar")
     """صفحة فواتيري"""
     st.markdown('<div class="main-header">📁 فواتيري</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">سجل الفواتير المُنشأة</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="myinv_back"):
+    if st.button(t("back_short", _myinv_lang), key="myinv_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -809,24 +810,24 @@ def show_my_invoices():
 
     # إحصائيات
     c1, c2, c3 = st.columns(3)
-    c1.metric("📄 عدد الفواتير", stats["count"])
+    c1.metric(t("myinv_count", _myinv_lang), stats["count"])
     c2.metric("💰 الإجمالي", f"{stats['total']:,.2f} DH")
     avg = stats["total"] / stats["count"] if stats["count"] > 0 else 0
-    c3.metric("📊 المتوسط", f"{avg:,.2f} DH")
+    c3.metric(t("myinv_avg", _myinv_lang), f"{avg:,.2f} DH")
 
     st.divider()
 
     if not rows:
-        st.info("📭 لا توجد فواتير بعد. اذهب إلى وكيل الفواتير وأنشئ واحدة.")
-        if st.button("🧾 إنشاء فاتورة", type="primary", key="myinv_create"):
+        st.info(t("myinv_empty", _myinv_lang))
+        if st.button(t("myinv_create", _myinv_lang), type="primary", key="myinv_create"):
             st.session_state.page = "invoice"
             st.rerun()
         return
 
     # جدول الفواتير
-    st.markdown("### 📋 الفواتير الأخيرة")
+    st.markdown(f"### {t('myinv_recent', _myinv_lang)}")
     import pandas as _pd
-    df = _pd.DataFrame(rows, columns=[t("mn_date", _mn_lang), "رقم الفاتورة", "العميل", "الإجمالي", "TVA", t("hr_language", _hr_lang)])
+    df = _pd.DataFrame(rows, columns=[t("mn_date", _myinv_lang), "رقم الفاتورة", "العميل", "الإجمالي", "TVA", t("hr_language", _myinv_lang)])
     df["الإجمالي"] = df["الإجمالي"].apply(lambda x: f"{x:,.2f} DH")
     df["TVA"] = df["TVA"].apply(lambda x: f"{int(x * 100)}%")
     st.dataframe(df, width="stretch", hide_index=True)
@@ -834,23 +835,24 @@ def show_my_invoices():
     st.divider()
 
     # تحميل فاتورة بالرقم
-    st.markdown("### ⬇️ تحميل فاتورة")
+    st.markdown(f"### {t('myinv_load', _myinv_lang)}")
     numbers = [row[1] for row in rows]
-    selected = st.selectbox("اختر رقم الفاتورة", numbers, key="myinv_select")
-    if st.button("📥 عرض التفاصيل", key="myinv_view"):
+    selected = st.selectbox(t("myinv_select", _myinv_lang), numbers, key="myinv_select")
+    if st.button(t("myinv_view", _myinv_lang), key="myinv_view"):
         inv = database.get_invoice_by_number(selected)
         if inv:
             st.json(inv)
         else:
-            st.error("❌ الفاتورة غير موجودة")
+            st.error(t("myinv_not_found", _myinv_lang))
 
 
 def show_stats():
+    _stats_lang = st.session_state.get("lang", "ar")
     """لوحة الإحصائيات — للمدير فقط"""
     roles = st.session_state.get("roles") or []
     if "admin" not in roles:
-        st.error(t("adm_err_forbidden", _ad_lang))
-        if st.button("⬅️ رجوع", key="stats_unauth"):
+        st.error(t("adm_err_forbidden", _stats_lang))
+        if st.button(t("back_short", _stats_lang), key="stats_unauth"):
             st.session_state.page = "landing"
             st.rerun()
         return
@@ -858,7 +860,7 @@ def show_stats():
     st.markdown('<div class="main-header">📊 الإحصائيات</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">نظرة شاملة على نشاط المنصة</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ رجوع", key="stats_back"):
+    if st.button(t("back_short", _stats_lang), key="stats_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -867,17 +869,17 @@ def show_stats():
     st.divider()
 
     # الإحصائيات الرئيسية
-    st.markdown("### 🎯 الأرقام الرئيسية")
+    st.markdown(f"### {t('stats_key_numbers', _stats_lang)}")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("📄 الفواتير", stats["invoices_count"])
+    c1.metric(t("stats_invoices", _stats_lang), stats["invoices_count"])
     c2.metric("💰 إجمالي TTC", f"{stats['invoices_total']:,.2f} DH")
     c3.metric("💵 إجمالي HT", f"{stats['invoices_subtotal']:,.2f} DH")
-    c4.metric("📝 المهمات", stats["tasks_count"])
+    c4.metric(t("stats_tasks", _stats_lang), stats["tasks_count"])
 
     st.divider()
 
     # أعلى الوكلاء
-    st.markdown("### 🏆 الوكلاء الأكثر استخداماً")
+    st.markdown(f"### {t('stats_top_agents', _stats_lang)}")
     if stats["top_agents"]:
         for i, (agent, count) in enumerate(stats["top_agents"], 1):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "▫️"
@@ -899,7 +901,7 @@ def show_stats():
         )
         st.dataframe(df, width="stretch", hide_index=True)
     else:
-        st.info("📭 لا توجد فواتير")
+        st.info(t("myinv_empty", _myinv_lang))
 
     st.divider()
 
