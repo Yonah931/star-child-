@@ -924,6 +924,18 @@ T = {
     "hr_top_candidate": {"ar": "🏆 الأفضل", "fr": "🏆 Meilleur", "en": "🏆 Top"},
     "hr_generating": {"ar": "⏳ جاري التوليد...", "fr": "⏳ Génération...", "en": "⏳ Generating..."},
 
+    # ─── Invoice page ───
+    "inv_number": {"ar": "رقم الفاتورة", "fr": "N° Facture", "en": "Invoice #"},
+    "inv_date": {"ar": "التاريخ", "fr": "Date", "en": "Date"},
+    "inv_client": {"ar": "العميل", "fr": "Client", "en": "Client"},
+    "inv_desc_col": {"ar": "الوصف", "fr": "Description", "en": "Description"},
+    "inv_qty_col": {"ar": "الكمية", "fr": "Quantité", "en": "Quantity"},
+    "inv_price_col": {"ar": "السعر", "fr": "Prix", "en": "Price"},
+    "inv_total_col": {"ar": "المجموع", "fr": "Total", "en": "Total"},
+    "inv_total_ht": {"ar": "المجموع HT", "fr": "Total HT", "en": "Total HT"},
+    "inv_total_ttc": {"ar": "المجموع TTC", "fr": "Total TTC", "en": "Total TTC"},
+    "inv_file_error": {"ar": "❌ لم يتم إنشاء الملف: {path}", "fr": "❌ Fichier non créé : {path}", "en": "❌ File not created: {path}"},
+
 }
 
 

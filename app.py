@@ -1560,14 +1560,14 @@ def show_invoice():
         inv = st.session_state["inv_dict"]
         st.divider()
         st.markdown(f"### {t('inv_preview', _inv_lang)}")
-        st.markdown(f"**رقم الفاتورة:** {inv['number']} | **التاريخ:** {inv['date']}")
-        st.markdown(f"**العميل:** {inv['client_name']}")
-        items_display = [{f"{t('inv_desc', _inv_lang)}": it["description"], f"{t('inv_quantity', _inv_lang)}": it["quantity"], "السعر": f"{it['unit_price']:.2f}", "المجموع": f"{it['quantity'] * it['unit_price']:.2f}"} for it in inv["items"]]
+        st.markdown(f"**{t('inv_number', _inv_lang)}:** {inv['number']} | **{t('inv_date', _inv_lang)}:** {inv['date']}")
+        st.markdown(f"**{t('inv_client', _inv_lang)}:** {inv['client_name']}")
+        items_display = [{f"{t('inv_desc', _inv_lang)}": it["description"], f"{t('inv_quantity', _inv_lang)}": it["quantity"], t("inv_price_col", _inv_lang): f"{it['unit_price']:.2f}", t("inv_total_col", _inv_lang): f"{it['quantity'] * it['unit_price']:.2f}"} for it in inv["items"]]
         st.dataframe(items_display, width="stretch", hide_index=True)
         c1, c2, c3 = st.columns(3)
-        c1.metric("المجموع HT", f"{inv['subtotal']:.2f} DH")
+        c1.metric(t("inv_total_ht", _inv_lang), f"{inv['subtotal']:.2f} DH")
         c2.metric(f"TVA {int(inv['tax_rate'] * 100)}%", f"{inv['tax']:.2f} DH")
-        c3.metric("المجموع TTC", f"{inv['total']:.2f} DH")
+        c3.metric(t("inv_total_ttc", _inv_lang), f"{inv['total']:.2f} DH")
         if st.button(f"{t('inv_generate_pdf', _inv_lang)}", type="primary", key="inv_pdf"):
             try:
                 with st.spinner(t("inv_generating", _inv_lang)):
@@ -1580,7 +1580,7 @@ def show_invoice():
                     st.session_state["inv_pdf_name"] = pdf_path
                     st.success(f"{t('inv_pdf_success', _inv_lang)}")
                 else:
-                    st.error(f"❌ لم يُنشأ الملف: {pdf_path}")
+                    st.error(t("inv_file_error", _inv_lang).format(path=pdf_path))
             except Exception as e:
                 st.error(f"خطأ: {e}")
         if st.session_state.get("inv_pdf_bytes"):
