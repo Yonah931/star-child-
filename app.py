@@ -1360,12 +1360,12 @@ def show_cfo():
     _cfo_lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
-        if st.button("← الرئيسية", key="back_cfo"):
+        if st.button(t("back_short", _cfo_lang), key="back_cfo"):
             st.session_state.page = "landing"
             st.rerun()
 
     st.markdown(f'<div class="main-header">{t("cfo_title", _cfo_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">تحليل الربحية • حساب الضرائب • التدفق النقدي • التوصيات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("cfo_subtitle", _cfo_lang)}</div>', unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown(f"### {t('cfo_upload', _cfo_lang)}")
@@ -1383,7 +1383,7 @@ def show_cfo():
         """)
 
     if uploaded is None:
-        st.info("👈 ارفع ملف البيانات المالية من الشريط الجانبي")
+        st.info(t("cfo_upload_hint", _cfo_lang))
         return
 
     temp_path = f"/tmp/{uploaded.name}"

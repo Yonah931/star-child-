@@ -966,6 +966,9 @@ T = {
     "contact_title": {"ar": "📞 تواصل معنا", "fr": "📞 Contact", "en": "📞 Contact"},
     "contact_subtitle": {"ar": "لأسئلتك، عروض، وطلبات مخصصة", "fr": "Questions, démos, demandes sur mesure", "en": "Questions, demos, custom requests"},
 
+    "cfo_subtitle": {"ar": "تحليل الربحية، حساب الضرائب، التدفق النقدي، التوصيات", "fr": "Rentabilité, taxes, trésorerie, recommandations", "en": "Profitability, taxes, cash flow, recommendations"},
+    "cfo_upload_hint": {"ar": "ارفع ملف البيانات المالية من الشريط الجانبي", "fr": "Chargez le fichier financier depuis la barre latérale", "en": "Upload financial file from sidebar"},
+
 }
 
 
