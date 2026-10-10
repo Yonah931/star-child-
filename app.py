@@ -866,79 +866,81 @@ def show_my_invoices():
             else:
                 st.error(t("myinv_not_found", _mi_lang))
 def show_stats():
-    _stat_lang = st.session_state.get("lang", "ar")
-    _stats_lang = st.session_state.get("lang", "ar")
+    _st_lang = st.session_state.get("lang", "ar")
     roles = st.session_state.get("roles") or []
+
     if "admin" not in roles:
-        st.error(t("adm_err_forbidden", _stats_lang))
-        if st.button(t("back_short", _stats_lang), key="stats_unauth"):
+        st.error(t("adm_err_forbidden", _st_lang))
+        if st.button(t("back_short", _st_lang), key="stats_unauth"):
             st.session_state.page = "landing"
             st.rerun()
         return
 
-    st.markdown('<div class="main-header">📊 الإحصائيات</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">{t("stats_subtitle", _stat_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header">📊 {t("stats_title", _st_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("stats_subtitle", _st_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button(t("back_short", _stats_lang), key="stats_back"):
+    if st.button(t("back_short", _st_lang), key="stats_back"):
         st.session_state.page = "landing"
         st.rerun()
 
     stats = database.get_full_stats()
-
     st.divider()
 
-    # الإحصائيات الرئيسية
-    st.markdown(f"### {t('stats_key_numbers', _stats_lang)}")
+    # الأرقام الرئيسية
+    st.markdown(f"### 📊 {t('stats_key_numbers', _st_lang)}")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric(t("stats_invoices", _stats_lang), stats["invoices_count"])
-    c2.metric("💰 إجمالي TTC", f"{stats['invoices_total']:,.2f} DH")
-    c3.metric("💵 إجمالي HT", f"{stats['invoices_subtotal']:,.2f} DH")
-    c4.metric(t("stats_tasks", _stats_lang), stats["tasks_count"])
+    c1.metric(t("stats_invoices", _st_lang), stats["invoices_count"])
+    c2.metric(t("stats_total_ttc", _st_lang), f"{stats['invoices_total']:,.2f} DH")
+    c3.metric(t("stats_total_ht", _st_lang), f"{stats['invoices_subtotal']:,.2f} DH")
+    c4.metric(t("stats_tasks", _st_lang), stats["tasks_count"])
 
     st.divider()
 
-    # أعلى الوكلاء
-    st.markdown(f"### {t('stats_top_agents', _stats_lang)}")
+    # Top agents
+    st.markdown(f"### 🏆 {t('stats_top_agents', _st_lang)}")
     if stats["top_agents"]:
         for i, (agent, count) in enumerate(stats["top_agents"], 1):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "▫️"
             c1, c2 = st.columns([4, 1])
             c1.markdown(f"{medal} **{agent}**")
-            c2.markdown(f"**{count}** استخدام")
+            c2.markdown(f"**{count}** {t('stats_uses', _st_lang)}")
     else:
-        st.info(t("stats_upload_hint", _stat_lang))
+        st.info(t("stats_upload_hint", _st_lang))
 
     st.divider()
 
     # آخر الفواتير
-    st.markdown(f"### 📊 {t('stat_recent', _stat_lang)}")
+    st.markdown(f"### 📋 {t('stat_recent', _st_lang)}")
     if stats["recent_invoices"]:
         import pandas as _pd
         df = _pd.DataFrame(
             stats["recent_invoices"],
-            columns=[t("mn_date", _stat_lang), t("stat_inv_num", _stat_lang), t("stat_client", _stat_lang), t("stat_total_dh", _stat_lang)]
+            columns=[
+                t("myinv_col_date", _st_lang),
+                t("myinv_col_number", _st_lang),
+                t("myinv_col_client", _st_lang),
+                t("myinv_col_total", _st_lang),
+            ],
         )
+        _tot = t("myinv_col_total", _st_lang)
+        df[_tot] = df[_tot].apply(lambda x: f"{float(x or 0):,.2f} DH")
         st.dataframe(df, width="stretch", hide_index=True)
     else:
-        st.info(t("myinv_empty", _my_lang))
+        st.info(t("myinv_empty", _st_lang))
 
     st.divider()
 
     # نشاط المستخدمين
-    st.markdown("### 👥 نشاط المستخدمين")
+    st.markdown(f"### 👥 {t('stats_user_activity', _st_lang)}")
     activity = database.get_user_activity()
     if activity:
         for username, count in activity:
-            st.markdown(f"- **{username}**: {count} فاتورة")
+            st.markdown(f"- **{username}**: {count} {t('stats_invoices_unit', _st_lang)}")
     else:
-        st.info(t("stats_upload_hint", _stat_lang))
+        st.info(t("stats_upload_hint", _st_lang))
 
     st.divider()
-    st.caption("📊 يتم التحديث تلقائياً عند كل زيارة")
-
-
-
-
+    st.caption(t("stats_auto_update", _st_lang))
 def show_contact():
     _cont_lang = st.session_state.get("lang", "ar")
     _ct_lang = st.session_state.get("lang", "ar")

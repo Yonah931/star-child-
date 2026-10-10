@@ -1172,3 +1172,35 @@ try:
     _i18n_myinv_merge(T)
 except NameError:
     pass
+
+# --- i18n: stats rebuild keys ---
+_I18N_STATS = {
+    'stats_title': {'ar': 'إحصائيات', 'fr': 'Statistiques', 'en': 'Statistics'},
+    'stats_subtitle': {'ar': 'نظرة عامة على النظام', 'fr': "Vue d'ensemble du système", 'en': 'System overview'},
+    'stats_key_numbers': {'ar': 'الأرقام الرئيسية', 'fr': 'Chiffres clés', 'en': 'Key Numbers'},
+    'stats_invoices': {'ar': '🧾 الفواتير', 'fr': '🧾 Factures', 'en': '🧾 Invoices'},
+    'stats_total_ttc': {'ar': '💰 إجمالي TTC', 'fr': '💰 Total TTC', 'en': '💰 Total TTC'},
+    'stats_total_ht': {'ar': '💵 إجمالي HT', 'fr': '💵 Total HT', 'en': '💵 Total HT'},
+    'stats_tasks': {'ar': '📋 المهام', 'fr': '📋 Tâches', 'en': '📋 Tasks'},
+    'stats_top_agents': {'ar': 'الوكلاء الأكثر استخداماً', 'fr': 'Agents les plus utilisés', 'en': 'Most used agents'},
+    'stats_uses': {'ar': 'استخدام', 'fr': 'utilisations', 'en': 'uses'},
+    'stats_upload_hint': {'ar': 'لا توجد بيانات', 'fr': 'Aucune donnée', 'en': 'No data'},
+    'stat_recent': {'ar': 'آخر الفواتير', 'fr': 'Dernières factures', 'en': 'Recent invoices'},
+    'stats_user_activity': {'ar': 'نشاط المستخدمين', 'fr': 'Activité des utilisateurs', 'en': 'User activity'},
+    'stats_invoices_unit': {'ar': 'فاتورة', 'fr': 'facture(s)', 'en': 'invoice(s)'},
+    'stats_auto_update': {'ar': '🔄 يتم التحديث تلقائياً عند كل زيارة', 'fr': '🔄 Mise à jour automatique à chaque visite', 'en': '🔄 Auto-updated on each visit'},
+}
+
+def _i18n_stats_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_STATS.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_STATS.items():
+            _T.setdefault(_k, dict(_v))
+
+try:
+    _i18n_stats_merge(T)
+except NameError:
+    pass
