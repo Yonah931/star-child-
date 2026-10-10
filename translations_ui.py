@@ -869,6 +869,25 @@ T = {
     "feat_hr_agent": {"ar": "HR Agent", "fr": "Agent RH", "en": "HR Agent"},
     "feat_cmo_agent": {"ar": "المسؤول التسويقي (CMO)", "fr": "Directeur Marketing (CMO)", "en": "CMO"},
 
+    # ─── Login + Top Bar + Misc ───
+    "login_form_title": {"ar": "🔐 تسجيل الدخول", "fr": "🔐 Connexion", "en": "🔐 Login"},
+    "login_username": {"ar": "اسم المستخدم", "fr": "Nom d'utilisateur", "en": "Username"},
+    "login_password": {"ar": "كلمة السر", "fr": "Mot de passe", "en": "Password"},
+    "login_btn": {"ar": "دخول", "fr": "Connexion", "en": "Login"},
+    "login_err_invalid": {"ar": "❌ اسم المستخدم أو كلمة السر خاطئة. المتبقي: {n} محاولات", "fr": "❌ Identifiants incorrects. Restant : {n}", "en": "❌ Wrong credentials. Left: {n}"},
+    "login_err_lockout": {"ar": "⚠️ تم قفل الجلسة لمدة 15 دقيقة بعد {n} محاولات فاشلة", "fr": "⚠️ Verrouillé 15 min après {n} essais", "en": "⚠️ Locked 15 min after {n} attempts"},
+    "login_err_cooldown": {"ar": "⚠️ الحساب مقفل مؤقتاً ({n} دقيقة)", "fr": "⚠️ Compte verrouillé ({n} min)", "en": "⚠️ Account locked ({n} min)"},
+    "login_warn_required": {"ar": "🚫 يرجى تسجيل الدخول للمتابعة", "fr": "🚫 Connectez-vous pour continuer", "en": "🚫 Please log in to continue"},
+    "wa_subscribe_here": {"ar": "اضغط هنا للاشتراك عبر واتساب", "fr": "Cliquez ici pour vous abonner sur WhatsApp", "en": "Click here to subscribe via WhatsApp"},
+    "wa_contact_here": {"ar": "اضغط للتواصل عبر واتساب", "fr": "Cliquez pour contacter sur WhatsApp", "en": "Click to contact via WhatsApp"},
+    "dash_agents_12": {"ar": "الوكلاء", "fr": "Agents", "en": "Agents"},
+    "dash_tasks_3": {"ar": "المهام", "fr": "Tâches", "en": "Tasks"},
+    "dash_today": {"ar": "اليوم", "fr": "Aujourd'hui", "en": "Today"},
+    "dash_since_reg": {"ar": "منذ التسجيل", "fr": "Depuis inscription", "en": "Since signup"},
+    "dash_unlimited": {"ar": "غير محدود", "fr": "Illimité", "en": "Unlimited"},
+    "dash_usage": {"ar": "الاستخدام", "fr": "Utilisation", "en": "Usage"},
+    "myinv_total_col": {"ar": "الإجمالي", "fr": "Total", "en": "Total"},
+
 }
 
 

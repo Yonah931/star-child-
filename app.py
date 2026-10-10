@@ -63,10 +63,10 @@ if _os.path.exists(_auth_file):
         location="main",
         key="main_login",
         fields={
-            "Form name": "🔐 تسجيل الدخول",
-            "Username": "اسم المستخدم",
-            "Password": "كلمة السر",
-            "Login": "دخول",
+            "Form name": t("login_form_title", st.session_state.get("lang", "ar")),
+            "Username": t("login_username", st.session_state.get("lang", "ar")),
+            "Password": t("login_password", st.session_state.get("lang", "ar")),
+            "Login": t("login_btn", st.session_state.get("lang", "ar")),
         },
     )
 
@@ -81,7 +81,7 @@ if _os.path.exists(_auth_file):
             st.error(f"❌ اسم المستخدم أو كلمة السر خاطئة (المتبقي: {_max - _attempts} محاولات)")
         st.stop()
     elif st.session_state.get("authentication_status") is None:
-        st.warning("🔒 يرجى تسجيل الدخول للمتابعة")
+        st.warning(t("login_warn_required", st.session_state.get("lang", "ar")))
         st.stop()
     else:
         st.session_state["login_attempts"] = 0
@@ -106,22 +106,22 @@ if _os.path.exists(_auth_file):
         with _col1:
             st.caption(f"👋 مرحباً **{st.session_state.get('name', 'مستخدم')}**")
         with _col2:
-            if st.button("📊 لوحتي", key="goto_dash"):
+            if st.button(t("my_dashboard", st.session_state.get("lang", "ar")), key="goto_dash"):
                 st.session_state.page = "dashboard"
                 st.rerun()
-            if st.button("📁 فواتيري", key="goto_myinv"):
+            if st.button(t("my_invoices", st.session_state.get("lang", "ar")), key="goto_myinv"):
                 st.session_state.page = "my_invoices"
                 st.rerun()
         with _col2:
-            if st.button("⚙️ الإعدادات", key="goto_settings"):
+            if st.button(t("settings", st.session_state.get("lang", "ar")), key="goto_settings"):
                 st.session_state.page = "settings"
                 st.rerun()
         _admin_roles = st.session_state.get("roles") or []
         if "admin" in _admin_roles:
-            if st.button("📊 إحصائيات", key="goto_stats"):
+            if st.button(t("stats", st.session_state.get("lang", "ar")), key="goto_stats"):
                 st.session_state.page = "stats"
                 st.rerun()
-            if st.button("👑 المدير", key="goto_admin"):
+            if st.button(t("admin", st.session_state.get("lang", "ar")), key="goto_admin"):
                 st.session_state.page = "admin"
                 st.rerun()
         with st.container():
@@ -517,7 +517,7 @@ def show_features():
 
     st.divider()
     if st.button("💬 {t('subscribe_now', _lang)}", type="primary", key="feat_subscribe"):
-        st.markdown("[اضغط هنا للاشتراك عبر واتساب](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحباً، أرغب في الاشتراك في منصة Yonah Ashkenaz") + ")")
+        st.markdown(f"[{t('wa_subscribe_here', _feat_lang)}](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحبا، أرغب في الاشتراك في منصة Yonah Ashkenaz") + ")")
 
 
 def show_admin():
@@ -700,7 +700,7 @@ def show_settings():
     c3.metric(t("set_metric_usage", _st_lang), t("set_usage_unlimited", _st_lang))
 
     if st.button(t("set_btn_upgrade", _st_lang), key="upgrade"):
-        st.markdown("[اضغط للتواصل عبر واتساب](https://wa.me/212719082215)")
+        st.markdown(f"[{t('wa_contact_here', _feat_lang)}](https://wa.me/212719082215)")
 
     st.divider()
 
