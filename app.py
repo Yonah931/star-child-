@@ -1211,14 +1211,14 @@ def show_hr():
             st.rerun()
 
     st.markdown(f'<div class="main-header">{t("hr_title", _hr_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">فرز CV • إعلانات توظيف • أسئلة مقابلات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("hr_subtitle", _hr_lang)}</div>', unsafe_allow_html=True)
 
     # التبويبات
-    tab1, tab2, tab3 = st.tabs(["🔍 فرز CV", "📢 إعلان توظيف", "❓ أسئلة المقابلة"])
+    tab1, tab2, tab3 = st.tabs([t("hr_tab_cv", _hr_lang), t("hr_tab_job", _hr_lang), t("hr_tab_q", _hr_lang)])
 
     # === تبويب 1: فرز CV ===
     with tab1:
-        st.markdown("### ارفع ملف السير الذاتية (Excel/CSV)")
+        st.markdown(f"### {t('hr_upload_title', _hr_lang)}")
         st.markdown("يجب أن يحتوي الملف على أعمدة: `Name`, `Email`, `Experience`, `Skills`")
 
         uploaded = st.file_uploader(t("hr_choose_file", _hr_lang), type=['xlsx', 'xls', 'csv'], key="hr_cv_upload")
@@ -1298,8 +1298,7 @@ def show_hr():
 
                     # أزرار التحميل
                     if st.session_state.get('hr_pdf_ar_ready'):
-                        st.download_button(
-                            "⬇️ تحميل التقرير العربي",
+                        st.download_button(t("hr_download_ar", _hr_lang),
                             st.session_state['hr_pdf_ar_bytes'],
                             file_name=f"hr_report_ar_{datetime.now().strftime('%Y%m%d')}.pdf",
                             mime="application/pdf",
@@ -1323,10 +1322,10 @@ def show_hr():
             job_type = st.selectbox(t("hr_job_type", _hr_lang),
                 options=["developer", "accountant", "sales", "marketing", "hr"],
                 format_func=lambda x: {
-                    "developer": "💻 مطور برمجيات",
-                    "accountant": "📊 محاسب",
-                    "sales": "💼 مندوب مبيعات",
-                    "marketing": "📢 مسؤول تسويق",
+                    "developer": t("hr_job_developer", _hr_lang),
+                    "accountant": t("hr_job_accountant", _hr_lang),
+                    "sales": t("hr_job_sales", _hr_lang),
+                    "marketing": t("hr_job_marketing", _hr_lang),
                     "hr": "👥 مسؤول HR"
                 }[x])
         with col2:
@@ -1335,7 +1334,7 @@ def show_hr():
         lang_job = st.selectbox(t("hr_language", _hr_lang), ["ar", "fr", "en"],
             format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
 
-        if st.button("📢 توليد الإعلان", key="hr_job_btn", width="stretch"):
+        if st.button(t("hr_generate_job", _hr_lang), key="hr_job_btn", width="stretch"):
             hr = HRAgent()
             posting = hr.generate_job_posting(job_type, company_name, lang=lang_job)
             st.markdown("---")
@@ -1349,7 +1348,7 @@ def show_hr():
         col1, col2 = st.columns(2)
         with col1:
             category = st.selectbox(t("hr_category", _hr_lang), ["general", "technical"],
-                format_func=lambda x: {"general": "📋 عامة", "technical": "💼 تقنية"}[x])
+                format_func=lambda x: {"general": t("hr_cat_general", _hr_lang), "technical": t("hr_cat_tech", _hr_lang)}[x])
         with col2:
             lang_q = st.selectbox("اللغة ", ["ar", "fr", "en"],
                 format_func=lambda x: {"ar": "🇲🇦 العربية", "fr": "🇫🇷 Français", "en": "🇬🇧 English"}[x])
