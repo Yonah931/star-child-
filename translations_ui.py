@@ -952,6 +952,17 @@ T = {
     "land_biz_4": {"ar": "دعم 24/7", "fr": "Support 24/7", "en": "24/7 Support"},
     "land_start_today": {"ar": "ابدأ اليوم", "fr": "Commencez aujourd'hui", "en": "Start today"},
 
+    # ─── About page ───
+    "about_vision_h": {"ar": "رؤيتنا", "fr": "Notre vision", "en": "Our vision"},
+    "about_vision_p": {"ar": "نبني أدوات ذكية مخصصة للسوق المغربي — بسيطة، قوية، وبأسعار في متناول الجميع. نهدف لتمكين المقاولات الصغرى والمتوسطة من مواكبة التحول الرقمي.", "fr": "Nous créons des outils intelligents pour le marché marocain — simples, puissants et abordables. Notre but : aider les PME à réussir leur transformation digitale.", "en": "We build smart tools for the Moroccan market — simple, powerful, and affordable. We help SMEs succeed in their digital transformation."},
+    "about_why_h": {"ar": "لماذا؟", "fr": "Pourquoi ?", "en": "Why?"},
+    "about_why_p": {"ar": "لاحظنا أن معظم أدوات الذكاء الاصطناعي:", "fr": "Nous avons remarqué que la plupart des outils IA sont :", "en": "We noticed that most AI tools are:"},
+    "about_why_1": {"ar": "تخدم السوق الأمريكي/الأوروبي", "fr": "orientés marché US/EU", "en": "aimed at US/EU markets"},
+    "about_why_2": {"ar": "باهظة الثمن بالدولار", "fr": "trop chers en dollars", "en": "too expensive in dollars"},
+    "about_why_3": {"ar": "لا تفهم TVA/IS/CNSS المغربية", "fr": "ignorent la TVA/IS/CNSS marocaine", "en": "don't understand Moroccan TVA/IS/CNSS"},
+    "about_why_4": {"ar": "لا تدعم العربية بمستوى احترافي", "fr": "ne supportent pas l'arabe professionnel", "en": "don't support professional Arabic"},
+    "about_why_end": {"ar": "قررنا أن نصنع الحل المغربي", "fr": "Nous avons décidé de créer la solution marocaine", "en": "We decided to build the Moroccan solution"},
+
 }
 
 

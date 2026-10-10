@@ -391,7 +391,6 @@ def make_whatsapp_link(plan_name, price):
 
 def show_dashboard():
     _dash_lang = st.session_state.get("lang", "ar")
-    """لوحة تحكم العميل"""
     st.markdown('<div class="main-header">{t("dash_title", _dash_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">{t("dash_subtitle", _dash_lang)}</div>', unsafe_allow_html=True)
 
@@ -453,7 +452,6 @@ def show_dashboard():
 
 def show_features():
     _feat_lang = st.session_state.get("lang", "ar")
-    """صفحة الميزات التفصيلية"""
     st.markdown(f'<div class="main-header">{t("feat_title", _feat_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">12 وكيلاً ذكياً لإدارة أعمالك</div>', unsafe_allow_html=True)
 
@@ -522,7 +520,6 @@ def show_features():
 
 def show_admin():
     _ad_lang = st.session_state.get("lang", "ar")
-    """لوحة تحكم المدير — إدارة المستخدمين"""
     # حماية: admin فقط
     roles = st.session_state.get("roles") or []
     if "admin" not in roles:
@@ -627,7 +624,6 @@ def show_admin():
 
 def show_settings():
     _st_lang = st.session_state.get("lang", "ar")
-    """إعدادات المستخدم"""
     st.markdown('<div class="main-header">{t("set_title", _st_lang)}</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">{t("set_subtitle", _st_lang)}</div>', unsafe_allow_html=True)
 
@@ -713,7 +709,6 @@ def show_settings():
 
 def show_about():
     _about_lang = st.session_state.get("lang", "ar")
-    """صفحة من نحن"""
     st.markdown(f'<div class="main-header">{t("about_title", _about_lang)}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="sub-header">{t("about_subtitle", _about_lang)}</div>', unsafe_allow_html=True)
 
@@ -725,14 +720,14 @@ def show_about():
 
     # القصة
     st.markdown("""
-    ### 🎯 رؤيتنا
+    st.markdown(f"### 🎯 {t('about_vision_h', _about_lang)}")
     
     نبني **أدوات ذكية مخصصة للسوق المغربي** — بلغات ثلاثة، بأسعار في متناول الجميع، 
     وبفهم عميق لاحتياجات المقاولات الصغيرة والمتوسطة.
     
-    ### 💡 لماذا؟
+    st.markdown(f"### 💡 {t('about_why_h', _about_lang)}")
     
-    لاحظنا أن معظم أدوات الذكاء الاصطناعي:
+    st.markdown(t("about_why_p", _about_lang))
     - 🚫 صُمّمت للسوق الأمريكي/الأوروبي
     - 🚫 باهظة الثمن بالدولار
     - 🚫 لا تفهم TVA/IS/CNSS المغربية
@@ -797,7 +792,6 @@ def show_about():
 
 def show_my_invoices():
     _myinv_lang = st.session_state.get("lang", "ar")
-    """صفحة فواتيري"""
     st.markdown('<div class="main-header">📁 فواتيري</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">سجل الفواتير المُنشأة</div>', unsafe_allow_html=True)
 
@@ -849,7 +843,6 @@ def show_my_invoices():
 
 def show_stats():
     _stats_lang = st.session_state.get("lang", "ar")
-    """لوحة الإحصائيات — للمدير فقط"""
     roles = st.session_state.get("roles") or []
     if "admin" not in roles:
         st.error(t("adm_err_forbidden", _stats_lang))
