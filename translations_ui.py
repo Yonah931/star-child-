@@ -796,7 +796,7 @@ T = {
 "set_danger_title": {"ar": "⚠️ منطقة الخطر", "fr": "⚠️ Zone dangereuse", "en": "⚠️ Danger zone"},
 "set_danger_caption": {"ar": "حذف الحساب لا يمكن التراجع عنه.", "fr": "La suppression est irréversible.", "en": "Deletion cannot be undone."},
 "set_btn_delete_me": {"ar": "🗑️ حذف حسابي", "fr": "🗑️ Supprimer mon compte", "en": "🗑️ Delete my account"},
-"set_delete_contact": {"ar": "⚠️ للتواصل مع الإدارة لحذف الحساب: ashkenazyona@gmail.com", "fr": "⚠️ Contactez : ashkenazyona@gmail.com", "en": "⚠️ Contact: ashkenazyona@gmail.com"},
+"set_delete_contact": {"ar": "⚠️ للتواصل مع الإدارة لحذف الحساب: ashkenazyonah@gmail.com", "fr": "⚠️ Contactez : ashkenazyonah@gmail.com", "en": "⚠️ Contact: ashkenazyonah@gmail.com"},
     # ─── My Invoices ───
     "myinv_title": {"ar": "🧾 فواتيري", "fr": "🧾 Mes factures", "en": "🧾 My Invoices"},
     "myinv_subtitle": {"ar": "سجل الفواتير الشخصية", "fr": "Historique personnel", "en": "Personal invoice history"},
@@ -1061,5 +1061,56 @@ def _i18n_feat_merge(_T):
 
 try:
     _i18n_feat_merge(T)
+except NameError:
+    pass
+
+# --- i18n: about rebuild keys ---
+_I18N_ABOUT = {
+    'about_title': {'ar': 'من نحن', 'fr': 'À propos', 'en': 'About Us'},
+    'about_subtitle': {'ar': 'قصة Yonah Ashkenaz Agentic OS', 'fr': "L'histoire de Yonah Ashkenaz Agentic OS", 'en': 'The story of Yonah Ashkenaz Agentic OS'},
+    'about_vision_h': {'ar': 'رؤيتنا', 'fr': 'Notre vision', 'en': 'Our vision'},
+    'about_vision_p': {'ar': 'نبني أدوات ذكية مخصصة للسوق المغربي — بلغات ثلاثة، بأسعار في متناول الجميع، وبفهم عميق لاحتياجات المقاولات الصغيرة والمتوسطة.', 'fr': 'Nous créons des outils intelligents dédiés au marché marocain — trilingues, abordables, avec une compréhension profonde des besoins des PME.', 'en': "We build smart tools dedicated to the Moroccan market — trilingual, affordable, with a deep understanding of SMEs' needs."},
+    'about_why_h': {'ar': 'لماذا؟', 'fr': 'Pourquoi ?', 'en': 'Why?'},
+    'about_why_p': {'ar': 'لاحظنا أن معظم أدوات الذكاء الاصطناعي:', 'fr': "Nous avons remarqué que la plupart des outils d'IA :", 'en': 'We noticed that most AI tools:'},
+    'about_why_1': {'ar': 'تخدم السوق الأمريكي/الأوروبي', 'fr': 'ciblent le marché US/EU', 'en': 'target the US/EU market'},
+    'about_why_2': {'ar': 'باهظة الثمن بالدولار', 'fr': 'sont chers en dollars', 'en': 'are expensive in dollars'},
+    'about_why_3': {'ar': 'لا تفهم TVA/IS/CNSS المغربية', 'fr': 'ne comprennent pas la TVA/IS/CNSS marocaine', 'en': "don't understand Moroccan TVA/IS/CNSS"},
+    'about_why_4': {'ar': 'لا تدعم العربية بشكل احترافي', 'fr': "ne supportent pas l'arabe professionnel", 'en': "don't support professional Arabic"},
+    'about_why_end': {'ar': 'قررنا أن نصنع الحل المغربي', 'fr': 'Nous avons décidé de créer la solution marocaine', 'en': 'We decided to build the Moroccan solution'},
+    'about_distinct': {'ar': 'ما الذي يميزنا؟', 'fr': 'Ce qui nous distingue', 'en': 'What makes us different'},
+    'about_why_scope': {'ar': 'محفظة للمغرب: TVA, IS, IR, CNSS, ICE, OMPIC', 'fr': 'Périmètre Maroc : TVA, IS, IR, CNSS, ICE, OMPIC', 'en': 'Morocco scope: TVA, IS, IR, CNSS, ICE, OMPIC'},
+    'about_why_langs2': {'ar': '3 لغات: عربي، فرنسي، إنجليزي', 'fr': '3 langues : Arabe, Français, Anglais', 'en': '3 languages: Arabic, French, English'},
+    'about_why_agents': {'ar': '12 وكيل ذكي: محاسبة، HR، CFO، دعم، تسويق', 'fr': '12 agents IA : compta, RH, CFO, support, marketing', 'en': '12 AI agents: accounting, HR, CFO, support, marketing'},
+    'about_why_price': {'ar': 'أسعار بالدرهم: تبدأ من 500 درهم/شهر', 'fr': 'Prix en dirhams : à partir de 500 DH/mois', 'en': 'Prices in DH: from 500 DH/month'},
+    'about_why_fast': {'ar': 'سريعة: نتائج في ثوان', 'fr': 'Rapide : résultats en secondes', 'en': 'Fast: results in seconds'},
+    'about_why_secure': {'ar': 'آمنة: تسجيل دخول + حماية متقدمة', 'fr': 'Sécurisé : login + protection avancée', 'en': 'Secure: login + advanced protection'},
+    'about_numbers': {'ar': 'الأرقام', 'fr': 'Chiffres', 'en': 'Numbers'},
+    'about_num_agents': {'ar': '👥 الوكلاء', 'fr': '👥 Agents', 'en': '👥 Agents'},
+    'about_num_langs': {'ar': '🌐 اللغات', 'fr': '🌐 Langues', 'en': '🌐 Languages'},
+    'about_num_smart': {'ar': '🤖 الوكلاء الأذكياء', 'fr': '🤖 Agents IA', 'en': '🤖 Smart agents'},
+    'about_num_maroc': {'ar': '📍 مقرنا في', 'fr': '📍 Basés au', 'en': '📍 Based in'},
+    'about_num_maroc_val': {'ar': 'المغرب', 'fr': 'Maroc', 'en': 'Morocco'},
+    'about_founder_h': {'ar': 'المؤسس', 'fr': 'Fondateur', 'en': 'Founder'},
+    'about_founder_role': {'ar': 'مهندس أنظمة ذكاء اصطناعي — Casablanca, Maroc', 'fr': 'Ingénieur en IA — Casablanca, Maroc', 'en': 'AI systems engineer — Casablanca, Morocco'},
+    'about_founder_bio': {'ar': 'شغوف ببناء أدوات تسهّل على المقاولين والمحاسبين المغاربة يومهم.', 'fr': "Passionné par la création d'outils qui facilitent le quotidien des entrepreneurs et comptables marocains.", 'en': 'Passionate about building tools that simplify the daily work of Moroccan entrepreneurs and accountants.'},
+    'about_contact': {'ar': 'تواصل', 'fr': 'Contact', 'en': 'Contact'},
+    'about_contact_email': {'ar': 'البريد الإلكتروني', 'fr': 'Email', 'en': 'Email'},
+    'about_contact_wa': {'ar': 'واتساب', 'fr': 'WhatsApp', 'en': 'WhatsApp'},
+    'about_copyright': {'ar': '© 2025 Yonah Ashkenaz — جميع الحقوق محفوظة', 'fr': '© 2025 Yonah Ashkenaz — Tous droits réservés', 'en': '© 2025 Yonah Ashkenaz — All rights reserved'},
+}
+
+
+def _i18n_about_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_ABOUT.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_ABOUT.items():
+            _T.setdefault(_k, dict(_v))
+
+
+try:
+    _i18n_about_merge(T)
 except NameError:
     pass

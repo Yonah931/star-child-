@@ -713,78 +713,72 @@ def show_about():
 
     st.divider()
 
-    # القصة
-    st.markdown(f"""
+    # الرؤية
     st.markdown(f"### 🎯 {t('about_vision_h', _about_lang)}")
-    
-    نبني **أدوات ذكية مخصصة للسوق المغربي** — بلغات ثلاثة، بأسعار في متناول الجميع، 
-    وبفهم عميق لاحتياجات المقاولات الصغيرة والمتوسطة.
-    
+    st.markdown(t("about_vision_p", _about_lang))
+
+    # لماذا
     st.markdown(f"### 💡 {t('about_why_h', _about_lang)}")
-    
     st.markdown(t("about_why_p", _about_lang))
-    - 🚫 صُمّمت للسوق الأمريكي/الأوروبي
-    - 🚫 باهظة الثمن بالدولار
-    - 🚫 لا تفهم TVA/IS/CNSS المغربية
-    - 🚫 لا تدعم العربية بشكل احترافي
-    
-    **{t("about_why_end", _about_lang)}**
-    
-    ### 🚀 ما الذي يميزنا؟
-    
-    - 🇲🇦 **مصمّمة للمغرب:** TVA, IS, IR, CNSS, ICE, OMPIC
-    - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
-    - 🤖 **12 وكيلاً ذكياً:** محاسبة، HR، CFO، تسويق، دعم
-    - 💰 **أسعار بالدرهم:** تبدأ من 500 {t('per_month', _about_lang)}
-    - ⚡ **سريعة:** نتائج في ثوانٍ
-    - 🔒 **آمنة:** تسجيل دخول + حماية متقدمة
-    """)
+    st.markdown(f"""
+- ❌ {t('about_why_1', _about_lang)}
+- ❌ {t('about_why_2', _about_lang)}
+- ❌ {t('about_why_3', _about_lang)}
+- ❌ {t('about_why_4', _about_lang)}
+""")
+    st.markdown(f"**{t('about_why_end', _about_lang)}**")
+
+    # ما يميزنا
+    st.markdown(f"### 🚀 {t('about_distinct', _about_lang)}")
+    st.markdown(f"""
+- 💼 {t('about_why_scope', _about_lang)}
+- 🌐 {t('about_why_langs2', _about_lang)}
+- 🤖 {t('about_why_agents', _about_lang)}
+- 💰 {t('about_why_price', _about_lang)}
+- ⚡ {t('about_why_fast', _about_lang)}
+- 🔒 {t('about_why_secure', _about_lang)}
+""")
 
     st.divider()
 
-    # الإحصائيات
-    st.markdown(t("about_numbers", _about_lang))
+    # الأرقام
+    st.markdown(f"### 📊 {t('about_numbers', _about_lang)}")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("🤖 الوكلاء", "12")
-    c2.metric("🌍 اللغات", "3")
-    c3.metric("⚡ الذكاء الاصطناعي", "7 وكلاء")
-    c4.metric("🇲🇦 مصمّم في", "المغرب")
+    c1.metric(t("about_num_agents", _about_lang), "12")
+    c2.metric(t("about_num_langs", _about_lang), "3")
+    c3.metric(t("about_num_smart", _about_lang), "7")
+    c4.metric(t("about_num_maroc", _about_lang), t("about_num_maroc_val", _about_lang))
 
     st.divider()
 
     # المؤسس
-    st.markdown("""
-    ### 👤 المؤسس
-    
-    **Yonah Ashkenaz**  
-    مهندس أنظمة ذكاء اصطناعي — Casablanca, Maroc
-    
-    شغوف ببناء أدوات تسهّل على المقاولين والمحاسبين المغاربة يومهم.
-    
-    📧 ashkenazyonah@gmail.com  
-    💬 +212719082215
-    """)
+    st.markdown(f"""### 👤 {t('about_founder_h', _about_lang)}
+
+**Yonah Ashkenaz**
+{t('about_founder_role', _about_lang)}
+
+{t('about_founder_bio', _about_lang)}
+
+📧 ashkenazyonah@gmail.com
+💬 +212719082215
+""")
 
     st.divider()
 
     # تواصل
-    st.markdown(t("about_contact", _about_lang))
+    st.markdown(f"### 📞 {t('about_contact', _about_lang)}")
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown("""
-        **البريد الإلكتروني:**  
-        📧 ashkenazyonah@gmail.com
-        """)
+        st.markdown(f"""**{t('about_contact_email', _about_lang)}:**
+📧 ashkenazyonah@gmail.com
+""")
     with c2:
-        st.markdown("""
-        **واتساب:**  
-        💬 +212719082215
-        """)
+        st.markdown(f"""**{t('about_contact_wa', _about_lang)}:**
+💬 +212719082215
+""")
 
     st.divider()
     st.caption(t("about_copyright", _about_lang))
-
-
 def show_my_invoices():
     _my_i_lang = st.session_state.get("lang", "ar")
     _myinv_lang = st.session_state.get("lang", "ar")
