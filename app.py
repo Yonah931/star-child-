@@ -453,7 +453,7 @@ def show_dashboard():
 def show_features():
     _feat_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("feat_title", _feat_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">12 وكيلاً ذكياً لإدارة أعمالك</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("features_subtitle", _feat_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _feat_lang), key="feat_back"):
         st.session_state.page = "landing"
@@ -719,7 +719,7 @@ def show_about():
     st.divider()
 
     # القصة
-    st.markdown("""
+    st.markdown(f"""
     st.markdown(f"### 🎯 {t('about_vision_h', _about_lang)}")
     
     نبني **أدوات ذكية مخصصة للسوق المغربي** — بلغات ثلاثة، بأسعار في متناول الجميع، 
@@ -733,7 +733,7 @@ def show_about():
     - 🚫 لا تفهم TVA/IS/CNSS المغربية
     - 🚫 لا تدعم العربية بشكل احترافي
     
-    **قررنا أن نبني البديل المغربي.**
+    **{t("about_why_end", _about_lang)}**
     
     ### 🚀 ما الذي يميزنا؟
     
@@ -791,9 +791,10 @@ def show_about():
 
 
 def show_my_invoices():
+    _my_i_lang = st.session_state.get("lang", "ar")
     _myinv_lang = st.session_state.get("lang", "ar")
     st.markdown('<div class="main-header">📁 فواتيري</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">سجل الفواتير المُنشأة</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("my_invoices_subtitle", _my_i_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _myinv_lang), key="myinv_back"):
         st.session_state.page = "landing"
@@ -842,6 +843,7 @@ def show_my_invoices():
 
 
 def show_stats():
+    _stat_lang = st.session_state.get("lang", "ar")
     _stats_lang = st.session_state.get("lang", "ar")
     roles = st.session_state.get("roles") or []
     if "admin" not in roles:
@@ -852,7 +854,7 @@ def show_stats():
         return
 
     st.markdown('<div class="main-header">📊 الإحصائيات</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">نظرة شاملة على نشاط المنصة</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("stats_subtitle", _stat_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _stats_lang), key="stats_back"):
         st.session_state.page = "landing"
@@ -881,7 +883,7 @@ def show_stats():
             c1.markdown(f"{medal} **{agent}**")
             c2.markdown(f"**{count}** استخدام")
     else:
-        st.info("📭 لا توجد مهمات مسجّلة بعد")
+        st.info(t("stats_upload_hint", _stat_lang))
 
     st.divider()
 
@@ -906,7 +908,7 @@ def show_stats():
         for username, count in activity:
             st.markdown(f"- **{username}**: {count} فاتورة")
     else:
-        st.info("📭 لا يوجد نشاط مسجّل")
+        st.info(t("stats_upload_hint", _stat_lang))
 
     st.divider()
     st.caption("📊 يتم التحديث تلقائياً عند كل زيارة")
@@ -915,11 +917,12 @@ def show_stats():
 
 
 def show_contact():
-    """صفحة تواصل معنا"""
-    st.markdown('<div class="main-header">Contact / تواصل معنا</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">For questions, demos, and custom requests</div>', unsafe_allow_html=True)
+    _cont_lang = st.session_state.get("lang", "ar")
+    _ct_lang = st.session_state.get("lang", "ar")
+    st.markdown('<div class="main-header">{t("contact_title", _ct_lang)}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("contact_subtitle", _ct_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button("Back / رجوع", key="contact_back"):
+    if st.button(t("back_short", _ct_lang), key="contact_back"):
         st.session_state.page = "landing"
         st.rerun()
 
@@ -959,7 +962,7 @@ def show_contact():
                     try:
                         database.save_message(name, email, phone, message)
                         st.success("Message sent. We will reply soon.")
-                        st.info("Sent / تم الإرسال")
+                        st.info(t("contact_upload_hint", _cont_lang))
                     except Exception as e:
                         st.error("Error: " + str(e)[:100])
 
@@ -1198,7 +1201,7 @@ def show_hr():
     _hr_lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
-        if st.button("← الرئيسية", key="back_hr"):
+        if st.button(t("back_short", _hr_lang), key="back_hr"):
             st.session_state.page = "landing"
             st.rerun()
 
@@ -1360,12 +1363,12 @@ def show_cfo():
     _cfo_lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
-        if st.button("← الرئيسية", key="back_cfo"):
+        if st.button(t("back_short", _cfo_lang), key="back_cfo"):
             st.session_state.page = "landing"
             st.rerun()
 
     st.markdown(f'<div class="main-header">{t("cfo_title", _cfo_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">تحليل الربحية • حساب الضرائب • التدفق النقدي • التوصيات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("cfo_subtitle", _cfo_lang)}</div>', unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown(f"### {t('cfo_upload', _cfo_lang)}")
@@ -1383,7 +1386,7 @@ def show_cfo():
         """)
 
     if uploaded is None:
-        st.info("👈 ارفع ملف البيانات المالية من الشريط الجانبي")
+        st.info(t("cfo_upload_hint", _cfo_lang))
         return
 
     temp_path = f"/tmp/{uploaded.name}"
@@ -1586,9 +1589,10 @@ def show_invoice():
 # Router
 # ============================================================
 def show_moroccan_admin():
+    _moro_lang = st.session_state.get("lang", "ar")
     _ma_lang = st.session_state.get("lang", "ar")
     st.markdown('<div class="main-header">🇲🇦 Moroccan Admin</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">TVA · IS · IR · CNSS · Payroll</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("moroccan_admin_subtitle", _moro_lang)}</div>', unsafe_allow_html=True)
     if st.button(t("back_short", _ma_lang), key="ma_back"):
         st.session_state.page = "landing"
         st.rerun()
@@ -1720,9 +1724,10 @@ def show_customer_support():
 
 
 def show_content_writer():
+    _cont_lang = st.session_state.get("lang", "ar")
     _cw_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("cw_title", _cw_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">مقالات · وصف منتجات · سوشيال ميديا · إعلانات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("content_writer_subtitle", _cont_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _cw_lang), key="cw_back"):
         st.session_state.page = "landing"
@@ -1805,9 +1810,10 @@ def show_content_writer():
 
 
 def show_email_agent():
+    _emai_lang = st.session_state.get("lang", "ar")
     _em_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("em_title", _em_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">ردود · حملات · متابعة · دعوات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("email_agent_subtitle", _emai_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _em_lang), key="em_back"):
         st.session_state.page = "landing"
@@ -1863,9 +1869,10 @@ def show_email_agent():
 
 
 def show_social_media():
+    _soci_lang = st.session_state.get("lang", "ar")
     _sm_lang = st.session_state.get("lang", "ar")
     st.markdown('<div class="main-header">📱 Social Media Agent</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">منشورات جاهزة · 6 منصات · 3 لغات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("social_media_subtitle", _soci_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _sm_lang), key="sm_back"):
         st.session_state.page = "landing"
@@ -1917,9 +1924,10 @@ def show_social_media():
 
 
 def show_meeting_notes():
+    _meet_lang = st.session_state.get("lang", "ar")
     _mn_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("mn_title", _mn_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">محاضر اجتماعات · مهام · قرارات</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("meeting_notes_subtitle", _meet_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _mn_lang), key="mn_back"):
         st.session_state.page = "landing"
@@ -1957,9 +1965,10 @@ def show_meeting_notes():
 
 
 def show_supplier():
+    _supp_lang = st.session_state.get("lang", "ar")
     _sp_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("sp_title", _sp_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">طلبات · تفاوض · مقارنة الموردين</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("supplier_subtitle", _supp_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _sp_lang), key="sp_back"):
         st.session_state.page = "landing"
