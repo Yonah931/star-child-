@@ -453,14 +453,14 @@ def show_dashboard():
 def show_features():
     _feat_lang = st.session_state.get("lang", "ar")
     st.markdown(f'<div class="main-header">{t("feat_title", _feat_lang)}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">{t("features_subtitle", _feat_lang)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{t("features_subtitle", _feat_lang)}</div>', unsafe_allow_html=True)
 
     if st.button(t("back_short", _feat_lang), key="feat_back"):
         st.session_state.page = "landing"
         st.rerun()
 
     st.divider()
-    st.markdown(f"### 🤖 {t('feat_finance', _feat_lang)}")
+    st.markdown(f"### 💼 {t('feat_finance', _feat_lang)}")
 
     features = [
         ("📊 " + t("accountant", _feat_lang), t("feat_fin_acc_desc", _feat_lang), "AI"),
@@ -468,11 +468,10 @@ def show_features():
         ("🏛️ " + t("moroccan_admin", _feat_lang), t("feat_fin_adm_desc", _feat_lang), "AI"),
         ("🧾 " + t("invoice", _feat_lang), t("feat_fin_inv_desc", _feat_lang), "AI"),
     ]
-
     for name, desc, badge in features:
-        with st.expander(f"{name}"):
-            st.markdown(f"{t("feat_desc", _feat_lang)}: {desc}")
-            st.markdown(f"{t("feat_tech", _feat_lang)}: {badge}")
+        with st.expander(name):
+            st.markdown(f"{t('feat_desc', _feat_lang)}: {desc}")
+            st.markdown(f"{t('feat_tech', _feat_lang)}: {badge}")
 
     st.divider()
     st.markdown(f"### 📢 {t('feat_marketing', _feat_lang)}")
@@ -481,43 +480,39 @@ def show_features():
         ("✍️ " + t("content_writer", _feat_lang), t("feat_mkt_cw_desc", _feat_lang)),
         ("📱 " + t("social_media", _feat_lang), t("feat_mkt_sm_desc", _feat_lang)),
         ("📧 " + t("email_agent", _feat_lang), t("feat_mkt_em_desc", _feat_lang)),
-        ("📈 " + t("feat_cmo_agent", _feat_lang), t("feat_mkt_cmo_desc", _feat_lang)),
+        ("📈 " + t("cmo", _feat_lang), t("feat_mkt_cmo_desc", _feat_lang)),
     ]
-
     for name, desc in marketing:
-        with st.expander(f"{name}"):
+        with st.expander(name):
             st.markdown(desc)
 
     st.divider()
     st.markdown(f"### 👥 {t('feat_admin', _feat_lang)}")
 
-    admin = [
-        ("👥 " + t("feat_hr_agent", _feat_lang), t("feat_adm_hr_desc", _feat_lang)),
+    admin_list = [
+        ("👥 " + t("hr_agent", _feat_lang), t("feat_adm_hr_desc", _feat_lang)),
         ("💬 " + t("customer_support", _feat_lang), t("feat_adm_cs_desc", _feat_lang)),
         ("📝 " + t("meeting_notes", _feat_lang), t("feat_adm_mn_desc", _feat_lang)),
         ("🚚 " + t("supplier", _feat_lang), t("feat_adm_sup_desc", _feat_lang)),
     ]
-
-    for name, desc in admin:
-        with st.expander(f"{name}"):
+    for name, desc in admin_list:
+        with st.expander(name):
             st.markdown(desc)
 
     st.divider()
-    st.markdown(f"### {t('feat_extra', _feat_lang)}")
-    st.markdown("""
-    - 🌍 **3 لغات:** عربي، فرنسي، إنجليزي
-    - 📄 **تقارير PDF** احترافية
-    - 🔒 **تسجيل دخول آمن**
-    - ⚡ **سريع** (نتائج في ثوانٍ)
-    - ☁️ **سحابي** (يعمل من أي جهاز)
-    - 💬 **دعم واتساب مباشر**
-    """)
+    st.markdown(f"### ✨ {t('feat_extra', _feat_lang)}")
+    st.markdown(f"""
+- 🌍 **{t('feat_langs_label', _feat_lang)}:** {t('feat_langs_val', _feat_lang)}
+- 📄 **{t('feat_pdf_label', _feat_lang)}:** {t('feat_pdf_val', _feat_lang)}
+- 🔐 **{t('feat_login_label', _feat_lang)}**
+- ⚡ **{t('feat_fast_label', _feat_lang)}:** {t('feat_fast_val', _feat_lang)}
+- ☁️ **{t('feat_cloud_label', _feat_lang)}:** {t('feat_cloud_val', _feat_lang)}
+- 💬 **{t('feat_support_label', _feat_lang)}**
+""")
 
     st.divider()
-    if st.button("💬 {t('subscribe_now', _lang)}", type="primary", key="feat_subscribe"):
-        st.markdown(f"[{t('wa_subscribe_here', _feat_lang)}](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحبا، أرغب في الاشتراك في منصة Yonah Ashkenaz") + ")")
-
-
+    if st.button(t("subscribe_now", _feat_lang), type="primary", key="feat_subscribe"):
+        st.markdown(f"[{t('wa_subscribe_here', _feat_lang)}](https://wa.me/212719082215?text=" + urllib.parse.quote("مرحبا، أرغب في الاشتراك في Yonah Ashkenaz") + ")")
 def show_admin():
     _ad_lang = st.session_state.get("lang", "ar")
     # حماية: admin فقط

@@ -1011,3 +1011,55 @@ def t(key, lang="ar"):
     """Get translation for a key."""
     entry = T.get(key, {})
     return entry.get(lang, entry.get("ar", key))
+
+# --- i18n: features rebuild keys ---
+_I18N_FEAT = {
+    'feat_title': {'ar': 'الميزات الكاملة', 'fr': 'Toutes les Fonctionnalités', 'en': 'Full Features'},
+    'features_subtitle': {'ar': '12 وكيل ذكي لإدارة أعمالك', 'fr': '12 agents IA pour votre business', 'en': '12 AI agents for your business'},
+    'feat_finance': {'ar': 'وكلاء المالية والمحاسبة', 'fr': 'Agents Financiers et Comptables', 'en': 'Financial & Accounting Agents'},
+    'feat_marketing': {'ar': 'وكلاء التسويق', 'fr': 'Agents Marketing', 'en': 'Marketing Agents'},
+    'feat_admin': {'ar': 'وكلاء الإدارة والدعم', 'fr': 'Agents Administratifs & Support', 'en': 'Admin & Support Agents'},
+    'feat_extra': {'ar': 'ميزات إضافية', 'fr': 'Fonctionnalités additionnelles', 'en': 'Additional Features'},
+    'feat_desc': {'ar': 'الوصف', 'fr': 'Description', 'en': 'Description'},
+    'feat_tech': {'ar': 'التقنية', 'fr': 'Technologie', 'en': 'Tech'},
+    'feat_fin_acc_desc': {'ar': 'Excel/CSV. مولد تقارير PDF مع 3 لغات', 'fr': 'Excel/CSV. Rapports PDF en 3 langues', 'en': 'Excel/CSV. PDF reports in 3 languages'},
+    'feat_fin_cfo_desc': {'ar': 'TVA/IS/CNSS. تحليل، مراجعة، توصيات ذكية', 'fr': 'TVA/IS/CNSS. Analyse et recommandations', 'en': 'TVA/IS/CNSS. Analysis & recommendations'},
+    'feat_fin_adm_desc': {'ar': 'TVA, IS, IR, CNSS, Payroll. فهم القوانين المغربية', 'fr': 'TVA, IS, IR, CNSS, Payroll. Lois marocaines', 'en': 'TVA, IS, IR, CNSS, Payroll. Moroccan laws'},
+    'feat_fin_inv_desc': {'ar': 'ICE, TVA. فواتير مع PDF بـ 3 لغات', 'fr': 'ICE, TVA. Factures PDF en 3 langues', 'en': 'ICE, TVA. PDF invoices in 3 languages'},
+    'feat_mkt_cw_desc': {'ar': 'مقالات، وصف منتجات، سوشيال ميديا، إعلانات', 'fr': 'Articles, descriptions, réseaux sociaux', 'en': 'Articles, descriptions, social media'},
+    'feat_mkt_sm_desc': {'ar': 'منشورات لـ 6 منصات', 'fr': 'Posts pour 6 plateformes', 'en': 'Posts for 6 platforms'},
+    'feat_mkt_em_desc': {'ar': 'ردود، حملات، متابعة، دعوات', 'fr': 'Réponses, campagnes, relances', 'en': 'Replies, campaigns, follow-ups'},
+    'feat_mkt_cmo_desc': {'ar': 'استراتيجيات تسويق متكاملة', 'fr': 'Stratégies marketing complètes', 'en': 'Complete marketing strategies'},
+    'feat_adm_hr_desc': {'ar': 'إعلانات توظيف، أسئلة مقابلات، فحص CVs', 'fr': 'Offres, questions, analyse CVs', 'en': 'Job posts, interviews, CV screening'},
+    'feat_adm_cs_desc': {'ar': 'اقتراح AI، تصنيف التذاكر، ردود', 'fr': 'Suggestion IA, tri tickets, réponses', 'en': 'AI suggestions, ticket triage, replies'},
+    'feat_adm_mn_desc': {'ar': 'محاضر اجتماعات مع مهام وقرارات', 'fr': 'Comptes-rendus avec actions', 'en': 'Meeting minutes with actions'},
+    'feat_adm_sup_desc': {'ar': 'طلبات، تفاوض، مقارنة موردين', 'fr': 'Devis, négociation, comparaison', 'en': 'Quotes, negotiation, comparison'},
+    'feat_langs_label': {'ar': 'لغات', 'fr': 'Langues', 'en': 'Languages'},
+    'feat_langs_val': {'ar': 'عربي، فرنسي، إنجليزي', 'fr': 'Arabe, Français, Anglais', 'en': 'Arabic, French, English'},
+    'feat_pdf_label': {'ar': 'احترافية PDF', 'fr': 'PDF pro', 'en': 'Pro PDF'},
+    'feat_pdf_val': {'ar': 'تقارير', 'fr': 'Rapports', 'en': 'Reports'},
+    'feat_login_label': {'ar': 'تسجيل دخول آمن', 'fr': 'Connexion sécurisée', 'en': 'Secure login'},
+    'feat_fast_label': {'ar': 'سريع', 'fr': 'Rapide', 'en': 'Fast'},
+    'feat_fast_val': {'ar': '(نتائج في ثوان)', 'fr': '(résultats en secondes)', 'en': '(results in seconds)'},
+    'feat_cloud_label': {'ar': 'سحابي', 'fr': 'Cloud', 'en': 'Cloud'},
+    'feat_cloud_val': {'ar': '(يعمل من أي جهاز)', 'fr': "(depuis n'importe quel appareil)", 'en': '(from any device)'},
+    'feat_support_label': {'ar': 'دعم واتساب مباشر', 'fr': 'Support WhatsApp direct', 'en': 'Direct WhatsApp support'},
+    'subscribe_now': {'ar': '🚀 اشترك الآن', 'fr': "🚀 S'abonner maintenant", 'en': '🚀 Subscribe now'},
+    'wa_subscribe_here': {'ar': 'اضغط هنا للاشتراك عبر واتساب', 'fr': 'Cliquez ici pour vous abonner', 'en': 'Click here to subscribe'},
+}
+
+
+def _i18n_feat_merge(_T):
+    if all(isinstance(_T.get(_l), dict) for _l in ('ar', 'fr', 'en')):
+        for _k, _v in _I18N_FEAT.items():
+            for _l in ('ar', 'fr', 'en'):
+                _T[_l].setdefault(_k, _v[_l])
+    else:
+        for _k, _v in _I18N_FEAT.items():
+            _T.setdefault(_k, dict(_v))
+
+
+try:
+    _i18n_feat_merge(T)
+except NameError:
+    pass
