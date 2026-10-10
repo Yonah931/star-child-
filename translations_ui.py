@@ -963,6 +963,9 @@ T = {
     "about_why_4": {"ar": "لا تدعم العربية بمستوى احترافي", "fr": "ne supportent pas l'arabe professionnel", "en": "don't support professional Arabic"},
     "about_why_end": {"ar": "قررنا أن نصنع الحل المغربي", "fr": "Nous avons décidé de créer la solution marocaine", "en": "We decided to build the Moroccan solution"},
 
+    "contact_title": {"ar": "📞 تواصل معنا", "fr": "📞 Contact", "en": "📞 Contact"},
+    "contact_subtitle": {"ar": "لأسئلتك، عروض، وطلبات مخصصة", "fr": "Questions, démos, demandes sur mesure", "en": "Questions, demos, custom requests"},
+
 }
 
 

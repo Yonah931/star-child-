@@ -719,7 +719,7 @@ def show_about():
     st.divider()
 
     # القصة
-    st.markdown("""
+    st.markdown(f"""
     st.markdown(f"### 🎯 {t('about_vision_h', _about_lang)}")
     
     نبني **أدوات ذكية مخصصة للسوق المغربي** — بلغات ثلاثة، بأسعار في متناول الجميع، 
@@ -733,7 +733,7 @@ def show_about():
     - 🚫 لا تفهم TVA/IS/CNSS المغربية
     - 🚫 لا تدعم العربية بشكل احترافي
     
-    **قررنا أن نبني البديل المغربي.**
+    **{t("about_why_end", _about_lang)}**
     
     ### 🚀 ما الذي يميزنا؟
     
@@ -915,11 +915,11 @@ def show_stats():
 
 
 def show_contact():
-    """صفحة تواصل معنا"""
-    st.markdown('<div class="main-header">Contact / تواصل معنا</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">For questions, demos, and custom requests</div>', unsafe_allow_html=True)
+    _ct_lang = st.session_state.get("lang", "ar")
+    st.markdown('<div class="main-header">{t("contact_title", _ct_lang)}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("contact_subtitle", _ct_lang)}</div>', unsafe_allow_html=True)
 
-    if st.button("Back / رجوع", key="contact_back"):
+    if st.button(t("back_short", _ct_lang), key="contact_back"):
         st.session_state.page = "landing"
         st.rerun()
 
