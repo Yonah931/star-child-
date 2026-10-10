@@ -1032,9 +1032,9 @@ def show_landing():
         <div class="price-card">
             <h3>Starter</h3>
             <div class="price-amount">500 <span class="price-currency">{t('per_month', _lang)}</span></div>
-            <p>✅ وكيل واحد من اختيارك</p>
-            <p>✅ 20 مهمة شهرياً</p>
-            <p>✅ دعم واتساب</p>
+            <p>{t("land_starter_1", _lang)}</p>
+            <p>{t("land_starter_2", _lang)}</p>
+            <p>{t("land_starter_3", _lang)}</p>
         <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Starter%20%28500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 {t('subscribe_now', _lang)}</a>
         </div>
         """, unsafe_allow_html=True)
@@ -1043,10 +1043,10 @@ def show_landing():
         <div class="price-card featured">
             <h3>Pro 🔥</h3>
             <div class="price-amount">1,200 <span class="price-currency">{t('per_month', _lang)}</span></div>
-            <p>✅ 3 وكلاء</p>
-            <p>✅ 100 مهمة شهرياً</p>
-            <p>✅ كل الميزات</p>
-            <p>✅ دعم أولوية</p>
+            <p>{t("land_pro_1", _lang)}</p>
+            <p>{t("land_pro_2", _lang)}</p>
+            <p>{t("land_pro_3", _lang)}</p>
+            <p>{t("land_pro_4", _lang)}</p>
         <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Pro%20%281200%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 {t('subscribe_now', _lang)}</a>
         </div>
         """, unsafe_allow_html=True)
@@ -1055,10 +1055,10 @@ def show_landing():
         <div class="price-card">
             <h3>Business</h3>
             <div class="price-amount">2,500 <span class="price-currency">{t('per_month', _lang)}</span></div>
-            <p>✅ كل الوكلاء (8)</p>
-            <p>✅ غير محدود</p>
-            <p>✅ تخصيص كامل</p>
-            <p>✅ دعم 24/7</p>
+            <p>{t("land_biz_1", _lang)}</p>
+            <p>{t("land_biz_2", _lang)}</p>
+            <p>{t("land_biz_3", _lang)}</p>
+            <p>{t("land_biz_4", _lang)}</p>
         <a href="https://wa.me/212719082215?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AD%D8%B2%D9%85%D8%A9%20Business%20%282500%20%D8%AF%D8%B1%D9%87%D9%85/%D8%B4%D9%87%D8%B1%29." target="_blank" style="display:block; text-align:center; margin-top:15px; background:linear-gradient(90deg,#00d4ff,#00ff88); color:#0f1428; padding:12px; border-radius:10px; text-decoration:none; font-weight:bold;">💬 {t('subscribe_now', _lang)}</a>
         </div>
         """, unsafe_allow_html=True)
