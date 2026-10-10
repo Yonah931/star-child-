@@ -1156,43 +1156,44 @@ def show_accountant():
 # الصفحة 3: نظام الوكلاء السبعة
 # ============================================================
 def show_agents():
+    _ag_lang = st.session_state.get("lang", "ar")
     col1, col2 = st.columns([1, 5])
     with col1:
-        if st.button("← الرئيسية", key="back_agents"):
+        if st.button(t("back_short", _ag_lang), key="back_agents"):
             st.session_state.page = "landing"
             st.rerun()
 
-    st.markdown('<div class="main-header">🤖 نظام الوكلاء السبعة</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">CEO + 6 وكلاء متخصصين</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">{t("ag_title", _ag_lang)}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">{t("ag_subtitle", _ag_lang)}</div>', unsafe_allow_html=True)
 
     st.markdown("### 🎯 الوكلاء المتاحون")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("**👑 CEO** — المنسق الرئيسي")
-        st.markdown("**🤖 Assistant** — الأسئلة العامة")
-        st.markdown("**🔍 Researcher** — بحث في الإنترنت")
+        st.markdown(f"**👑 CEO** – {t('ag_ceo_desc', _ag_lang)}")
+        st.markdown(f"**🤖 Assistant** – {t('ag_asst_desc', _ag_lang)}")
+        st.markdown(f"**🔍 Researcher** – {t('ag_res_desc', _ag_lang)}")
     with col2:
-        st.markdown("**📢 CMO** — التسويق والمحتوى")
-        st.markdown("**💼 SalesRep** — المبيعات والعملاء")
-        st.markdown("**💻 Dev** — التطوير التقني")
+        st.markdown(f"**📣 CMO** – {t('ag_cmo_desc', _ag_lang)}")
+        st.markdown(f"**💼 SalesRep** – {t('ag_sales_desc', _ag_lang)}")
+        st.markdown(f"**💻 Dev** – {t('ag_dev_desc', _ag_lang)}")
     with col3:
-        st.markdown("**📊 DataAnalyst** — تحليل البيانات")
+        st.markdown(f"**📊 DataAnalyst** – {t('ag_data_desc', _ag_lang)}")
 
     st.markdown("---")
-    st.success("✅ النظام جاهز ويعمل على السحابة")
+    st.success(t("ag_ready", _ag_lang))
 
     st.markdown("### 📝 افتح التطبيق الكامل")
     st.markdown("انقر على الرابط أدناه لفتح النظام الكامل (7 وكلاء):")
 
     st.link_button(
-        "🚀 افتح نظام الوكلاء السبعة",
+        t("ag_open_btn", _ag_lang),
         "https://yonah-agents.streamlit.app",
         width="stretch"
     )
 
     st.markdown("---")
     st.markdown("### 🎯 أو جرّب المحاسب الذكي")
-    if st.button("📊 فتح المحاسب", key="go_acc_from_agents", width="stretch"):
+    if st.button(t("ag_open_acc", _ag_lang), key="go_acc_from_agents", width="stretch"):
         st.session_state.page = "accountant"
         st.rerun()
 
